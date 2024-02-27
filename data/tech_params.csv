@@ -1,0 +1,23 @@
+﻿technology,CO2 intensity,efficiency,FOM,fuel,investment,lifetime,VOM,construction_time,capital_spend_year_1,capital_spend_year_2,capital_spend_year_3,capital_spend_year_4,capital_spend_year_5,capital_spend_year_6,capital_spend_year_7
+battery inverter,,0.9,3,,411,20,,1,1,0,0,0,0,0,0
+battery storage,,,,,192,15,,1,1,0,0,0,0,0,0
+biomass,,0.468,4.526935,7,2209,30,,4,0.15,0.35,0.3,0.2,0,0,0
+gas - ccgt,0.187,0.5,2.5,21.6,800,30,4,3,0.3,0.6,0.1,0,0,0,0
+gas - ocgt,,,,,,,,2,0.75,0.25,0,0,0,0,0
+gas - chp,,,,,,,,3,0.3,0.6,0.1,0,0,0,0
+coal,0.354,0.464,1.923076,8.4,1300,40,6,5,0.1,0.3,0.3,0.2,0.1,0,0
+electrolysis,,0.8,4,,350,18,,1,1,0,0,0,0,0,0
+fuel cell,,0.58,3,,339,20,,1,1,0,0,0,0,0,0
+H2 pipeline,,0.98,5,,267,40,,1,1,0,0,0,0,0,0
+HVAC overhead,,,2,,400,40,,1,1,0,0,0,0,0,0
+HVDC inverter pair,,,2,,150000,40,,1,1,0,0,0,0,0,0
+HVDC overhead,,,2,,400,40,,1,1,0,0,0,0,0,0
+HVDC submarine,,,2,,2000,40,,1,1,0,0,0,0,0,0
+hydro,,0.9,1,,2000,80,,6,0.1,0.25,0.2,0.2,0.15,0.1,0
+hydrogen storage,,,,,11.2,20,,1,1,0,0,0,0,0,0
+hydrogen underground storage,,,,,0.5,40,,1,1,0,0,0,0,0,0
+nuclear,,0.337,,3,6000,45,8,7,0.1,0.2,0.2,0.2,0.15,0.1,0.05
+oil,0.248,0.393,1.5,50,400,30,3,2,0.75,0.25,0,0,0,0,0
+onwind,,,2.450549,,1040,30,2.3,2,0.75,0.25,0,0,0,0,0
+offwind,,,,,,,,2,0.75,0.25,0,0,0,0,0
+solar,,,3,,425,25,,1,1,0,0,0,0,0,0
