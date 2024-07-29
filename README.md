@@ -1,13 +1,25 @@
 <div style="display: flex; justify-content: space-around; align-items: center;">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/tza-google-cfe/blob/refactor-for-tz-pypsa/img/logo.png">
-    <img alt="TransitionZero Logo" width="600 px" src="https://github.com/transition-zero/tza-google-cfe/blob/refactor-for-tz-pypsa/img/logo.png">
+    <img alt="TransitionZero Logo" width="800 px" src="https://github.com/transition-zero/tza-google-cfe/blob/refactor-for-tz-pypsa/img/logo.png">
   </picture>
 </div>
 
 <!-- height="50px" width="300px" -->
 
 # TransitionZero: 24/7 Carbon Free Energy (CFE) in Asia
+
+
+<!-- badges-begin -->
+
+![Python][python badge]
+![Status][status badge]
+
+[python badge]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Lkruitwagen/bd1e357c1bce5fc2c0808bcdb569157c/raw/python_version_badge.json
+
+[status badge]: https://img.shields.io/badge/under%20construction-ffae00
+
+<!-- badges-end -->
 
 ## Background
 
