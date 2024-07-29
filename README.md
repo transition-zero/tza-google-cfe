@@ -35,6 +35,23 @@
 
 ### Running a scenario
 
+## Contributors
+
+### TransitionZero Team
+
+- [Aman Majid](https://www.transitionzero.org/team/aman-majid)
+- [Abhishek Shivakumar](https://www.transitionzero.org/team/abhishek-shivakumar)
+
+### External Advisors
+
+### Want to use, develop or support this project?
+We strongly welcome anyone interested in collaborating on this or future related projects. If you have any ideas, suggestions or encounter problems, feel invited to file issues or make pull requests on GitHub. To discuss ideas for the project, please contact [@Abhishek Shivakumar](mailto:abhishek@transitionzero.org).
+
+## Licence
+
+<!-- - [Handriyanti Diah Puspitarini](https://www.transitionzero.org/team/handriyanti-diah-puspitarini)
+- [Dan Welsby](https://github.com/djwels) -->
+
 <!-- - Clone this repository
 - Setup your python environment:
 
