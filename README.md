@@ -1,20 +1,32 @@
-
-<picture>
-$PLACEHOLDER$<div>
-   <img alt="TransitionZero Logo" width="300px" src="https://github.com/transition-zero/.github/raw/main/profile/img/logo-light.png">
-   <img alt="TransitionZero Logo (Dark)" width="300px" src="https://github.com/transition-zero/.github/raw/main/profile/img/logo-dark.png">
+<div style="display: flex; justify-content: space-around; align-items: center;">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/.github/raw/main/profile/img/logo-dark.png">
+    <img alt="TransitionZero Logo" width="300px" src="https://github.com/transition-zero/.github/raw/main/profile/img/logo-light.png">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/.github/raw/main/profile/img/logo-dark.png">
+    <img alt="TransitionZero Logo" width="300px" src="https://github.com/transition-zero/.github/raw/main/profile/img/logo-light.png">
+  </picture>
 </div>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/.github/raw/main/profile/img/logo-dark.png">
-  <img alt="TransitionZero Logo" width="300px" src="https://github.com/transition-zero/.github/raw/main/profile/img/logo-light.png">
-  <a href="https://www.transitionzero.org/">
-</picture>
-
-# TZ-Analysis-PyPSA
 
 
-## Getting started:
+# TransitionZero: 24/7 Carbon Free Energy (CFE) in Asia
 
-- Clone this repository
+## Background
+
+## Our study
+
+### Scope
+
+### Methodology
+
+## Reproducing this work
+
+### Getting started
+
+### Running a scenario
+
+<!-- - Clone this repository
 - Setup your python environment:
 
 ```
@@ -32,4 +44,4 @@ conda env create --name cfe --file environment.yml
 
  - **Updates/improvements:**
     - [ ] Update to TZ renewables profiles
-    - [ ] Update system input data to pull from FEO api
+    - [ ] Update system input data to pull from FEO api -->
