@@ -7,7 +7,7 @@
 
 <!-- height="50px" width="300px" -->
 
-# TransitionZero: 24/7 Carbon Free Energy (CFE) in Asia
+# System-level impacts of 24/7 Carbon Free Energy (CFE) in Asia
 
 
 <!-- badges-begin -->
@@ -26,6 +26,12 @@
 ## Our study
 
 ### Scope
+
+1. India
+2. Japan
+3. Taiwan
+4. Malaysia
+5. Singapore
 
 ### Methodology
 
