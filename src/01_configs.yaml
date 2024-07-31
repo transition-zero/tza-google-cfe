@@ -12,6 +12,7 @@
 paths:
   output_model_runs: '../outputs/model_runs/'
 
+
 global_vars:
   year: 2030
   frequency: 24h
@@ -22,10 +23,29 @@ global_vars:
 
 model_runs:
   - name: SGP-MYS
+    palette: palette_1
     core_model: ASEAN
     select_nodes:
       - SGPXX
       - MYSPE
       - MYSSK
       - MYSSH
+    nodes_with_cfe_load:
+      - SGPXX
+    cfe_load_fraction: 0.1 # assume 10% of load curve is to be matched by CFE PPA
     backstop: false
+
+
+cfe_technology_palette:
+  palette_1:
+    - photovoltaic-unspecified
+    - wind-offshore-unspecified
+    - wind-onshore
+    - battery
+  palette_2:
+    - photovoltaic-unspecified
+    - wind-offshore-unspecified
+    - wind-onshore
+    - hydro-unspecified
+    - bioenergy-unspecified
+    - battery
