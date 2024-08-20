@@ -33,12 +33,15 @@
 5. Singapore
 
 ### Methodology
+TODO
 
 ## Reproducing this work
 
 ### Getting started
+TODO
 
 ### Running a scenario
+TODO
 
 ## Contributors
 
@@ -48,6 +51,7 @@
 - [Abhishek Shivakumar](https://www.transitionzero.org/team/abhishek-shivakumar)
 
 ### External Advisors
+TODO
 
 ### Want to use, develop or support this project?
 We strongly welcome anyone interested in collaborating on this or future related projects. If you have any ideas, suggestions or encounter problems, feel invited to file issues or make pull requests on GitHub. To discuss ideas for the project, please contact [@Abhishek Shivakumar](mailto:abhishek@transitionzero.org).
@@ -59,28 +63,25 @@ We relied on several excellent previous analyses to do this work. In particular,
 - TU Berlin's study of 24/7 Carbon-Free Energy procurement in Europe ([link](https://github.com/PyPSA/247-cfe)).
 - The Zero Lab's (Princeton University) analysis of electricity System and market impacts of time-based attribute trading and 24/7 carbon-free electricity procurement in the USA ([link](https://acee.princeton.edu/24-7/))
 
-
 ## Licence
+TODO
 
-<!-- - [Handriyanti Diah Puspitarini](https://www.transitionzero.org/team/handriyanti-diah-puspitarini)
-- [Dan Welsby](https://github.com/djwels) -->
+## TODO
 
-<!-- - Clone this repository
-- Setup your python environment:
+ - **Essential Model Features:**
+    - [x] Separate PPA to its own bus
+    - [x] Add C&I to brownfield network for consistency
+    - [ ] Add annual matching constraint
+    - [ ] Add ability to allow imported CFE
 
-```
-conda env create --name cfe --file environment.yml
-```
+ - **Analysis:**
+    - [ ] Cost comparison between brownfield, annual matching and CFE
+    - [ ] Generation capacity comparison between brownfield, annual matching and CFE
+    - [ ] Storage capacity comparison between brownfield, annual matching and CFE
+    - [ ] Trade-off curve: CFE score vs costs
 
-- Work your way through the [notebooks](https://github.com/amanmajid/google_cfe/tree/main/notebooks)
-
-## TODO:
-
- - **Expand model functionality:**
-    - [ ] Implement cost functions
-    - [ ] Implement renewable potentials
-    - [ ] Introduce unit commitment
-
- - **Updates/improvements:**
-    - [ ] Update to TZ renewables profiles
-    - [ ] Update system input data to pull from FEO api -->
+ - **Data needs:**
+    - [ ] % of demand attributed to C&I in Malaysia and Singapore
+    - [ ] 
+    - [ ] 
+    - [ ] 
