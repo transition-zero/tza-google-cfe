@@ -11,6 +11,7 @@ def run_annual_matching_scenario(
         run : dict = None,
         configs : dict = None,
         brownfield_network : pypsa.Network = None,
+        cfe_score : float = 1.0,
     ) -> pypsa.Network:
     
     '''Run a network with annually matched renewable generation.
@@ -53,6 +54,7 @@ def run_annual_matching_scenario(
             .variables['Generator-p']
             .sel(Generator=lhs_generators)
             .sum()
+            .sum()
         )
 
         # get hourly dispatch from storage
@@ -61,10 +63,11 @@ def run_annual_matching_scenario(
             .variables['StorageUnit-p_dispatch']
             .sel(StorageUnit=lhs_storages)
             .sum()
+            .sum()
         )
 
         lp_model.add_constraints(
-            lhs_total_hourly_generation + lhs_total_hourly_storage_discharge == run['cfe_score'] * rhs_load,
+            lhs_total_hourly_generation + lhs_total_hourly_storage_discharge == cfe_score * rhs_load,
             name = f'cfe_constraint_{bus}',
         )
     
@@ -73,6 +76,7 @@ def run_annual_matching_scenario(
 
     network.optimize.solve_model(
         solver_name=configs['global_vars']['solver'],
+        multi_investment=True,
     )
 
     # save results
@@ -82,7 +86,7 @@ def run_annual_matching_scenario(
 
     network.export_to_netcdf(
         os.path.join(
-            configs['paths']['output_model_runs'], run['name'], 'solved_networks', 'annual_matching_' + str(configs['global_vars']['year']) + '_cfe' + str(int(run['cfe_score']*100)) + '.nc'
+            configs['paths']['output_model_runs'], run['name'], 'solved_networks', 'annual_matching_' + str(configs['global_vars']['year']) + '_cfe' + str(int(cfe_score*100)) + '.nc'
         )
     )
 

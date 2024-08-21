@@ -6,6 +6,7 @@ import tz_pypsa as tza
 from tz_pypsa.model import Model
 
 from .helpers import *
+from .constraints import *
 
 def run_brownfield_scenario(
         run : dict = None,
@@ -32,8 +33,8 @@ def run_brownfield_scenario(
 
     # ensure p_nom is extendable
     network.generators['p_nom_extendable']      = True
-    network.links['p_nom_extendable']           = True
     network.storage_units['p_nom_extendable']   = True
+    network.links['p_nom_extendable']           = run['allow_grid_expansion']
 
     # ----------------------------------------------------------------------
     # Step 1: 
@@ -186,9 +187,16 @@ def run_brownfield_scenario(
 
     # ----------------------------------------------------------------------
     # Step 4: 
-    # Set renewable targets in brownfield network
+    # Add custom constraints
     # ----------------------------------------------------------------------
+
+    lp_model = network.optimize.create_model()
+
+    # Set renewable targets in brownfield network
     # TODO!
+
+    # Prevent charging of clean storage units with fossil fuels
+    lp_model, network = fossil_storage_charging_constraint(lp_model, network, configs)
 
     # solve
     print('Beginning optimization...')
