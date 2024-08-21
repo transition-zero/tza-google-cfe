@@ -19,9 +19,8 @@ global_vars:
   timesteps: 744
   set_global_constraints: false
   backstop: false
-  solver: 'gurobi'
-  ci_label: 'c&i-ppa' # this is a unique identifier for all CFE attributes in the network
-
+  solver: gurobi
+  ci_label: c&i-ppa # this is a unique identifier for all CFE attributes in the network
 
 model_runs:
   - name: SGP-MYS
@@ -35,8 +34,13 @@ model_runs:
       - MYSPE
       - MYSSK
       - MYSSH
-    ci_load_fraction: 0.1 # assume 10% of load curve is to be matched by C&I PPA
-    cfe_score: 1.0
+    ci_load_fraction: 0.1 # percentage of nodal demand is attributed to C&I
+    cfe_score: 
+      # percentage of C&I electricity demand that is met by carbon-free energy PPA
+      # 0.50 = 50%
+      - 0.75
+      # - 1.00
+    allow_grid_expansion: false
     backstop: false
 
 
