@@ -6,6 +6,7 @@ import tz_pypsa as tza
 from tz_pypsa.model import Model
 
 from .helpers import *
+from .constraints import *
 
 def run_annual_matching_scenario(
         run : dict = None,
@@ -31,46 +32,41 @@ def run_annual_matching_scenario(
     network.storage_units['p_nom_extendable']   = False
 
     # make C&I assets extendable
-    network.generators.loc[network.generators.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]        = True
+    clean_carriers = network.carriers.query(" co2_emissions <= 0 ").index.to_list() 
+    network.generators.loc[ network.generators.carrier.isin( clean_carriers ), 'p_nom_extendable' ]                             = True
+    #network.generators.loc[network.generators.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]        = True
     network.links.loc[network.links.bus0.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]                 = True
     network.storage_units.loc[network.storage_units.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]  = True
     
-    # -----------------------------------
-    # Add annual matching constraints
-    # -----------------------------------
+    # --------------------------------------------------------
+    # ADD CONSTRAINTS
+    # --------------------------------------------------------
 
     # init linopy model
     lp_model = network.optimize.create_model()
 
-    for bus in run['nodes_with_ci_load']:
+    # Renewable targets
+    # --------------------
 
-        lhs_generators = [i for i in network.generators.index if configs['global_vars']['ci_label'] in i and bus in i]
-        lhs_storages = [i for i in network.storage_units.index if configs['global_vars']['ci_label'] in i and bus in i]
-        rhs_load = network.loads_t.p_set[bus + '-' + configs['global_vars']['ci_label']].sum()
+    # TODO! ADD A PLACEHOLDER 30% CLEAN GENERATION TARGET FOR NOW
+    lp_model, network = constraint_clean_generation_target(lp_model, network, ci_nodes=run['nodes_with_ci_load'], configs=configs)
 
-        # get hourly dispatch from clean generators
-        lhs_total_hourly_generation = (
-            lp_model
-            .variables['Generator-p']
-            .sel(Generator=lhs_generators)
-            .sum()
-            .sum()
-        )
+    # Charging storages with fossil fuels
+    # --------------------
 
-        # get hourly dispatch from storage
-        lhs_total_hourly_storage_discharge = (
-            lp_model
-            .variables['StorageUnit-p_dispatch']
-            .sel(StorageUnit=lhs_storages)
-            .sum()
-            .sum()
-        )
+    # add fossil storage charging constraint
+    if not configs['global_vars']['enable_fossil_charging']:
+        lp_model, network = constraint_fossil_storage_charging(lp_model, network)
 
-        lp_model.add_constraints(
-            lhs_total_hourly_generation + lhs_total_hourly_storage_discharge == cfe_score * rhs_load,
-            name = f'cfe_constraint_{bus}',
-        )
-    
+    # Annual matching
+    # --------------------
+
+    lp_model, network = annual_matching(lp_model, network, cfe_score=cfe_score, ci_nodes=run['nodes_with_ci_load'], configs=configs)
+
+    # --------------------------------------------------------
+    # SOLVE
+    # --------------------------------------------------------
+
     # solve
     print('Beginning optimisation')
 
