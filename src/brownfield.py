@@ -36,6 +36,11 @@ def run_brownfield_scenario(
     network.storage_units['p_nom_extendable']   = True
     network.links['p_nom_extendable']           = run['allow_grid_expansion']
 
+    # set p_nom_min
+    network.generators['p_nom_min']      = network.generators['p_nom']
+    network.storage_units['p_nom_min']   = network.storage_units['p_nom']
+    network.links['p_nom_min']           = network.links['p_nom']
+
     # ----------------------------------------------------------------------
     # Step 1: 
     # Separate C&I and non-C&I load
@@ -66,21 +71,39 @@ def run_brownfield_scenario(
             bus + '-' + configs['global_vars']['ci_label'],
         )
         
-        # add bus for C&I PPA
+        # add virtual link connecting bus to C&I bus
         network.add(
             "Link",
             name='virtual-link-' + bus + '-' + configs['global_vars']['ci_label'] + '-' + bus,
             bus0=bus + '-' + configs['global_vars']['ci_label'],
             bus1=bus,
-            type=network.links.type.unique()[0],
-            carrier=network.links.carrier.unique()[0],
-            build_year=network.links.build_year.unique()[0],
+            type='HVAC',
+            carrier='transmission-HVAC-overhead',
+            build_year=configs['global_vars']['year'],
             p_nom_extendable=False,
-            marginal_cost=0,
+            # parameters below make it a bidirectional lossless links
             capital_cost=0,
+            marginal_cost=0,
             efficiency=1,
+            p_min_pu=0,
         )
-    
+
+        network.add(
+            "Link",
+            name='virtual-link-' + bus + '-' + bus + '-' + configs['global_vars']['ci_label'],
+            bus0=bus,
+            bus1=bus + '-' + configs['global_vars']['ci_label'],
+            type='HVAC',
+            carrier='transmission-HVAC-overhead',
+            build_year=configs['global_vars']['year'],
+            p_nom_extendable=False,
+            # parameters below make it a bidirectional lossless links
+            capital_cost=0,
+            marginal_cost=0,
+            efficiency=1,
+            p_min_pu=0,
+        )
+
     # ----------------------------------------------------------------------
     # Step 3: 
     # Add new generators and storages solely for C&I PPA
@@ -186,17 +209,21 @@ def run_brownfield_scenario(
                 )
 
     # ----------------------------------------------------------------------
-    # Step 4: 
-    # Add custom constraints
+    # ADD CONSTRAINTS
     # ----------------------------------------------------------------------
 
     lp_model = network.optimize.create_model()
 
-    # Set renewable targets in brownfield network
-    # TODO!
+    # Renewable targets
+    # --------------------
 
-    # Prevent charging of clean storage units with fossil fuels
-    lp_model, network = fossil_storage_charging_constraint(lp_model, network, configs)
+    lp_model, network = constraint_clean_generation_target(lp_model, network, ci_nodes=run['nodes_with_ci_load'], configs=configs)
+
+    # Charging storages with fossil fuels
+    # --------------------
+
+    if not configs['global_vars']['enable_fossil_charging']:
+        lp_model, network = constraint_fossil_storage_charging(lp_model, network)
 
     # solve
     print('Beginning optimization...')
