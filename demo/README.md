@@ -19,9 +19,11 @@
 There are three fundamental constraints for 24/7 CFE. These are itemised below.
 
 **Constraint 1: Hourly matching**
+The hourly matching constraint ensures that the demand $D$ of the commercial and industrial consumer $i$ must be met by clean electricity at any given time step, such that:
 
 $$
-Demand_t + DemandResponseUp_t - DemandResponseDown_t + ContractedStorageCharge_t - ContractedStorageDispatch_t = TotalContractedCFE_t - Excess_t + GridSupply_t
+D_{i,t} + \bar{s}_{r,t} - \underline{s}_{r,t} = g_{r,t} - e_{i,t} + u_{i,t}
+% Demand_t + DemandResponseUp_t - DemandResponseDown_t + ContractedStorageCharge_t - ContractedStorageDispatch_t = TotalContractedCFE_t - Excess_t + GridSupply_t
 $$
 
 
