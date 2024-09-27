@@ -23,9 +23,9 @@ The hourly matching constraint ensures that the demand $D$ of the commercial and
 
 $$
 D_{i,t} + \bar{s}_{r,t} - \underline{s}_{r,t} = g_{r,t} - e_{i,t} + u_{i,t}
-% Demand_t + DemandResponseUp_t - DemandResponseDown_t + ContractedStorageCharge_t - ContractedStorageDispatch_t = TotalContractedCFE_t - Excess_t + GridSupply_t
 $$
 
+<!-- Demand_t + DemandResponseUp_t - DemandResponseDown_t + ContractedStorageCharge_t - ContractedStorageDispatch_t = TotalContractedCFE_t - Excess_t + GridSupply_t -->
 
 **Constraint 2: Impose CFE target**
 
