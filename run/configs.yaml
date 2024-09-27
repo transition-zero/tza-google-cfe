@@ -23,13 +23,14 @@ global_vars:
   enable_fossil_charging: false
   enable_additionality: true
   set_global_constraints: false
-  maximum_excess_export: 0.1
+  maximum_excess_export: 0.05
 
 
 model_runs:
+
   - name: SGP
     palette: palette_1
-    core_model: ASEAN
+    stock_model: ASEAN
     select_nodes:
       - MYSPE
       # - MYSSK
@@ -38,17 +39,26 @@ model_runs:
       - MYSPE
       # - MYSSK
       # - MYSSH
-    ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
+    ci_load_fraction: 0.1 # percentage of nodal demand is attributed to C&I
     cfe_score: 
       # percentage of C&I electricity demand that is met by carbon-free energy PPA
       # 0.10 = 10% CFE matching
-      - 1.0
+      # - 0.10
+      # - 0.20
+      # - 0.30
+      # - 0.40
+      # - 0.50
+      # - 0.60
+      - 0.70
+      - 0.80
+      - 0.90
+      - 1.00
     allow_grid_expansion: false
     backstop: false
 
   # - name: SGP-MYS
   #   palette: palette_1
-  #   core_model: ASEAN
+  #   stock_model: ASEAN
   #   select_nodes:
   #     - MYSPE
   #     - MYSSK

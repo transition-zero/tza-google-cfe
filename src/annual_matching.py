@@ -33,8 +33,8 @@ def run_annual_matching_scenario(
 
     # make C&I assets extendable
     clean_carriers = network.carriers.query(" co2_emissions <= 0 ").index.to_list() 
-    network.generators.loc[ network.generators.carrier.isin( clean_carriers ), 'p_nom_extendable' ]                             = True
-    #network.generators.loc[network.generators.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]        = True
+    #network.generators.loc[ network.generators.carrier.isin( clean_carriers ), 'p_nom_extendable' ]                             = True
+    network.generators.loc[network.generators.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]        = True
     network.links.loc[network.links.bus0.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]                 = True
     network.storage_units.loc[network.storage_units.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]  = True
     

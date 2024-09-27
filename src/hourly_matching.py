@@ -34,44 +34,65 @@ def run_hourly_matching_scenario(
     # make C&I assets extendable
     network.generators.loc[network.generators.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]        = True
     network.links.loc[network.links.bus0.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]                 = True
+    #network.stores.loc[network.stores.bus.str.contains(configs['global_vars']['ci_label']), 'e_nom_extendable' ]                = True
     network.storage_units.loc[network.storage_units.bus.str.contains(configs['global_vars']['ci_label']), 'p_nom_extendable' ]  = True
     
-    # -----------------------------------
-    # Add hourly matching constraints
-    # -----------------------------------
+    # --------------------------------------------------------
+    # ADD CONSTRAINTS
+    # --------------------------------------------------------
 
     # init linopy model
-    lp_model = network.optimize.create_model()
+    network.optimize.create_model()
 
-    for bus in run['nodes_with_ci_load']:
+    # # Renewable targets
+    # # --------------------
 
-        lhs_generators = [i for i in network.generators.index if configs['global_vars']['ci_label'] in i and bus in i]
-        lhs_storages = [i for i in network.storage_units.index if configs['global_vars']['ci_label'] in i and bus in i]
-        rhs_load = network.loads_t.p_set[bus + '-' + configs['global_vars']['ci_label']]
+    # # TODO! ADD A PLACEHOLDER 30% CLEAN GENERATION TARGET FOR NOW
+    # lp_model, network = constraint_clean_generation_target(lp_model, network, ci_nodes=run['nodes_with_ci_load'], configs=configs)
 
-        # get hourly dispatch from clean generators
-        lhs_total_hourly_generation = (
-            lp_model
-            .variables['Generator-p']
-            .sel(Generator=lhs_generators)
-            .sum('Generator')
-        )
+    # Charging storages with fossil fuels
+    # --------------------
 
-        # get hourly dispatch from storage
-        lhs_total_hourly_storage_discharge = (
-            lp_model
-            .variables['StorageUnit-p_dispatch']
-            .sel(StorageUnit=lhs_storages)
-            .sum('StorageUnit')
-        )
+    # # add fossil storage charging constraint
+    # if not configs['global_vars']['enable_fossil_charging']:
+    #     lp_model, network = constraint_fossil_storage_charging(lp_model, network)
 
-        lp_model.add_constraints(
-            lhs_total_hourly_generation + lhs_total_hourly_storage_discharge == cfe_score * rhs_load,
-            name = f'cfe_constraint_{bus}',
-        )
+    # Hourly matching
+    # --------------------
 
-    # add fossil storage charging constraint
-    lp_model, network = fossil_storage_charging_constraint(lp_model, network, configs)
+    ci_nodes=run['nodes_with_ci_load']
+
+    weights = network.snapshot_weightings["generators"]
+    clean_carriers = network.carriers.query(" co2_emissions <= 0 ").index.to_list() 
+
+    for bus in ci_nodes:
+        clean_gens = [
+                i for i in network.generators.index 
+                if network.generators.loc[i].carrier in clean_carriers
+                and bus in i
+                and configs['global_vars']['ci_label'] in i
+            ]
+        
+        gen_sum = (network.model.variables["Generator-p"].loc[:, clean_gens] * weights).sum()
+
+        ci_stores = [
+            i for i in network.storage_units.index 
+            if bus in i and configs['global_vars']['ci_label'] in i
+        ]
+
+    # lp_model, network = (
+    #     hourly_matching2(
+    #         lp_model, 
+    #         network, 
+    #         ci_nodes=run['nodes_with_ci_load'], 
+    #         cfe_score=cfe_score, 
+    #         configs=configs
+    #     )
+    # )
+    
+    # --------------------------------------------------------
+    # SOLVE
+    # --------------------------------------------------------
     
     # solve
     print('Beginning optimisation')

@@ -37,20 +37,21 @@ if __name__ == '__main__':
 
         scenarios['brownfield'] = brownfield_network
 
-        for cfe_score in run['cfe_score']:
+        cfe_score = 1
+        print(f'Computing annual matching scenario (CFE: {int(cfe_score*100)})...')
 
-            print(f'Computing annual matching scenario (CFE: {int(cfe_score*100)})...')
-
-            annual_matching = (
-                run_annual_matching_scenario(
-                    run,
-                    configs,
-                    brownfield_network,
-                    cfe_score,
-                )
+        annual_matching = (
+            run_annual_matching_scenario(
+                run,
+                configs,
+                brownfield_network,
+                cfe_score,
             )
+        )
 
-            scenarios['annual_matching_' + str(cfe_score)] = annual_matching
+        scenarios['annual_matching_' + str(cfe_score)] = annual_matching
+
+        for cfe_score in run['cfe_score']:
 
             print(f'Computing hourly matching scenario (CFE: {int(cfe_score*100)})...')
 
@@ -69,25 +70,25 @@ if __name__ == '__main__':
         # MAKE PLOTS FOR EACH SCENARIO
         # ----------------------------------------------------------------------
         
-        # set path
-        fig_path = os.path.join(configs['paths']['output_model_runs'], run['name'])
+        # # set path
+        # fig_path = os.path.join(configs['paths']['output_model_runs'], run['name'])
         
-        # plot capacity
-        capacity = postprocess.aggregate_capacity(scenarios).reset_index()
+        # # plot capacity
+        # capacity = postprocess.aggregate_capacity(scenarios).reset_index()
 
-        fig = (
-            plotting
-            .plot_capacity_bar(
-                capacity,
-                carriers=brownfield_network.carriers,
-                width=1000,
-                height=400,
-            )
-        )
+        # fig = (
+        #     plotting
+        #     .plot_capacity_bar(
+        #         capacity,
+        #         carriers=brownfield_network.carriers,
+        #         width=1000,
+        #         height=400,
+        #     )
+        # )
 
 
-        fig.write_image( os.path.join(fig_path, 'capacity.png') )
-        fig.write_html( os.path.join(fig_path, 'capacity.html') )
+        # fig.write_image( os.path.join(fig_path, 'capacity.png') )
+        # fig.write_html( os.path.join(fig_path, 'capacity.html') )
 
     
     print('*'*100)

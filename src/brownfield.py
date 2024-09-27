@@ -17,11 +17,11 @@ def run_brownfield_scenario(
     '''
     
     # setup network
-    print('loading model: ', run['core_model'])
+    print('loading model: ', run['stock_model'])
 
     network = (
         Model.load_model(
-            run['core_model'], 
+            run['stock_model'], 
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
             select_nodes=run['select_nodes'], 
@@ -169,7 +169,7 @@ def run_brownfield_scenario(
                     min_down_time = params['min_down_time'], # 
                 )
             
-            # add storage if technolgy is a storage unit
+            # add storage if technology is a storage unit
             if technology in network.storage_units.carrier.unique():
 
                 # get params
@@ -187,26 +187,67 @@ def run_brownfield_scenario(
                     .to_dict()
                 )
 
-                # add storage unit
+                ppa_bus = bus + '-' + configs['global_vars']['ci_label']
+                
+                # add bus for storage
                 network.add(
-                    'StorageUnit',
-                    bus + '-' + technology + '-ext-' + str(params['build_year']) + '-' + configs['global_vars']['ci_label'],
-                    bus=bus + '-' + configs['global_vars']['ci_label'], 
-                    carrier=params['carrier'],
-                    p_nom=0, # starting capacity (MW)
-                    p_nom_min=0, # minimum capacity (MW)
-                    p_nom_extendable=False,
-                    capital_cost=params['capital_cost'],
-                    marginal_cost=params['marginal_cost'],
-                    build_year=params['build_year'],
-                    lifetime=params['lifetime'],
-                    state_of_charge_initial=params['state_of_charge_initial'],
-                    max_hours=params['max_hours'],
-                    efficiency_store=params['efficiency_store'],
-                    efficiency_dispatch=params['efficiency_dispatch'],
-                    standing_loss=params['standing_loss'],
-                    cyclic_state_of_charge=params['cyclic_state_of_charge'],
+                    'Bus',
+                    ppa_bus + '-' + params['carrier'],
                 )
+
+                network.add(
+                    "StorageUnit",
+                    ppa_bus + '-' + params['carrier'],
+                    bus = ppa_bus + '-' + params['carrier'],
+                    p_nom_extendable = False,
+                    cyclic_state_of_charge=True,
+                    max_hours=params['max_hours'],
+                    build_year=params['build_year'],
+                    carrier=params['carrier'],
+                    capital_cost=params['capital_cost'],
+                )
+
+                network.add(
+                    "Link",
+                    ppa_bus + '-' + params['carrier'] + "-charge",
+                    bus0 = ppa_bus,
+                    bus1 = ppa_bus + '-' + params['carrier'],
+                    efficiency = 0.9,
+                    p_nom_extendable = False,
+                    #capital_cost=params['capital_cost'],
+                    #marginal_cost=params['marginal_cost'],
+                )
+
+                network.add(
+                    "Link",
+                    ppa_bus + '-' + params['carrier'] + "-discharge",
+                    bus0 = ppa_bus + '-' + params['carrier'],
+                    bus1 = ppa_bus,
+                    p_nom_extendable = False,
+                    efficiency = params['efficiency_dispatch'],
+                    marginal_cost=params['marginal_cost'],
+                )
+
+                # # add storage unit
+                # network.add(
+                #     'StorageUnit',
+                #     ppa_bus + '-' + params['carrier'],
+                #     bus=ppa_bus + '-' + params['carrier'], 
+                #     carrier=params['carrier'],
+                #     p_nom=0, # starting capacity (MW)
+                #     p_nom_min=0, # minimum capacity (MW)
+                #     p_nom_extendable=False,
+                #     capital_cost=params['capital_cost'],
+                #     marginal_cost=params['marginal_cost'],
+                #     build_year=params['build_year'],
+                #     lifetime=params['lifetime'],
+                #     state_of_charge_initial=params['state_of_charge_initial'],
+                #     max_hours=params['max_hours'],
+                #     efficiency_store=params['efficiency_store'],
+                #     efficiency_dispatch=params['efficiency_dispatch'],
+                #     standing_loss=params['standing_loss'],
+                #     cyclic_state_of_charge=params['cyclic_state_of_charge'],
+                # )
 
     # ----------------------------------------------------------------------
     # ADD CONSTRAINTS
