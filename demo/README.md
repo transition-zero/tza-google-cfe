@@ -16,21 +16,22 @@
 ### 100% Renewables (i.e., annual matching)
 
 ### 24/7 Carbon-free energy procurement (i.e., hourly matching)
-There are three fundamental constraints for 24/7 CFE. These are itemised below.
+There are **three fundamental constraints** that must be imposed in the model to ensure 24/7 CFE for a commercial and industrial customer. These are itemised below.
 
 **Constraint 1: Hourly matching**
 The hourly matching constraint ensures that the demand of the commercial and industrial consumer $i$ must be met by clean electricity at any given time step ($t$), such that:
 
-$$Demand_{i,t} + StorageCharge_{r,t} - StorageDischarge_{r,t} = CleanGenProcured_{r,t} - Excess_{i,t} + GridImport_{i,t} \forall r \in CFE$$
+$$Demand_{(i,t)} + StorageCharge_{(r,t)} - StorageDischarge_{(r,t)} = CleanGenProcured_{(r,t)} - Excess_{(i,t)} + GridImport_{(i,t)} ~~~ \forall r \in CFE, t \in T$$
 
-
-
-<!-- $D_{i,t} + \bar{s}_{r,t} - \underline{s}_{r,t} = g_{r,t} - e_{i,t} + u_{i,t}$ -->
-
-<!-- Demand_t + DemandResponseUp_t - DemandResponseDown_t + ContractedStorageCharge_t - ContractedStorageDispatch_t = TotalContractedCFE_t - Excess_t + GridSupply_t -->
+where $r$ denotes generation and storage technologies procured by the C&I customer by their PPA. In the above, an excess occurs when the the procured generation exceeeds the demand of the C&I customer, while grid imports occur when the demand of the C&I customer exceeds the supply by the procured portfolio. 
 
 **Constraint 2: Impose CFE target**
 
 **Constraint 3: Set a limit on the excess (exports to grid)**
+An "excess" occurs when the total electricity generation from assets procured by participating consumers exceeds their demand in a given hour. In the model, we assume this excess can either be curtailed or sold to the regional electricity market at wholesale prices. A constraint is set, limiting the amount of excess generation sold to the regional grid to $u=20%$ of the participating consumers' annual demand, such that:
 
-This sentence uses $\` and \`$ delimiters to show math inline:  $`\sqrt{3x-1}+(1+x)^2`$
+$$
+\sum_t Excess_{(i,t)} \leq \left( \sum_t Demand_{(i,t)} \right) \times u
+$$
+
+The wholesale market prices are based on the dual variables of a nodal energy balance constraint.
