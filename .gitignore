@@ -1,6 +1,5 @@
 scrap/*
 *_GITHUB_TOKEN_
 *.DS_Store
-*.ipynb
 __pycache__/
 src/scrap.py
