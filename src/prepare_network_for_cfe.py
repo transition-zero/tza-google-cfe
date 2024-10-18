@@ -107,8 +107,8 @@ def PrepareNetworkForCFE(
         network.add(
             "Link",
             f"{bus} C&I Storage Discharge",
-            bus0=ci_bus_name, 
-            bus1=ci_storage_bus_name, 
+            bus0=ci_storage_bus_name, 
+            bus1=ci_bus_name, 
             p_nom=0,
             p_nom_extendable=p_nom_extendable,
             # add small capital and marginal costs to prevent model infeasibilities
@@ -207,6 +207,19 @@ def PrepareNetworkForCFE(
                     carrier=params['carrier'],
                     capital_cost=params['capital_cost'],
                 )
+
+                # network.add(
+                #     "StorageUnit",
+                #     "hydrogen storage underground",
+                #     bus = ci_storage_bus_name,
+                #     carrier="hydrogen storage underground",
+                #     max_hours=168,
+                #     capital_cost=1e12,
+                #     efficiency_store=0.44,
+                #     efficiency_dispatch=0.44,
+                #     p_nom_extendable=True,
+                #     cyclic_state_of_charge=True,
+                # )
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")

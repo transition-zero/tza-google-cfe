@@ -16,7 +16,7 @@ paths:
 global_vars:
   year: 2030
   frequency: 1h
-  timesteps: 744
+  timesteps: 8760
   solver: gurobi
   ci_label: C&I # this is a unique identifier for all CFE attributes in the network
   backstop: false
@@ -28,59 +28,102 @@ global_vars:
 
 model_runs:
 
-  - name: prelim-runs-10-2024
+  - name: prelim-run-SGP-oct-2024
     palette: palette_1
     stock_model: ASEAN
     select_nodes:
-      - MYSPE
+      - SGPXX
       # - MYSSK
+      # - MYSPE
       # - MYSSH
+      # - IDNSM
+      # - IDNJW
+      # - IDNNU
+      # - IDNKA
+      # - IDNSL
+      # - IDNML
+      # - IDNPP
+      # - PHLLU
+      # - PHLVI
+      # - PHLMI
+      # - BRNXX
+      # - MMRXX
+      # - THANO
+      # - THASO
+      # - THACE
+      # - VNMNO
+      # - VNMCE
+      # - VNMSO
+      # - KHMXX
+      # - LAOXX
     nodes_with_ci_load:
-      - MYSPE
-      # - MYSSK
-      # - MYSSH
-    ci_load_fraction: 0.1 # percentage of nodal demand is attributed to C&I
+      - SGPXX
+      # - MYSPE
+    ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
     cfe_score: 
       # percentage of C&I electricity demand that is met by carbon-free energy PPA
       # 0.10 = 10% CFE matching
-      - 0.10
+      # - 0.10
+      # - 0.15
       # - 0.20
+      # - 0.25
       # - 0.30
+      # - 0.35
       # - 0.40
-      - 0.50
-      # - 0.60
-      # - 0.70
+      # - 0.45
+      # - 0.50
+      # - 0.55
+      - 0.60
+      - 0.65
+      - 0.70
+      - 0.75
       - 0.80
+      - 0.85
       - 0.90
+      - 0.95
+      - 0.96
+      - 0.97
+      - 0.98
+      - 0.99
       - 1.00
     allow_grid_expansion: false
     backstop: false
 
-  # - name: SGP-MYS
+  
+  # - name: prelim-run-MYS-oct-2024
   #   palette: palette_1
   #   stock_model: ASEAN
   #   select_nodes:
-  #     - MYSPE
   #     - MYSSK
-  #     - MYSSH
   #   nodes_with_ci_load:
-  #     - MYSPE
   #     - MYSSK
-  #     - MYSSH
-  #   ci_load_fraction: 0.1 # percentage of nodal demand is attributed to C&I
+  #   ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
   #   cfe_score: 
   #     # percentage of C&I electricity demand that is met by carbon-free energy PPA
   #     # 0.10 = 10% CFE matching
-  #     - 0.1
-  #     - 0.2
-  #     - 0.3
-  #     - 0.4
-  #     - 0.5
-  #     - 0.6
-  #     - 0.7
-  #     - 0.8
-  #     - 0.9
-  #     - 1.0
+  #     # - 0.10
+  #     # - 0.15
+  #     # - 0.20
+  #     # - 0.25
+  #     # - 0.30
+  #     # - 0.35
+  #     # - 0.40
+  #     # - 0.45
+  #     # - 0.50
+  #     # - 0.55
+  #     - 0.60
+  #     - 0.65
+  #     - 0.70
+  #     - 0.75
+  #     - 0.80
+  #     - 0.85
+  #     - 0.90
+  #     - 0.95
+  #     - 0.96
+  #     - 0.97
+  #     - 0.98
+  #     - 0.99
+  #     - 1.00
   #   allow_grid_expansion: false
   #   backstop: false
 
@@ -98,3 +141,11 @@ technology_palette:
     - hydro-unspecified
     - bioenergy-unspecified
     - battery
+  palette_3:
+    - photovoltaic-unspecified
+    - wind-offshore-unspecified
+    - wind-onshore
+    - hydro-unspecified
+    - bioenergy-unspecified
+    - battery
+    - hydrogen???

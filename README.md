@@ -65,3 +65,5 @@ We relied on several excellent previous analyses to do this work. In particular,
 
 ## Licence
 TODO
+
+- Change 100% RES to include grid imports
