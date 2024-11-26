@@ -179,11 +179,11 @@ def get_ci_procurement(n, ci_identifier):
     ci_load = n.loads_t.p.filter(regex=ci_identifier).sum().sum()
     return pd.DataFrame({
         # imports
-        'Grid import' : (
+        'Grid supply' : (
             n.links_t.p0.filter(regex=ci_identifier).filter(regex='Import').sum().sum() / ci_load,
         ),
         # exports
-        'Grid export' : (
+        'Excess' : (
             n.links_t.p1.filter(regex=ci_identifier).filter(regex='Export').sum().sum() / ci_load,
         ),
         # ppa
