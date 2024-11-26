@@ -4,9 +4,20 @@ import pypsa
 from tz_pypsa.model import Model
 
 def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
-    '''This function sets up the brownfield system
-    '''
+    """
     
+    Sets up the brownfield network based on the provided run configuration and global variables.
+
+    Parameters:
+    run (dict): A dictionary containing run-specific configurations such as 'stock_model', 'select_nodes', 'backstop', and 'allow_grid_expansion'.
+    configs (dict): A dictionary containing global configuration variables including 'frequency', 'timesteps', 'year', and 'set_global_constraints'.
+
+    Returns:
+    pypsa.Network: A PyPSA Network object with the brownfield system set up according to the provided configurations.
+
+    """
+    
+    # load the stock model from tza-pypsa 
     network = (
         Model.load_model(
             run['stock_model'], 
@@ -19,60 +30,14 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         )
     )
 
-    # ensure p_nom is extendable
+    # ensure p_nom is extendable in the brownfield network
     network.generators['p_nom_extendable']      = True
     network.storage_units['p_nom_extendable']   = True
     network.links['p_nom_extendable']           = run['allow_grid_expansion']
 
-    # set p_nom_min to prevent decommissioning of assets
+    # set p_nom_min to prevent early decommissioning of assets
     network.generators['p_nom_min']      = network.generators['p_nom']
     network.storage_units['p_nom_min']   = network.storage_units['p_nom']
     network.links['p_nom_min']           = network.links['p_nom']
 
     return network
-
-
-
-    # # ----------------------------------------------------------------------
-    # # ADD CONSTRAINTS
-    # # ----------------------------------------------------------------------
-
-    # lp_model = network.optimize.create_model()
-
-    # # Renewable targets
-    # # --------------------
-
-    # lp_model, network = constraint_clean_generation_target(lp_model, network, ci_nodes=run['nodes_with_ci_load'], configs=configs)
-
-    # # Charging storages with fossil fuels
-    # # --------------------
-
-    # if not configs['global_vars']['enable_fossil_charging']:
-    #     lp_model, network = constraint_fossil_storage_charging(lp_model, network)
-
-    # # solve
-    # print('Beginning optimization...')
-
-    # try:
-    #     network.optimize.solve_model(
-    #         solver_name=configs['global_vars']['solver'],
-    #     )
-    # except:
-    #     network.optimize(
-    #         solver_name=configs['global_vars']['solver'],
-    #         #solver_options={ 'solver': 'pdlp' },
-    #         #multi_year_investment=True,
-    #     )
-    
-    # # save results
-    # setup_dir(
-    #     path_to_dir=configs['paths']['output_model_runs'] + run['name'] + '/solved_networks/'
-    # )
-
-    # network.export_to_netcdf(
-    #     os.path.join(
-    #         configs['paths']['output_model_runs'], run['name'], 'solved_networks', 'brownfield_' + str(configs['global_vars']['year']) + '.nc'
-    #     )
-    # )
-    
-    # return network
