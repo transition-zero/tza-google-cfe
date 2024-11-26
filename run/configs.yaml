@@ -10,20 +10,19 @@
 # -------------------------------------------------------------------------
 
 paths:
-  output_model_runs: '../outputs/model_runs/'
+  output_model_runs: '../outputs/model_runs/' # path to save model run outputs
 
 
 global_vars:
-  year: 2030
-  frequency: 1h
-  timesteps: 8760
-  solver: gurobi
+  year: 2030 # year of the model run
+  frequency: 1h # time resolution of the model run (should be 1h for CFE)
+  timesteps: 8760 # number of timesteps in the model run (e.g., 24 = 1 day)
+  solver: gurobi # solver used to solve the optimization problem
   ci_label: C&I # this is a unique identifier for all CFE attributes in the network
-  backstop: false
-  enable_fossil_charging: false
-  enable_additionality: true
-  set_global_constraints: false
-  maximum_excess_export: 0.20
+  enable_fossil_charging: false # if true, the model will allow batteries to be charged by fossil fuels
+  enable_additionality: true # if true, the model will enforce additionality constraints
+  set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
+  maximum_excess_export: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid
 
 
 model_runs:
@@ -32,6 +31,7 @@ model_runs:
     palette: palette_1
     stock_model: ASEAN
     select_nodes:
+      #### here we can take a subset of nodes from the stock model
       - SGPXX
       # - MYSSK
       # - MYSPE
@@ -57,12 +57,12 @@ model_runs:
       # - KHMXX
       # - LAOXX
     nodes_with_ci_load:
+      #### here we can define which nodes (buses) we want to have a C&I load with a 24/7 CFE PPA
       - SGPXX
       # - MYSPE
     ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
     cfe_score: 
-      # percentage of C&I electricity demand that is met by carbon-free energy PPA
-      # 0.10 = 10% CFE matching
+      #### percentage of C&I electricity demand that is met by carbon-free energy PPA (0.10 = 10% CFE matching)
       # - 0.10
       # - 0.15
       # - 0.20
@@ -86,8 +86,8 @@ model_runs:
       - 0.98
       - 0.99
       - 1.00
-    allow_grid_expansion: false
-    backstop: false
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
   
   # - name: prelim-run-MYS-oct-2024
@@ -129,6 +129,7 @@ model_runs:
 
 
 technology_palette:
+  #### only palette 1 is currently supported
   palette_1:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
