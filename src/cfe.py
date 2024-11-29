@@ -250,3 +250,84 @@ def PrepareNetworkForCFE(
                 raise ValueError(f"Invalid technology: {technology}")
             
     return network
+
+
+def apply_cfe_constraint(
+        n : pypsa.Network, 
+        GridCFE : list, 
+        ci_buses : list, 
+        ci_identifier : str, 
+        CFE_Score : float,
+        max_excess_export : float,
+    ) -> pypsa.Network:
+    '''Set CFE constraint
+    '''
+    for bus in ci_buses:
+        # ---
+        # fetch necessary variables to implement CFE
+
+        CI_Demand = (
+            n.loads_t.p_set.filter(regex=bus).filter(regex=ci_identifier).values.flatten()
+        )
+
+        CI_StorageCharge = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Charge' in i and bus in i]
+            )
+            .sum(dims='Link')
+        )
+
+        CI_StorageDischarge = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Discharge' in i and bus in i]
+            )
+            .sum(dims='Link')
+        )
+
+        CI_GridExport = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Export' in i and bus in i]
+            )
+            .sum(dims='Link')
+        )
+
+        CI_GridImport = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i]
+            )
+            .sum(dims='Link')
+        )
+
+        CI_PPA = (
+            n.model.variables['Generator-p'].sel(
+                Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
+            )
+            .sum(dims='Generator')
+        )
+
+        # Constraint 1: Hourly matching
+        # ---------------------------------------------------------------
+
+        n.model.add_constraints(
+            CI_Demand == CI_PPA - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
+        )
+
+        # Constraint 2: CFE target
+        # ---------------------------------------------------------------
+        n.model.add_constraints(
+            ( CI_PPA - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
+        )
+
+        # Constraint 3: Excess
+        # ---------------------------------------------------------------
+        n.model.add_constraints(
+            CI_GridExport.sum() <= sum(CI_Demand) * max_excess_export,
+        )
+
+        # Constraint 4: Battery can only be charged by clean PPA (not grid)
+        # ---------------------------------------------------------------
+        n.model.add_constraints(
+            CI_PPA >= CI_StorageCharge,
+        )
+
+    return n

@@ -8,123 +8,87 @@ import matplotlib.pyplot as plt
 
 from matplotlib.ticker import MaxNLocator
 
-import src.helpers as helpers
-import src.postprocess as postprocess
-import src.plotting as plotting
-import src.postprocess_plotting as postprocess_plotting
+from src import (
+    brownfield, 
+    cfe,
+    helpers,
+    postprocess
+)
 
-from src.prepare_brownfield_network import SetupBrownfieldNetwork
-from src.prepare_network_for_cfe import PrepareNetworkForCFE
 
-def cfe_constraint(
+def GetGridCFE(
         n : pypsa.Network, 
-        GridCFE : list, 
-        ci_buses : list, 
-        ci_identifier : str, 
-        CFE_Score : float,
-    ) -> pypsa.Network:
-    '''Set CFE constraint
-    '''
-    for bus in ci_buses:
-        # ---
-        # fetch necessary variables to implement CFE
+        # bus : str,
+        ci_identifier : str,
+    ):
 
-        CI_Demand = (
-            n.loads_t.p_set.filter(regex=bus).filter(regex=ci_identifier).values.flatten()
-        )
+    """
+    
+    Calculate the CFE score of a grid, intra- and inter-regionally. Here, we follow the mathematical 
+    expressions presented by Xu and Jenkins (2021): https://acee.princeton.edu/24-7/
 
-        CI_StorageCharge = (
-            n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Charge' in i and bus in i]
-            )
-            .sum(dims='Link')
-        )
+    Parameters:
+    -----------
+    network : pypsa.Network
+        The optimised network for which we are calculating the GridCFE.
+    bus : str
+        The country bus for which we are calculating the GridCFE.
+    ci_identifier : str
+        The unique identifer used to identify C&I assets.
 
-        CI_StorageDischarge = (
-            n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Discharge' in i and bus in i]
-            )
-            .sum(dims='Link')
-        )
+    Returns:
+    -----------
+    CFE Score: list
+        Hourly resolution CFE scores for each snapshot in the network.
 
-        CI_GridExport = (
-            n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Export' in i and bus in i]
-            )
-            .sum(dims='Link')
-        )
+    Let:
+    -----------
+    R = Intra-regional grid
+    Z = Inter-regional grid
 
-        CI_GridImport = (
-            n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i]
-            )
-            .sum(dims='Link')
-        )
+    """
 
-        CI_PPA = (
-            n.model.variables['Generator-p'].sel(
-                Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
-            )
-            .sum(dims='Generator')
-        )
-
-        # Constraint 1: Hourly matching
-        # ---------------------------------------------------------------
-
-        n.model.add_constraints(
-            CI_Demand == CI_PPA - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
-        )
-
-        # Constraint 2: CFE target
-        # ---------------------------------------------------------------
-        n.model.add_constraints(
-            ( CI_PPA - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
-        )
-
-        # Constraint 3: Excess
-        # ---------------------------------------------------------------
-        n.model.add_constraints(
-            CI_GridExport.sum() <= sum(CI_Demand) * configs['global_vars']['maximum_excess_export'],
-        )
-
-        # Constraint 4: Battery can only be charged by clean PPA (not grid)
-        # ---------------------------------------------------------------
-        n.model.add_constraints(
-            CI_PPA >= CI_StorageCharge,
-        )
-
-    return n
-
-
-def GetGridCFE(n:pypsa.Network, ci_identifier, system_boundary='Local'):
-    '''Returns CFE of regional grid as a list of floats
-    '''
-    # TODO: can we add an option to toggle expansion of system boundary (e.g., local, anytown, anycountry, anothercountry etc.)
-    # get clean carriers
-    clean_carriers = [
+    # get global clean carriers
+    global_clean_carriers = [
         i for i in n.carriers.query(" co2_emissions <= 0").index.tolist() 
         if i in n.generators.carrier.tolist()
     ]
-    # get clean generators
-    clean_generators_grid = (
-        n.generators.loc[ 
-            (n.generators.carrier.isin(clean_carriers)) &
+
+    # get clean generators in R
+    R_clean_generators = (
+        n.generators.loc[
+            # clean carriers
+            (n.generators.carrier.isin(global_clean_carriers)) &
+            # exclude assets not in R
+            #(n.generators.index.str.contains(bus)) &
+            # exclude C&I assets
             (~n.generators.index.str.contains(ci_identifier))
         ]
         .index
     )
+    
     # get all generators
-    all_generators_grid = (
+    R_all_generators = (
         n.generators.loc[ 
             (~n.generators.index.str.contains(ci_identifier))
         ]
         .index
     )
-    # return CFE
-    return (n.generators_t.p[clean_generators_grid].sum(axis=1) / n.generators_t.p[all_generators_grid].sum(axis=1)).round(2).tolist()
+
+    # calculate CFE sceore
+    total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
+    total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
+
+    # return CFE score
+    return ( total_clean_generation / total_generation).round(2).tolist()
 
 
 def PostProcessBrownfield(n : pypsa.Network):
+    '''
+    This function post-processes the brownfield network to make it ready for the CFE and RES100 simulations.
+    The logic is that we fix all optimised capacities in 2030 (brownfield) and only allow the C&I assets to be extendable, 
+    representing the "additionality" of their PPA.
+    '''
     components = ['generators', 'links', 'storage_units']
     for c in components:
         # Fix p_nom to p_nom_opt for each component in brownfield network
@@ -139,10 +103,10 @@ def PostProcessBrownfield(n : pypsa.Network):
 def RunBrownfieldSimulation(run, configs):
     '''Setup and run the brownfield simulation
     '''
-    N_BROWNFIELD = SetupBrownfieldNetwork(run, configs)
+    N_BROWNFIELD = brownfield.SetupBrownfieldNetwork(run, configs)
 
     N_BROWNFIELD = (
-        PrepareNetworkForCFE(
+        cfe.PrepareNetworkForCFE(
             N_BROWNFIELD, 
             buses_with_ci_load=run['nodes_with_ci_load'],
             ci_load_fraction=run['ci_load_fraction'],
@@ -168,11 +132,11 @@ def RunBrownfieldSimulation(run, configs):
     return N_BROWNFIELD
 
 
-def RunRES100(N_BROWNFIELD : pypsa.Network):
-    '''
-    TODO: 
-    Right now, this assumes that we apply 100% RES at each bus, but in reality this type 
-    of procurement can happen at any bus. We need to think about how to implement this.
+def RunRES100(
+        N_BROWNFIELD : pypsa.Network,
+        #bus : str,
+    ):
+    '''Sets up the 100% RES (annual matching) simulation
     '''
     
     # make a copy of the brownfield
@@ -235,20 +199,10 @@ def RunRES100(N_BROWNFIELD : pypsa.Network):
             if ci_identifier not in i and bus[0:3] in i
         ]
 
-        GRID_CLEAN_GEN = (
-            N_RES_100
-            .model
-            .variables['Generator-p']
-            .sel(
-                Generator=clean_region_generators
-            )
-            .sum()
-        )
-
         # Constraint 1: Annual matching
         # ---------------------------------------------------------------
         N_RES_100.model.add_constraints(
-            CI_PPA >= (RES_TARGET/100) * CI_Demand, #+ GRID_CLEAN_GEN
+            CI_PPA >= (RES_TARGET/100) * CI_Demand,
             name = f'{RES_TARGET}_RES_constraint_{bus}',
         )
 
@@ -282,19 +236,45 @@ def RunCFE(N_BROWNFIELD : pypsa.Network, CFE_Score):
     # init linopy model
     N_CFE.optimize.create_model()
 
-    # Run a set of iterations to calculate GridSupply CFE
+    # ---------------------------------------------------------------
+    #
+    #   ITERATIVELY SOLVE FOR GRID CFE
+    #
+    #   Following Xu and Jenkins (2021), here we iteratively solve 
+    #   for the grid supply CFE score. We have to do this to avoid a 
+    #   a non-convex problem, where two dynamic decision variables 
+    #   (grid supply and grid CFE) are being multiplied by one another. 
+    #   This approach allows us to compute the grid CFE "a priori" and
+    #   then feed it as a parameter into the model.
+    #
+    #   The process is as follows:
+    #       1. Set the grid CFE to 0 and run the model
+    #       2. Calculate the real grid CFE from (1)
+    #       3. Now, fix the grid CFE to (2) and re-run the model
+    #       4. Calculate the grid CFE from (3) and compare against (2)
+    #       5. If the difference is less than 0.01, stop. Otherwise, repeat from (3)
+    # 
+    # ---------------------------------------------------------------
+
+    # start a counter and initialise a dataframe to store the results
     count = 1
     GridSupplyCFE = pd.DataFrame({})
+
+    # [Step 1] Run the model with grid supply CFE set to 0
     GridCFE = [0 for i in range(N_CFE.snapshots.size)]
     GridSupplyCFE[f'iteration_{count}'] = GridCFE
 
-    # set CFE constraint
-    N_CFE = cfe_constraint(
-        N_CFE, 
-        GridCFE, 
-        run['nodes_with_ci_load'], 
-        ci_identifier, 
-        CFE_Score
+    # apply the CFE constraint
+    N_CFE = (
+        cfe
+        .apply_cfe_constraint(
+            N_CFE, 
+            GridCFE, 
+            run['nodes_with_ci_load'], 
+            ci_identifier, 
+            CFE_Score,
+            configs['global_vars']['maximum_excess_export'],
+        )
     )
 
     # optimise
@@ -305,15 +285,16 @@ def RunCFE(N_BROWNFIELD : pypsa.Network, CFE_Score):
     count += 1
     GridSupplyCFE[f'iteration_{count}'] = GridCFE
 
-    # calculate difference between iterations with a maximum of 10 loops
-    max_iterations = 10
+    # calculate difference between iterations with a maximum of 100 loops
+    max_iterations = 100
     while (GridSupplyCFE[f'iteration_{count}'].sum() - GridSupplyCFE[f'iteration_{count-1}'].sum()) > 0.01 and count < max_iterations:
-        N_CFE = cfe_constraint(
+        N_CFE = cfe.apply_cfe_constraint(
             N_CFE, 
             GridCFE, 
             run['nodes_with_ci_load'], 
             ci_identifier, 
-            CFE_Score
+            CFE_Score,
+            configs['global_vars']['maximum_excess_export'],
         )
         N_CFE.optimize.solve_model(solver_name='gurobi')
         GridCFE = GetGridCFE(N_CFE, ci_identifier)
@@ -348,38 +329,36 @@ if __name__ == '__main__':
     print('BEGIN MODEL RUNS')
     print('')
 
-    # setup params
-    RES_TARGET = 100
-    ci_identifier = 'C&I'
-
     # get config file
     configs = helpers.load_configs('configs.yaml')
+    ci_identifier = configs['global_vars']['ci_label']
 
     # ----------------------------------------------------------------------
     # RUN SCENARIOS
     # ----------------------------------------------------------------------
-    # scenarios = {}
-    # for run in configs['model_runs']:
+    scenarios = {}
+    for run in configs['model_runs']:
 
-    #     # setup a directory for outputs
-    #     helpers.setup_dir(
-    #         path_to_dir=configs['paths']['output_model_runs'] + run['name'] + '/solved_networks/'
-    #     )
+        # setup a directory for outputs
+        helpers.setup_dir(
+            path_to_dir=configs['paths']['output_model_runs'] + run['name'] + '/solved_networks/'
+        )
 
-    #     print('Running: ' + run['name'])
+        print('Running: ' + run['name'])
 
-    #     # Run brownfield
-    #     print('Compute brownfield scenario...')
-    #     N_BROWNFIELD = RunBrownfieldSimulation(run, configs)
+        # Run brownfield
+        print('Compute brownfield scenario...')
+        N_BROWNFIELD = RunBrownfieldSimulation(run, configs)
 
-    #     # 100% RES SIMULATION
-    #     print(f'Computing annual matching scenario (RES Target: {int(RES_TARGET)}%)...')
-    #     RunRES100(N_BROWNFIELD)
+        # 100% RES SIMULATION
+        RES_TARGET = 100
+        print(f'Computing annual matching scenario (RES Target: {int(RES_TARGET)}%)...')
+        RunRES100(N_BROWNFIELD)
 
-    #     # Compute hourly matching scenarios
-    #     for CFE_Score in run['cfe_score']:
-    #         print(f'Computing hourly matching scenario (CFE: {int(CFE_Score*100)}...')
-    #         RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score)
+        # Compute hourly matching scenarios
+        for CFE_Score in run['cfe_score']:
+            print(f'Computing hourly matching scenario (CFE: {int(CFE_Score*100)}...')
+            RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score)
 
     # ----------------------------------------------------------------------
     # MAKE PLOTS FOR EACH SCENARIO

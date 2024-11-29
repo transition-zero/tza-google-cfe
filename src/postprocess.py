@@ -10,8 +10,6 @@ from matplotlib.ticker import MaxNLocator
 from . import plotting as cplt
 from . import get as cget
 
-from . import postprocess_plotting
-
 def plot_results(path_to_run_dir: str):
     '''Plot results for a given run
     '''
