@@ -6,8 +6,8 @@
 
 <div style="display: flex; justify-content: space-around; align-items: center;">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/tza-google-cfe/blob/implement-cfe-constr/demo/simple-model.png">
-    <img alt="TransitionZero Logo" width="800 px" src="https://github.com/transition-zero/tza-google-cfe/blob/implement-cfe-constr/demo/simple-model.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/transition-zero/tza-google-cfe/blob/main/docs/simple-model.png">
+    <img alt="TransitionZero Logo" width="800 px" src="https://github.com/transition-zero/tza-google-cfe/blob/main/docs/simple-model.png">
   </picture>
 </div>
 
