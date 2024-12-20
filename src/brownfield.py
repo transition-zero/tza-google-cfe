@@ -2,6 +2,10 @@
 import pypsa
 
 from tz_pypsa.model import Model
+from tz_pypsa.constraints import (constr_bus_self_sufficiency, 
+                                  constr_cumulative_p_nom, 
+                                  constr_policy_targets, 
+                                  constr_max_annual_utilisation)
 
 def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
     """
@@ -31,6 +35,14 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
     )
+        
+    # Instantiate the linopy model
+    lp_model = network.optimize.create_model()
+
+    # Add policy target constraints to the linopy model
+    constr_policy_targets(network,
+                          lp_model,
+                          run['stock_model'])
 
     # ensure p_nom is extendable in the brownfield network
     network.generators['p_nom_extendable']      = True
