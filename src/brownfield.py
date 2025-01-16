@@ -19,15 +19,16 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
 
     """
     
-    # load the stock model from tza-pypsa 
+    # load csv stock model from tza-pypsa 
     network = (
-        Model.load_model(
-            run['stock_model'], 
+        Model.load_csv_from_dir(
+            "/home/dwelsby/repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan",
+            #run['stock_model'], 
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
             select_nodes=run['select_nodes'], 
             years=[ configs['global_vars']['year'] ],
-            backstop=run['backstop'],
+            #backstop=run['backstop'],
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
     )

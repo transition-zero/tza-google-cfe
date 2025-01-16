@@ -258,8 +258,8 @@ def PrepareNetworkForCFE(
                 #     cyclic_state_of_charge=True,
                 # )
 
-            else:
-                raise ValueError(f"Invalid technology: {technology}")
+            # else:
+            #     raise ValueError(f"Invalid technology: {technology}")
             
     return network
 
