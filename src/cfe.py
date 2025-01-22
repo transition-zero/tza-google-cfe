@@ -165,7 +165,9 @@ def PrepareNetworkForCFE(
                 )
 
                 # get capacity factors if technology is renewable
-                cf = network.generators_t.p_max_pu.filter(regex = bus + '-' + technology)
+                # cf = network.generators_t.p_max_pu.filter(regex = bus + '-' + technology)
+                cf = network.generators_t.p_max_pu.filter(regex = technology)
+                
                 if cf.empty:
                     cf = params['p_max_pu']
                 else:

@@ -22,7 +22,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
     # load csv stock model from tza-pypsa 
     network = (
         Model.load_csv_from_dir(
-            "/home/dwelsby/repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan",
+            configs['paths']['path_to_model'], 
             #run['stock_model'], 
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
