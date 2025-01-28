@@ -26,14 +26,17 @@ global_vars:
 
 model_runs:
 
-  - name: test-for-tech-wizards
+  - name: test-min-bus-generation
     palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
       - JPN02
+      - JPN03
     nodes_with_ci_load:
       - JPN01
+      - JPN02
+      - JPN03
     cfe_score: 
       - 0.6
     ci_load_fraction: 0.25 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
@@ -146,7 +149,9 @@ technology_palette:
   palette_1:
     - JPN01-Solar
     - JPN01-Wind
-    - Batteries
+    - JPN02-Solar
+    - JPN02-Wind 
+    - Batteries # carrier name rather than generator name to get picked up in cfe scripts
   # palette_2:
   #   - photovoltaic-unspecified
   #   - wind-offshore-unspecified
