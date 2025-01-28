@@ -2,6 +2,7 @@
 import pypsa
 
 from tz_pypsa.model import Model
+from tz_pypsa.constraints import constr_bus_self_sufficiency
 
 def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
     """
@@ -33,13 +34,16 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         )
     )
 
-    # lp_model = network.optimize.create_model()
+    lp_model = network.optimize.create_model()
 
     # constr_policy_targets(network,
     #                       lp_model,
     #                       configs['paths']['path_to_model'])
 
-    # constr_bus_self_sufficiency()
+    constr_bus_self_sufficiency(network,
+                                lp_model,
+                                min_self_sufficiency = network.buses.bus_self_sufficiency)
+    
     # constr_max_annual_utilisation()
 
     network.buses['bus_self_sufficiency']       = network.buses['bus_self_sufficiency']
