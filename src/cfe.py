@@ -56,6 +56,7 @@ def PrepareNetworkForCFE(
         ci_bus_name = f'{bus} C&I Grid'
         ci_load_name = f'{bus} C&I Load'
         ci_storage_bus_name = f'{bus} C&I Storage'
+        ci_hydrogen_bus_name = f'{bus} C&I Hydrogen'
 
         # add a bus for the C&I system
         network.add(
@@ -139,6 +140,57 @@ def PrepareNetworkForCFE(
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
+
+        # add H2 supply chain
+
+        network.add(
+            'Bus',
+            ci_hydrogen_bus_name,
+            carrier='Hydrogen',
+            x = network.buses.x.iloc[0] - 1, # add jitter
+            y = network.buses.y.iloc[0] - 1, # add jitter
+        )
+
+        network.add(
+            "Carrier",
+            "Hydrogen electrolyser",
+            co2_emissions=0,
+        )
+
+        network.add(
+            "Carrier",
+            "Hydrogen pipeline",
+            co2_emissions=0,
+        )            
+
+        network.add(
+            "Link",
+            f"{bus} Hydrogen electrolyser",
+            bus0=ci_bus_name, 
+            bus1=ci_hydrogen_bus_name, 
+            p_nom=0,
+            p_nom_extendable=p_nom_extendable,
+            carrier='Hydrogen electrolyser',
+            # add small capital and marginal costs to prevent model infeasibilities
+            marginal_cost=0,#1.32, # EU TIMES data as placeholder
+            capital_cost=0,#107132, # EU TIMES small decentralised electrolyser data as placeholder
+            efficiency=0.68,
+        )
+
+        network.add(
+            "Link",
+            f"{bus} Hydrogen pipeline",
+            bus0=ci_hydrogen_bus_name, 
+            bus1=ci_bus_name, 
+            p_nom=0,
+            p_nom_extendable=p_nom_extendable,
+            carrier='Hydrogen',
+            # add small capital and marginal costs to prevent model infeasibilities
+            marginal_cost=0,#1980, # EU TIMES data as placeholder
+            capital_cost=0,#199754, # EU TIMES data as placeholder
+            efficiency=0,# 0.94 # EU TIMES data as placeholder,
+        )
+
 
         # STEP 3:
         # Add generators and storages to C&I bus within the technology palette. 
@@ -249,15 +301,15 @@ def PrepareNetworkForCFE(
 
                 # network.add(
                 #     "StorageUnit",
-                #     "hydrogen storage underground",
+                #     "Hydrogen storage",
                 #     bus = ci_storage_bus_name,
-                #     carrier="hydrogen storage underground",
-                #     max_hours=168,
-                #     capital_cost=1e12,
-                #     efficiency_store=0.44,
-                #     efficiency_dispatch=0.44,
-                #     p_nom_extendable=True,
+                #     carrier="hydrogen storage",
+                #     p_nom_extendable = p_nom_extendable,
                 #     cyclic_state_of_charge=True,
+                #     max_hours=params['max_hours'],
+                #     build_year=params['build_year'],
+                #     carrier=params['carrier'],
+                #     capital_cost=params['capital_cost'],
                 # )
 
             # else:
