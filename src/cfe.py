@@ -153,24 +153,24 @@ def PrepareNetworkForCFE(
 
         network.add(
             "Carrier",
-            "Hydrogen electrolyser",
+            "Hydrogen electrolysis",
             co2_emissions=0,
         )
 
         network.add(
             "Carrier",
-            "Hydrogen pipeline",
+            "Hydrogen transport",
             co2_emissions=0,
         )            
 
         network.add(
             "Link",
-            f"{bus} Hydrogen electrolyser",
+            f"{bus} Hydrogen electrolysis",
             bus0=ci_bus_name, 
             bus1=ci_hydrogen_bus_name, 
             p_nom=0,
-            p_nom_extendable=p_nom_extendable,
-            carrier='Hydrogen electrolyser',
+            p_nom_extendable=True,
+            carrier='Hydrogen electrolysis',
             # add small capital and marginal costs to prevent model infeasibilities
             marginal_cost=0,#1.32, # EU TIMES data as placeholder
             capital_cost=0,#107132, # EU TIMES small decentralised electrolyser data as placeholder
@@ -179,16 +179,16 @@ def PrepareNetworkForCFE(
 
         network.add(
             "Link",
-            f"{bus} Hydrogen pipeline",
+            f"{bus} Hydrogen transport",
             bus0=ci_hydrogen_bus_name, 
             bus1=ci_bus_name, 
             p_nom=0,
-            p_nom_extendable=p_nom_extendable,
+            p_nom_extendable=True,
             carrier='Hydrogen',
             # add small capital and marginal costs to prevent model infeasibilities
             marginal_cost=0,#1980, # EU TIMES data as placeholder
             capital_cost=0,#199754, # EU TIMES data as placeholder
-            efficiency=0,# 0.94 # EU TIMES data as placeholder,
+            efficiency=0.94,# 0.94 # EU TIMES data as placeholder,
         )
 
 

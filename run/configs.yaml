@@ -36,7 +36,7 @@ model_runs:
       # - JPN02
       # - JPN03
     cfe_score: 
-      - 0.6
+      - 0.8
     ci_load_fraction: 0.25 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
