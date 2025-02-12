@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------
 #
 #   CONFIGS
-#   
+#
 #     xxx
 #
 #     Authors:
@@ -10,8 +10,8 @@
 # -------------------------------------------------------------------------
 
 paths:
-  output_model_runs: '../outputs/model_runs/' # path to save model run outputs
-
+  brownfield_models: "../networks/brownfield/"
+  output_model_runs: "../outputs/model_runs/" # path to save model run outputs
 
 global_vars:
   year: 2030 # year of the model run
@@ -23,9 +23,7 @@ global_vars:
   set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
   maximum_excess_export: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid
 
-
 model_runs:
-
   - name: test-for-tech-wizards
     palette: palette_1
     stock_model: ASEAN
@@ -34,7 +32,7 @@ model_runs:
       - MYSSK
     nodes_with_ci_load:
       - SGPXX
-    cfe_score: 
+    cfe_score:
       - 0.6
       - 0.7
       - 0.8
@@ -77,7 +75,7 @@ model_runs:
   #     #### Define which nodes (buses) we want to have a C&I load with a 24/7 CFE PPA
   #     #### ((Note: we can only model C&I at one node at a time right now. Multi-node C&I is WIP.))
   #     - SGPXX
-  #   cfe_score: 
+  #   cfe_score:
   #     #### percentage of C&I electricity demand that is met by carbon-free energy PPA (0.10 = 10% CFE matching)
   #     # - 0.10
   #     # - 0.15
@@ -106,7 +104,6 @@ model_runs:
   #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
   #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
-  
   # - name: prelim-run-MYS-oct-2024
   #   palette: palette_1
   #   stock_model: ASEAN
@@ -115,7 +112,7 @@ model_runs:
   #   nodes_with_ci_load:
   #     - MYSSK
   #   ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
-  #   cfe_score: 
+  #   cfe_score:
   #     # percentage of C&I electricity demand that is met by carbon-free energy PPA
   #     # 0.10 = 10% CFE matching
   #     # - 0.10
@@ -143,7 +140,6 @@ model_runs:
   #     - 1.00
   #   allow_grid_expansion: false
   #   backstop: false
-
 
 technology_palette:
   #### only palette 1 is currently supported

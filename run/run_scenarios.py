@@ -114,7 +114,7 @@ def RunBrownfieldSimulation(run, configs):
 
     N_BROWNFIELD.export_to_netcdf(
         os.path.join(
-            configs["paths"]["output_model_runs"],
+            configs["paths"]["brownfield_models"],
             run["name"],
             "solved_networks",
             "brownfield_" + str(configs["global_vars"]["year"]) + ".nc",
