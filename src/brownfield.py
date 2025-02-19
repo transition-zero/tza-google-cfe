@@ -24,7 +24,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
     network = (
         Model.load_csv_from_dir(
             configs['paths']['path_to_model'], 
-            #run['stock_model'], 
+            run['stock_model'], 
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
             #select_nodes=configs['global_vars']['select_nodes'], 
@@ -34,20 +34,6 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         )
     )
 
-    lp_model = network.optimize.create_model()
-
-    # constr_policy_targets(network,
-    #                       lp_model,
-    #                       configs['paths']['path_to_model'])
-
-    constr_bus_self_sufficiency(network,
-                                lp_model,
-                                min_self_sufficiency = network.buses.bus_self_sufficiency)
-    
-    # constr_max_annual_utilisation()
-
-    network.buses['bus_self_sufficiency']       = network.buses['bus_self_sufficiency']
-    network.carriers['max_annual_utilisation']  = network.carriers['max_annual_utilisation']
 
     # ensure p_nom is extendable in the brownfield network
     network.generators['p_nom_extendable']      = True
