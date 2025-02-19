@@ -172,8 +172,8 @@ def PrepareNetworkForCFE(
             p_nom_extendable=True,
             carrier='Hydrogen electrolysis',
             # add small capital and marginal costs to prevent model infeasibilities
-            marginal_cost=0,#1.32, # EU TIMES data as placeholder
-            capital_cost=0,#107132, # EU TIMES small decentralised electrolyser data as placeholder
+            marginal_cost=1.32, # EU TIMES data as placeholder
+            capital_cost=107132, # EU TIMES small decentralised electrolyser data as placeholder
             efficiency=0.68,
         )
 
@@ -186,8 +186,8 @@ def PrepareNetworkForCFE(
             p_nom_extendable=True,
             carrier='Hydrogen',
             # add small capital and marginal costs to prevent model infeasibilities
-            marginal_cost=0,#1980, # EU TIMES data as placeholder
-            capital_cost=0,#199754, # EU TIMES data as placeholder
+            marginal_cost=1980, # EU TIMES data as placeholder
+            capital_cost=199754, # EU TIMES data as placeholder
             efficiency=0.94,# 0.94 # EU TIMES data as placeholder,
         )
 

@@ -11,7 +11,7 @@
 
 paths:
   output_model_runs: '../outputs/model_runs/' # path to save model run outputs
-  path_to_model: /repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan" # load directory of model here
+  path_to_model: '/home/dwelsby/repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan' # load directory of model here
 
 global_vars:
   year: 2030 # year of the model run
