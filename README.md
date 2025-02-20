@@ -42,7 +42,7 @@ Using `uv`:
 
 Create a virtual environment:
 ```bash
-uv create .venv
+uv venv
 ```
 
 Activate the virtual environment: 
