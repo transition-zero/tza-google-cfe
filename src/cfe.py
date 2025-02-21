@@ -301,12 +301,12 @@ def apply_cfe_constraint(
                 Link=[i for i in n.links.index if ci_identifier in i and 'Export' in i and bus in i]
             )
             .sum(dims='Link') 
-            + 
-            ((1-n.generators.carbon_free_score) *
-            (n.model.variables['Generator-p'].sel(
-                Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
-            )).sum(dims='Generator') 
-            )
+            # + 
+            # ((1-n.generators.carbon_free_score) *
+            # (n.model.variables['Generator-p'].sel(
+            #     Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
+            # )).sum(dims='Generator') 
+            # )
         )
 
         CI_GridImport = (
@@ -318,7 +318,7 @@ def apply_cfe_constraint(
 
         # for pure non-carbon generators the crbon_free_score is 1
         CI_PPA = (
-            n.generators.carbon_free_score *
+            # n.generators.carbon_free_score *
             (n.model.variables['Generator-p'].sel(
                 Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
             ))
