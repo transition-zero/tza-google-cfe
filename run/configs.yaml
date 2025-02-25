@@ -148,7 +148,7 @@ technology_palette:
     - JPN01-Solar
     - JPN01-Wind
     - Batteries # carrier name rather than generator name to get picked up in cfe scripts
-    #- JPN01-Gas-Hydrogen-Cofiring-Unit1
+    - JPN01-Gas-Hydrogen-Cofiring-Unit1
   # palette_2:
   #   - photovoltaic-unspecified
   #   - wind-offshore-unspecified
