@@ -40,10 +40,11 @@ def solve_brownfield_network(run, configs) -> pypsa.Network:
 def run_scenarios(configs):
     for run in configs["model_runs"]:
         print(f"Running: {run['name']}")
+        ci_identifier = configs["global_vars"]["ci_label"]
         N_BROWNFIELD = RunBrownfieldSimulation(run, configs)
         for CFE_Score in run["cfe_score"]:
             print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}...")
-            RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score)
+            RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score,ci_identifier=ci_identifier,run=run,configs=configs)
         path_to_run_dir = os.path.join(
             configs["paths"]["output_model_runs"], run["name"]
         )
@@ -107,3 +108,4 @@ def run_full_cfe(config):
 
 if __name__ == "__main__":
     cli()
+
