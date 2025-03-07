@@ -7,7 +7,7 @@ from run.run_scenarios import RunBrownfieldSimulation, RunCFE, RunRES100
 from src import brownfield, cfe, helpers, postprocess
 
 
-def build_brownfield_network(run, configs, with_cfe: bool) -> None:
+def build_brownfield_network(run, configs) -> None:
     """
     Builds and exports a brownfield network based on the provided run configuration.
     Args:
