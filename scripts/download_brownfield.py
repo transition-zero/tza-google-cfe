@@ -60,7 +60,7 @@ def prepare_brownfield(run: dict, network: pypsa.Network) -> pypsa.Network:
     network.generators["p_nom_extendable"] = True
     network.storage_units["p_nom_extendable"] = True
     network.links["p_nom_extendable"] = run["allow_grid_expansion"]
-
+    network.generators["committable"] = False
     network.generators["p_nom_min"] = network.generators["p_nom"]
     network.storage_units["p_nom_min"] = network.storage_units["p_nom"]
     network.links["p_nom_min"] = network.links["p_nom"]
