@@ -81,4 +81,4 @@ if __name__ == "__main__":
         network=network,
         run=run,
     )
-    network.export_to_netcdf(snakemake.output[0])
+    network.export_to_netcdf(snakemake.output.original_brownfield)

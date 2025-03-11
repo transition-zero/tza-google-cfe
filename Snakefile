@@ -11,5 +11,13 @@ configfile: "config.yaml"
 RDIR = config['results_dir'] + config['run']
 
 rule download_brownfield:
-    output: RDIR + "/brownfield/original_brownfield.nc"
+    output: 
+        original_brownfield = RDIR + "/brownfield/original_brownfield.nc"
     script: "scripts/download_brownfield.py"
+
+rule add_cfe_to_brownfield:
+    input: 
+        original_brownfield = RDIR + "/brownfield/original_brownfield.nc"
+    output: 
+        cfe_brownfield = RDIR + "/brownfield/cfe_brownfield.nc"
+    script: "scripts/add_cfe_to_brownfield.py"
