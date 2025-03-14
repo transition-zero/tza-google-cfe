@@ -7,3 +7,5 @@ outputs/*
 networks/
 .snakemake/
 .vscode/
+results/*
+gurobi.log
