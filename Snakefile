@@ -21,3 +21,10 @@ rule add_cfe_to_brownfield:
     output: 
         cfe_brownfield = RDIR + "/brownfield/cfe_brownfield.nc"
     script: "scripts/add_cfe_to_brownfield.py"
+
+rule solve_brownfield:
+    input:
+        cfe_brownfield = RDIR + "/brownfield/cfe_brownfield.nc"
+    output: 
+        solved_cfe_brownfield = RDIR + "/brownfield/solved_cfe_brownfield.nc"
+    script: "scripts/solve_brownfield.py"
