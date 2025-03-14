@@ -28,3 +28,17 @@ rule solve_brownfield:
     output: 
         solved_cfe_brownfield = RDIR + "/brownfield/solved_cfe_brownfield.nc"
     script: "scripts/solve_brownfield.py"
+
+rule prepare_brownfield_for_cfe:
+    input:
+        solved_cfe_brownfield = RDIR + "/brownfield/solved_cfe_brownfield.nc"
+    output:
+        prepared_cfe_brownfield = RDIR + "/brownfield/prepared_cfe_brownfield.nc"
+    script: "scripts/prepare_brownfield_for_cfe.py"
+
+rule run_annual_matching:
+    input:
+        prepared_cfe_brownfield = RDIR + "/brownfield/prepared_cfe_brownfield.nc"
+    output:
+        annual_matching = RDIR + "/cfe_100/annual_matching.nc"
+    script: "scripts/run_annual_matching.py"
