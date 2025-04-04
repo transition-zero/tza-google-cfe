@@ -272,6 +272,7 @@ def apply_cfe_constraint(
         ci_identifier : str, 
         CFE_Score : float,
         max_excess_export : float,
+        technology_palette: list,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
