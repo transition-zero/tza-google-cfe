@@ -201,6 +201,8 @@ def PrepareNetworkForCFE(
                     ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
                     min_up_time = params['min_up_time'], # 
                     min_down_time = params['min_down_time'], # 
+                    is_blend_or_ccs = params['is_blend_or_ccs'],
+                    generation_blend_share = params['generation_blend_share']
                 )
                 
             elif technology in network.storage_units.carrier.unique():
@@ -271,6 +273,7 @@ def apply_cfe_constraint(
         ci_identifier : str, 
         CFE_Score : float,
         max_excess_export : float,
+        technology_palette: list,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
@@ -301,12 +304,7 @@ def apply_cfe_constraint(
                 Link=[i for i in n.links.index if ci_identifier in i and 'Export' in i and bus in i]
             )
             .sum(dims='Link') 
-            + 
-        (
-            ((n.model.variables['Generator-p'].sel(
-                Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
-            )) * (1-n.generators.carbon_free_score[n.generators.index])).sum(dims='Generator') 
-            )
+            
         ) 
 
         CI_GridImport = (
@@ -316,26 +314,52 @@ def apply_cfe_constraint(
             .sum(dims='Link')
         )
 
-        # for pure non-carbon generators the crbon_free_score is 1
-        CI_PPA = (
+        for each_generator in technology_palette:
+
+            if n.generators.loc[each_generator].is_blend_or_ccs == False:
             
-            ((n.model.variables['Generator-p'].sel(
-                Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
-            )) * (n.generators.carbon_free_score[n.generators.index]))
-            .sum(dims='Generator')
-        )
+                CI_PPA_Clean = (
+            
+                ((n.model.variables['Generator-p'].sel(
+                    Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
+                )))
+                .sum(dims='Generator')
+                )
+
+            else:
+                
+                if n.carriers.loc[n.generators.loc[each_generator].carrier].co2_emissions == 0:
+
+                    CI_PPA_Clean = (
+                
+                    ((n.model.variables['Generator-p'].sel(
+                        Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
+                    )))
+                    .sum(dims='Generator')
+                    )
+
+                else:
+
+                    CI_PPA_Fossil = (
+
+                    ((n.model.variables['Generator-p'].sel(
+                        Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i]
+                    )))
+                    .sum(dims='Generator')
+                    )
+
 
         # Constraint 1: Hourly matching
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
+            CI_Demand == CI_PPA_Clean - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
         )
 
         # Constraint 2: CFE target
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
+            ( CI_PPA_Clean - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
         )
 
         # Constraint 3: Excess
@@ -347,7 +371,13 @@ def apply_cfe_constraint(
         # Constraint 4: Battery can only be charged by clean PPA (not grid)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            CI_PPA >= CI_StorageCharge,
+            CI_PPA_Clean >= CI_StorageCharge,
+        )
+
+        # Constraint 5: Force fossil fuel production (from blended or CCS) to be exported
+
+        n.model.add_constraints(
+            CI_GridExport >= CI_PPA_Fossil
         )
 
     return n
