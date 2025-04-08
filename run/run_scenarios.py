@@ -5,8 +5,8 @@ import pandas as pd
 import pypsa
 
 from tz_pypsa.constraints import (
-    constr_cumulative_p_nom,
     constr_bus_self_sufficiency,
+    constr_max_annual_utilisation,
     constr_policy_targets
 )
 
@@ -111,24 +111,23 @@ def RunBrownfieldSimulation(run, configs):
     print("prepared network for CFE")
     print("Begin solving...")
     # solver_options = {"Method": "barrier", "Presolve": 2, "Threads": 4, "Cores": 2}
-    N_BROWNFIELD.optimize(solver_name=configs["global_vars"]["solver"])
+    # N_BROWNFIELD.optimize(solver_name=configs["global_vars"]["solver"])
 
-    lp_model = N_BROWNFIELD.optimize.create_model()
+    # lp_model = N_BROWNFIELD.optimize.create_model()
+    N_BROWNFIELD.optimize.create_model()
 
-    # -------------------------------------------------------
-    # CUMULATIVE P_NOM_MAX CONSTRAINT
-    # -------------------------------------------------------
-    constr_cumulative_p_nom(N_BROWNFIELD, lp_model)
-
-    # -------------------------------------------------------
     # BUS SELF SUFFICIENCY CONSTRAINT
-    # -------------------------------------------------------
-    constr_bus_self_sufficiency(N_BROWNFIELD, lp_model, min_self_sufficiency = 0.6)
+    constr_bus_self_sufficiency(N_BROWNFIELD, 
+                                min_self_sufficiency = 0.6)
 
-    # -------------------------------------------------------
+    # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
+    constr_max_annual_utilisation(N_BROWNFIELD, 
+                                  max_utilisation_rate = 0.85, 
+                                  carriers = ['coal','gas','biomass','biogas','oil','geothermal'])
+
     # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
-    # -------------------------------------------------------
-    constr_policy_targets(N_BROWNFIELD, lp_model, stock_model = 'ASEAN')
+    constr_policy_targets(N_BROWNFIELD, 
+                          "ASEAN")
 
     N_BROWNFIELD.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 

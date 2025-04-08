@@ -52,22 +52,25 @@ def solve_brownfield_network(run, configs, with_cfe: bool) -> pypsa.Network:
         )
     else:
         final_brownfield = tza_brownfield_network
-    final_brownfield.optimize(solver_name=configs["global_vars"]["solver"])
+    # final_brownfield.optimize(solver_name=configs["global_vars"]["solver"])
 
-    lp_model = final_brownfield.optimize.create_model()
+    # lp_model = final_brownfield.optimize.create_model()
 
-    # CUMULATIVE P_NOM_MAX CONSTRAINT 
-    # constr_cumulative_p_nom(final_brownfield, lp_model)
+    final_brownfield.optimize.create_model()
 
     # BUS SELF SUFFICIENCY CONSTRAINT
-    constr_bus_self_sufficiency(final_brownfield, lp_model, min_self_sufficiency = 0.6)
+    constr_bus_self_sufficiency(final_brownfield, 
+                                min_self_sufficiency = 0.6)
 
     # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
-    constr_max_annual_utilisation(final_brownfield, max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas'])
+    constr_max_annual_utilisation(final_brownfield, 
+                                  max_utilisation_rate = 0.85, 
+                                  carriers = ['coal','gas','biomass','biogas','oil','geothermal'])
 
     # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
-    constr_policy_targets(final_brownfield, lp_model, stock_model = 'ASEAN')
+    constr_policy_targets(final_brownfield, 
+                          "ASEAN")
+                        #   stock_model = configs["model_runs"]["stock_model"])
 
     final_brownfield.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 
