@@ -5,3 +5,7 @@ __pycache__/
 src/scrap.py
 outputs/*
 networks/
+.snakemake/
+.vscode/
+results/*
+gurobi.log

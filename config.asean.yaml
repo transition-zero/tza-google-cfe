@@ -9,9 +9,11 @@
 #
 # -------------------------------------------------------------------------
 
+run: test-snakemake-asean
+results_dir: results/
 paths:
- brownfield_models: "networks/brownfield/"
- output_model_runs: "outputs/model_runs/" # path to save model run outputs
+  brownfield_models: "networks/brownfield/"
+  output_model_runs: "outputs/model_runs/" # path to save model run outputs
 
 global_vars:
   year: 2030 # year of the model run
@@ -22,7 +24,7 @@ global_vars:
   enable_fossil_charging: false # if true, the model will allow batteries to be charged by fossil fuels
   set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
   maximum_excess_export: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid
-
+  stock_model: ASEAN
 model_runs:
   - name: ASEAN_full_CFE_highs
     palette: palette_1
