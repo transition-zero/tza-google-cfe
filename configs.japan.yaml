@@ -12,7 +12,7 @@
 paths:
  brownfield_models: "networks/brownfield/"
  output_model_runs: "outputs/model_runs/" # path to save model run outputs
- path_to_model: 'tza-pypsa/stock_models/Japan' # load directory of model 
+ path_to_model: '/home/dwelsby/repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan_2Node_Test_Blend' # load directory of model 
 
 
   # path_to_model: '/home/dwelsby/repos/tz-pypsa-workspace/tza-pypsa/stock_models/Japan' # load directory of model here
@@ -30,18 +30,20 @@ global_vars:
 
 model_runs:
 
-  - name: JAPAN_28_02_25_with_cfe_gurobi
+  - name: Test_JPN_Blend
     palette: palette_1
-    stock_model: Japan
+    stock_model: Japan_2Node_Test_Blend
     select_nodes:
-      - JPN01
+      - JPN02
+      - JPN03
     nodes_with_ci_load:
-      - JPN01
+      - JPN02
       # - JPN02
       # - JPN03
     cfe_score: 
       - 0.9
-    ci_load_fraction: 0.25 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+      - 1
+    ci_load_fraction: 0.08 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
@@ -149,8 +151,9 @@ model_runs:
 technology_palette:
   #### only palette 1 is currently supported
   palette_1:
-      - 'wind-onshore'
-      - 'photovoltaic-unspecified'
+    - JPN02-Solar
+    - JPN02-Wind
+    - Batteries
     # - JPN01-Solar
     # - JPN01-Wind
     # - Batteries # carrier name rather than generator name to get picked up in cfe scripts

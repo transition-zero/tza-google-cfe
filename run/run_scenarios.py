@@ -265,6 +265,7 @@ def RunCFE(
         ci_identifier,
         CFE_Score,
         configs["global_vars"]["maximum_excess_export"],
+        configs["technology_palette"][run["palette"]],
     )
 
     # optimise
