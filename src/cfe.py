@@ -312,9 +312,9 @@ def apply_cfe_constraint(
             .sum(dims='Link')
         )
 
-        for each_generator in technology_palette:
+        for technology in technology_palette:
 
-            if n.generators.loc[each_generator].is_blend_or_ccs == False:
+            if n.generators.loc[technology].is_blend_or_ccs == False:
             
                 CI_PPA_Clean = (
             
@@ -324,9 +324,11 @@ def apply_cfe_constraint(
                 .sum(dims='Generator')
                 )
 
+                CI_PPA_Fossil = CI_PPA_Clean * 0.
+
             else:
                 
-                if n.carriers.loc[n.generators.loc[each_generator].carrier].co2_emissions == 0:
+                if n.carriers.loc[n.generators.loc[technology].carrier].co2_emissions == 0:
 
                     CI_PPA_Clean = (
                 
@@ -335,6 +337,8 @@ def apply_cfe_constraint(
                     )))
                     .sum(dims='Generator')
                     )
+
+                    CI_PPA_Fossil = CI_PPA_Clean * 0.
 
                 else:
 
@@ -345,6 +349,8 @@ def apply_cfe_constraint(
                     )))
                     .sum(dims='Generator')
                     )
+
+                    CI_PPA_Clean = CI_PPA_Fossil * 0.
 
 
         # Constraint 1: Hourly matching

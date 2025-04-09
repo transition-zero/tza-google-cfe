@@ -265,7 +265,7 @@ def RunCFE(
         ci_identifier,
         CFE_Score,
         configs["global_vars"]["maximum_excess_export"],
-        configs["technology_palette"][run["palette"]],
+        configs["technology_palette"][run["palette"]]
     )
 
     # optimise
@@ -289,6 +289,7 @@ def RunCFE(
             ci_identifier,
             CFE_Score,
             configs["global_vars"]["maximum_excess_export"],
+            configs["technology_palette"][run["palette"]]
         )
 
         N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
