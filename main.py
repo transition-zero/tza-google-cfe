@@ -65,12 +65,11 @@ def solve_brownfield_network(run, configs, with_cfe: bool) -> pypsa.Network:
     # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
     constr_max_annual_utilisation(final_brownfield, 
                                   max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas','biomass','biogas','oil','geothermal'])
+                                  carriers = ['coal','gas','oil','geothermal'])
 
     # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
     constr_policy_targets(final_brownfield, 
-                          "ASEAN")
-                        #   stock_model = configs["model_runs"]["stock_model"])
+                          stock_model = run["stock_model"])
 
     final_brownfield.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 

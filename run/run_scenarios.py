@@ -123,11 +123,11 @@ def RunBrownfieldSimulation(run, configs):
     # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
     constr_max_annual_utilisation(N_BROWNFIELD, 
                                   max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas','biomass','biogas','oil','geothermal'])
+                                  carriers = ['coal','gas','oil','geothermal'])
 
     # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
     constr_policy_targets(N_BROWNFIELD, 
-                          "ASEAN")
+                          stock_model = run["stock_model"])
 
     N_BROWNFIELD.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 
