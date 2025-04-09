@@ -314,7 +314,10 @@ def apply_cfe_constraint(
 
         for technology in technology_palette:
 
-            if n.generators.loc[technology].is_blend_or_ccs == False:
+            if technology in n.storage_units.type.unique():   
+                continue
+
+            elif n.generators.loc[technology].is_blend_or_ccs == False:
             
                 CI_PPA_Clean = (
             
@@ -326,7 +329,7 @@ def apply_cfe_constraint(
 
                 CI_PPA_Fossil = CI_PPA_Clean * 0.
 
-            else:
+            elif n.generators.loc[technology].is_blend_or_ccs == True:
                 
                 if n.carriers.loc[n.generators.loc[technology].carrier].co2_emissions == 0:
 
@@ -351,7 +354,7 @@ def apply_cfe_constraint(
                     )
 
                     CI_PPA_Clean = CI_PPA_Fossil * 0.
-
+                        
 
         # Constraint 1: Hourly matching
         # ---------------------------------------------------------------
