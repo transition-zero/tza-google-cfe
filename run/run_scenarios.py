@@ -158,10 +158,18 @@ def RunRES100(
             .sum(dims="Link")
         )
 
-        # get total PPA procurement (linopy.Var)
+        # get clean carriers in the regional grid
+        clean_carriers = [
+            i
+            for i in N_RES_100.carriers.query(" co2_emissions <= 0").index.tolist()
+            if i in N_RES_100.generators.carrier.tolist()
+        ]
+
+        #get total PPA procurement (linopy.Var)
         ci_ppa_generators = N_RES_100.generators.loc[
             (N_RES_100.generators.bus.str.contains(bus))
             & (N_RES_100.generators.bus.str.contains(ci_identifier))
+            & (N_RES_100.generators.carrier.isin(clean_carriers))
         ].index.tolist()  # get c&i ppa generators
 
         CI_PPA = (
@@ -169,13 +177,6 @@ def RunRES100(
             .sel(Generator=ci_ppa_generators)
             .sum()
         )
-
-        # get clean carriers in the regional grid
-        clean_carriers = [
-            i
-            for i in N_RES_100.carriers.query(" co2_emissions <= 0").index.tolist()
-            if i in N_RES_100.generators.carrier.tolist()
-        ]
 
         # clean generators
         clean_region_generators = [
@@ -265,7 +266,7 @@ def RunCFE(
         ci_identifier,
         CFE_Score,
         configs["global_vars"]["maximum_excess_export"],
-        configs["technology_palette"][run["palette"]]
+        #configs["technology_palette"][run["palette"]]
     )
 
     # optimise
@@ -289,7 +290,7 @@ def RunCFE(
             ci_identifier,
             CFE_Score,
             configs["global_vars"]["maximum_excess_export"],
-            configs["technology_palette"][run["palette"]]
+            #configs["technology_palette"][run["palette"]]
         )
 
         N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
