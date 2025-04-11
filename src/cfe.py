@@ -169,6 +169,7 @@ def PrepareNetworkForCFE(
                     (network.generators["type"] == technology) & (network.generators["bus"] == bus)
                 ]
                 cf = network.generators_t.p_max_pu[generator_names]
+                
                 if cf.empty:
                     cf = params['p_max_pu']
                 else:
@@ -217,9 +218,9 @@ def PrepareNetworkForCFE(
                         # ---
                         # unique technology parameters by bus
                         p_nom = 0, # starting capacity (MW)
-                        p_nom_min = 1, # minimum capacity (MW)
+                        p_nom_min = 0., # minimum capacity (MW)
                         p_max_pu = cf, # capacity factor
-                        p_min_pu = 0.01, # minimum capacity factor
+                        p_min_pu = params['p_min_pu'], # minimum capacity factor
                         efficiency = params['efficiency'], # efficiency
                         ramp_limit_up = params['ramp_limit_up'], # per unit
                         ramp_limit_down = params['ramp_limit_down'], # per unit
