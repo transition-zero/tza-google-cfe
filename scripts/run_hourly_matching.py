@@ -223,5 +223,16 @@ if __name__ == "__main__":
         from helper import mock_snakemake
 
         snakemake = mock_snakemake(
-            "run_annual_matching",
+            "run_hourly_matching",
         )
+    CFE_Score = snakemake.wildcards.regime 
+    run = snakemake.config["model_runs"][0]
+    config = snakemake.config
+    RunCFE(
+        network=pypsa.Network(snakemake.input.solved_brownfield),
+        ci_identifier=snakemake.config["global_vars"]["ci_label"],
+        CFE_Score=CFE_Score,
+        run=run,
+        configs=config,
+    )
+    

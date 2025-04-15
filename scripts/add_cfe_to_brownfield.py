@@ -272,14 +272,16 @@ if __name__ == "__main__":
         from helper import mock_snakemake
 
         snakemake = mock_snakemake(
-            "download_brownfield",
+            "add_cfe_to_brownfield",
+            palette="p1",
+            year=2023,
         )
     run = snakemake.config["model_runs"][0]
     buses_with_ci_load = run["nodes_with_ci_load"]
     ci_load_fraction = run["ci_load_fraction"]
     brownfield_network = pypsa.Network(snakemake.input.original_brownfield)
-    palette_no = run["palette"]
-    tech_palette = snakemake.config["technology_palette"][run["palette"]]
+    palette = snakemake.wildcards.palette
+    tech_palette = snakemake.config["technology_palette"][palette]
     cfe_brownfield_network = add_cfe_components_to_brownfield(
         buses_with_ci_load=buses_with_ci_load,
         ci_load_fraction=ci_load_fraction,

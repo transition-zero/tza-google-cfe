@@ -2,7 +2,7 @@ import pypsa
 from tz_pypsa.model import Model
 
 
-def download_brownfield(configs: dict, run: dict) -> pypsa.Network:
+def download_brownfield(configs: dict, run: dict, year:int) -> pypsa.Network:
     """
 
     Sets up the brownfield network based on the provided run configuration and global variables.
@@ -17,7 +17,7 @@ def download_brownfield(configs: dict, run: dict) -> pypsa.Network:
     pypsa.Network: A PyPSA Network object with the brownfield system set up according to the provided configurations.
 
     """
-    run = configs["model_runs"][0]
+    
     if configs["model_runs"][0]["stock_model"] == "ASEAN":
         # load the stock model from tza-pypsa
         network = Model.load_model(
@@ -25,7 +25,7 @@ def download_brownfield(configs: dict, run: dict) -> pypsa.Network:
             frequency=configs["global_vars"]["frequency"],
             timesteps=configs["global_vars"]["timesteps"],
             select_nodes=run["select_nodes"],
-            years=[configs["global_vars"]["year"]],
+            years=year,
             backstop=run["backstop"],
             set_global_constraints=configs["global_vars"]["set_global_constraints"],
         )
@@ -36,7 +36,7 @@ def download_brownfield(configs: dict, run: dict) -> pypsa.Network:
             frequency=configs["global_vars"]["frequency"],
             timesteps=configs["global_vars"]["timesteps"],
             # select_nodes=configs['global_vars']['select_nodes'],
-            years=[configs["global_vars"]["year"]],
+            year=year,
             # backstop=run['backstop'],
             set_global_constraints=configs["global_vars"]["set_global_constraints"],
         )
@@ -74,9 +74,12 @@ if __name__ == "__main__":
 
         snakemake = mock_snakemake(
             "download_brownfield",
+            
+            year=2023
         )
     run = snakemake.config["model_runs"][0]
-    network = download_brownfield(configs=snakemake.config, run=run)
+    year = snakemake.wildcards.year
+    network = download_brownfield(configs=snakemake.config, run=run,year=year)
     network = prepare_brownfield(
         network=network,
         run=run,
