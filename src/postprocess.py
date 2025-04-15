@@ -96,12 +96,18 @@ def plot_results(path_to_run_dir: str):
 
     for ax in [ax0, ax1]:
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         sns.despine(ax=ax, left=False)
 
-    # Remove legend title and box
-    legend = ax1.legend()
+    # Remove legend title and box, make sure labels are displayed in the same order as in the plot
+    handles, labels = ax1.get_legend_handles_labels()
+    order = [cfe.columns.tolist().index(label) for label in labels if label in cfe.columns]
+    sorted_handles_labels = sorted(zip(order, handles, labels), key=lambda x: -x[0])
+    sorted_handles, sorted_labels = zip(*[(h, l) for _, h, l in sorted_handles_labels])
+
+    legend = ax1.legend(sorted_handles, sorted_labels, bbox_to_anchor=(1, 0.5), ncol=1)
     legend.set_title(None)
     legend.get_frame().set_linewidth(0)
 
@@ -181,12 +187,18 @@ def plot_results(path_to_run_dir: str):
 
     for ax in [ax0, ax1]:
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         sns.despine(ax=ax, left=False)
 
-    # Remove legend title and box
-    legend = ax1.legend()
+    # Remove legend title and box, make sure labels are displayed in the same order as in the plot
+    handles, labels = ax1.get_legend_handles_labels()
+    order = [cfe_ci_costs.columns.tolist().index(label) for label in labels if label in cfe_ci_costs.columns]
+    sorted_handles_labels = sorted(zip(order, handles, labels), key=lambda x: -x[0])
+    sorted_handles, sorted_labels = zip(*[(h, l) for _, h, l in sorted_handles_labels])
+
+    legend = ax1.legend(sorted_handles, sorted_labels, bbox_to_anchor=(1, 0.5), ncol=1)
     legend.set_title(None)
     legend.get_frame().set_linewidth(0)
 
@@ -247,7 +259,8 @@ def plot_results(path_to_run_dir: str):
     for ax in [ax0, ax1]:
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         ax.set_xticklabels(ax.get_xticklabels(), fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         sns.despine(ax=ax, left=False)
 
     ax0.set_ylabel('Emission Reduction [%]', fontproperties=work_sans_font)
@@ -313,7 +326,8 @@ def plot_results(path_to_run_dir: str):
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         sns.despine(ax=ax, left=False)
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
 
     ax0.set_ylabel('System Emission Rate [gCO$_2$ kWh$^{-1}$]', fontproperties=work_sans_font)
     ax1.set_ylabel('')
@@ -377,7 +391,8 @@ def plot_results(path_to_run_dir: str):
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         sns.despine(ax=ax, left=False)
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
 
     ax0.set_ylabel('C&I Emission Rate [gCO$_2$ kWh$^{-1}$]', fontproperties=work_sans_font)
     ax1.set_ylabel('')
@@ -459,7 +474,8 @@ def plot_results(path_to_run_dir: str):
     for ax in [ax0, ax1, ax2]:
         # set y-axis grid
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         # Rotate x-ticks
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
         # despine
@@ -467,9 +483,13 @@ def plot_results(path_to_run_dir: str):
 
     # Adjust horizontal space between ax0 and ax1
     fig.subplots_adjust(wspace=0.1)
-
     # Remove legend title and box
-    legend = ax2.legend(loc='center left', bbox_to_anchor=(1, 0.5), ncol=1)
+    handles, labels = ax2.get_legend_handles_labels()
+    order = [res.columns.tolist().index(label) for label in labels if label in res.columns]
+    sorted_handles_labels = sorted(zip(order, handles, labels), key=lambda x: -x[0])
+    sorted_handles, sorted_labels = zip(*[(h, l) for _, h, l in sorted_handles_labels])
+
+    legend = ax2.legend(sorted_handles, sorted_labels, loc='center left', bbox_to_anchor=(1, 0.5), ncol=1)
     legend.set_title(None)
     legend.get_frame().set_linewidth(0)
 
@@ -563,7 +583,8 @@ def plot_results(path_to_run_dir: str):
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         ax.axhline(0, color='white', linewidth=0.8, linestyle='-')
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
 
     ax0.set_xlabel('')
     ax0.set_ylabel('C&I Cost and Benefits\n[billion USD]', fontproperties=work_sans_font)
@@ -649,7 +670,8 @@ def plot_results(path_to_run_dir: str):
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         # Rotate x-ticks
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         # despine
         sns.despine(ax=ax, left=False)
 
@@ -715,7 +737,8 @@ def plot_results(path_to_run_dir: str):
 
     for ax in [ax0, ax1]:
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
-        ax.set_yticklabels(ax.get_yticklabels(), fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
         ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
         sns.despine(ax=ax, left=False)
 

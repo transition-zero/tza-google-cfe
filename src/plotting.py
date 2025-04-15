@@ -221,6 +221,7 @@ def tech_color_palette():
         'Waste': '#b7492d',
         'Waste Unspecified': '#b7492d',
         'Water': '#8292e8',
+        'Uranium': '#ee9dda',
         'Transmission': '#ba63da',
         'AC': '#ba63da',
     }
