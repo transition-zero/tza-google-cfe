@@ -1,18 +1,21 @@
-# -------------------------------------------------------------------------
-#
-#   CONFIGS
-#
-#     xxx
-#
-#     Authors:
-#       - @amanmajid
-#
-# -------------------------------------------------------------------------
-
+run: test-snakemake-india
+results_dir: results/
 paths:
   brownfield_models: "networks/brownfield/"
   output_model_runs: "outputs/model_runs/" # path to save model run outputs
-  path_to_model: 'tza-pypsa/stock_models/India'
+  path_to_model: "/Users/adminuser/Documents/Coding/TransitionZero/tza-google-cfe/tza-pypsa/stock_models/India"
+
+###################
+# Wildcards
+scenario:
+  policy: ["ref", "cfe90", "cfe98", "cfe100"] # Example policies
+  palette: [
+      "palette_1", # onwind + solar + battery
+      "palette_2", # onwind + solar + battery + hydro
+      "palette_3", # onwind + solar + battery + hydrogen
+    ]
+  year: [2023, 2030] # Years for the model runs
+
 global_vars:
   year: 2023 # year of the model run
   frequency: 1h # time resolution of the model run (should be 1h for CFE)
@@ -26,7 +29,7 @@ global_vars:
 model_runs:
   - name: india-test-full-cfe
     palette: palette_1
-    stock_model: 'tza-pypsa/stock_models/India'
+    stock_model: "tza-pypsa/stock_models/India"
     select_nodes:
       - INDNO
       - INDEA
@@ -147,8 +150,8 @@ model_runs:
 technology_palette:
   #### only palette 1 is currently supported
   palette_1:
-    - 'wind-onshore'
-    - 'photovoltaic-unspecified'
+    - "wind-onshore"
+    - "photovoltaic-unspecified"
     # - batteries
   palette_2:
     - photovoltaic-unspecified
