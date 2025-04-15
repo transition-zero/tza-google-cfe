@@ -10,6 +10,8 @@ def apply_cfe_constraint(
     CFE_Score: float,
     max_excess_export: float,
 ) -> pypsa.Network:
+    
+    CFE_Score = CFE_Score / 100
     """Set CFE constraint"""
     for bus in ci_buses:
         # ---
@@ -188,6 +190,9 @@ def RunCFE(
         GridCFE = GetGridCFE(N_CFE, ci_identifier)
         count += 1
         GridSupplyCFE[f"iteration_{count}"] = GridCFE
+        
+        
+    return N_CFE
 
 
 def GetGridCFE(n: pypsa.Network, ci_identifier):
@@ -228,11 +233,12 @@ if __name__ == "__main__":
     CFE_Score = snakemake.wildcards.regime 
     run = snakemake.config["model_runs"][0]
     config = snakemake.config
-    RunCFE(
+    final_model = RunCFE(
         network=pypsa.Network(snakemake.input.solved_brownfield),
         ci_identifier=snakemake.config["global_vars"]["ci_label"],
         CFE_Score=CFE_Score,
         run=run,
         configs=config,
     )
+    final_model.export_to_netcdf(snakemake.output.hourly_matching)
     
