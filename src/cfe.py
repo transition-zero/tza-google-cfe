@@ -207,7 +207,9 @@ def PrepareNetworkForCFE(
                             ramp_limit_start_up = params['ramp_limit_start_up'], # 
                             ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
                             min_up_time = params['min_up_time'], # 
-                            min_down_time = params['min_down_time'], # 
+                            min_down_time = params['min_down_time'],
+                            is_blend_or_ccs = params['is_blend_or_ccs'],
+                            generation_blend_share = params['generation_blend_share'] # 
                         )
                     
                     else:
@@ -241,6 +243,8 @@ def PrepareNetworkForCFE(
                             ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
                             min_up_time = params['min_up_time'], # 
                             min_down_time = params['min_down_time'], # 
+                            is_blend_or_ccs = params['is_blend_or_ccs'],
+                            generation_blend_share = params['generation_blend_share'] #                             
                         )
 
             elif technology in network.storage_units.carrier.unique():
