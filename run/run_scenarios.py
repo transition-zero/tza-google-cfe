@@ -120,7 +120,7 @@ def RunBrownfieldSimulation(run, configs):
     constr_bus_self_sufficiency(N_BROWNFIELD, 
                                 min_self_sufficiency = 0.6)
 
-    # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
+    # # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
     constr_max_annual_utilisation(N_BROWNFIELD, 
                                   max_utilisation_rate = 0.85, 
                                   carriers = ['coal','gas','oil','geothermal'])
