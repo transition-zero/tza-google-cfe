@@ -145,7 +145,6 @@ def PrepareNetworkForCFE(
         # This represents the technologies procured in the C&I's PPA.
 
         for technology in technology_palette:
-            
             # check if technology is generator or storage
             if technology in network.generators.type.unique():
                 
@@ -166,7 +165,8 @@ def PrepareNetworkForCFE(
 
                 # get capacity factors if technology is renewable
                 generator_names = network.generators.index[
-                    (network.generators["type"] == technology) & (network.generators["bus"] == bus)
+                    (network.generators["type"] == technology) & (network.generators["bus"] == bus
+                                                                  )
                 ]
                 cf = network.generators_t.p_max_pu[generator_names]
                 
@@ -175,77 +175,77 @@ def PrepareNetworkForCFE(
                 else:
                     cf = cf.iloc[:,0].values
                 
-                for generator in generator_names:
-                    
-                    if network.carriers.loc[network.generators.carrier[generator]].co2_emissions <= 0:
-                    # add generator
-                        network.add(
-                            'Generator', # PyPSA component
-                            ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + 'Clean', # generator name
-                            type = technology, # technology type (e.g., solar, gas-ccgt etc.)
-                            bus = ci_bus_name, # region/bus/balancing zone
-                            # ---
-                            # unique technology parameters by bus
-                            p_nom = 0, # starting capacity (MW)
-                            p_nom_min = 0, # minimum capacity (MW)
-                            p_max_pu = cf, # capacity factor
-                            p_min_pu = params['p_min_pu'], # minimum capacity factor
-                            efficiency = params['efficiency'], # efficiency
-                            ramp_limit_up = params['ramp_limit_up'], # per unit
-                            ramp_limit_down = params['ramp_limit_down'], # per unit
-                            # ---
-                            # universal technology parameters
-                            p_nom_extendable = p_nom_extendable, # can the model build more?
-                            capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
-                            carrier = params['carrier'], # commodity/carrier
-                            build_year = params['build_year'], # year available from
-                            lifetime = params['lifetime'], # years
-                            start_up_cost = params['start_up_cost'], # currency/MW
-                            shut_down_cost = params['shut_down_cost'], # currency/MW
-                            committable = params['committable'], # UNIT COMMITMENT
-                            ramp_limit_start_up = params['ramp_limit_start_up'], # 
-                            ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
-                            min_up_time = params['min_up_time'], # 
-                            min_down_time = params['min_down_time'],
-                            is_blend_or_ccs = params['is_blend_or_ccs'],
-                            generation_blend_share = params['generation_blend_share'] # 
-                        )
-                    
-                    else:
+                #for generator in generator_names:
 
-                        network.add(
-                            'Generator', # PyPSA component
-                            ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + 'Fossil', # generator name
-                            type = technology, # technology type (e.g., solar, gas-ccgt etc.)
-                            bus = ci_bus_name, # region/bus/balancing zone
-                            # ---
-                            # unique technology parameters by bus
-                            p_nom = 0, # starting capacity (MW)
-                            p_nom_min = 0, # minimum capacity (MW)
-                            p_max_pu = cf, # capacity factor
-                            p_min_pu = params['p_min_pu'], # minimum capacity factor
-                            efficiency = params['efficiency'], # efficiency
-                            ramp_limit_up = params['ramp_limit_up'], # per unit
-                            ramp_limit_down = params['ramp_limit_down'], # per unit
-                            # ---
-                            # universal technology parameters
-                            p_nom_extendable = p_nom_extendable, # can the model build more?
-                            capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
-                            carrier = params['carrier'], # commodity/carrier
-                            build_year = params['build_year'], # year available from
-                            lifetime = params['lifetime'], # years
-                            start_up_cost = params['start_up_cost'], # currency/MW
-                            shut_down_cost = params['shut_down_cost'], # currency/MW
-                            committable = params['committable'], # UNIT COMMITMENT
-                            ramp_limit_start_up = params['ramp_limit_start_up'], # 
-                            ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
-                            min_up_time = params['min_up_time'], # 
-                            min_down_time = params['min_down_time'], # 
-                            is_blend_or_ccs = params['is_blend_or_ccs'],
-                            generation_blend_share = params['generation_blend_share'] #                             
-                        )
+                if network.carriers.loc[network.generators.carrier[technology]].co2_emissions <= 0:
+                # add generator
+                    network.add(
+                        'Generator', # PyPSA component
+                        ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + 'Clean', # generator name
+                        type = technology, # technology type (e.g., solar, gas-ccgt etc.)
+                        bus = ci_bus_name, # region/bus/balancing zone
+                        # ---
+                        # unique technology parameters by bus
+                        p_nom = 0, # starting capacity (MW)
+                        p_nom_min = 0, # minimum capacity (MW)
+                        p_max_pu = cf, # capacity factor
+                        p_min_pu = params['p_min_pu'], # minimum capacity factor
+                        efficiency = params['efficiency'], # efficiency
+                        ramp_limit_up = params['ramp_limit_up'], # per unit
+                        ramp_limit_down = params['ramp_limit_down'], # per unit
+                        # ---
+                        # universal technology parameters
+                        p_nom_extendable = p_nom_extendable, # can the model build more?
+                        capital_cost = params['capital_cost'], # currency/MW
+                        marginal_cost = params['marginal_cost'], # currency/MWh
+                        carrier = params['carrier'], # commodity/carrier
+                        build_year = params['build_year'], # year available from
+                        lifetime = params['lifetime'], # years
+                        start_up_cost = params['start_up_cost'], # currency/MW
+                        shut_down_cost = params['shut_down_cost'], # currency/MW
+                        committable = params['committable'], # UNIT COMMITMENT
+                        ramp_limit_start_up = params['ramp_limit_start_up'], # 
+                        ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
+                        min_up_time = params['min_up_time'], # 
+                        min_down_time = params['min_down_time'],
+                        is_blend_or_ccs = params['is_blend_or_ccs'],
+                        generation_blend_share = params['generation_blend_share'] # 
+                    )
+                
+                else:
+
+                    network.add(
+                        'Generator', # PyPSA component
+                        ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + 'Fossil', # generator name
+                        type = technology, # technology type (e.g., solar, gas-ccgt etc.)
+                        bus = ci_bus_name, # region/bus/balancing zone
+                        # ---
+                        # unique technology parameters by bus
+                        p_nom = 0, # starting capacity (MW)
+                        p_nom_min = 0, # minimum capacity (MW)
+                        p_max_pu = cf, # capacity factor
+                        p_min_pu = params['p_min_pu'], # minimum capacity factor
+                        efficiency = params['efficiency'], # efficiency
+                        ramp_limit_up = params['ramp_limit_up'], # per unit
+                        ramp_limit_down = params['ramp_limit_down'], # per unit
+                        # ---
+                        # universal technology parameters
+                        p_nom_extendable = p_nom_extendable, # can the model build more?
+                        capital_cost = params['capital_cost'], # currency/MW
+                        marginal_cost = params['marginal_cost'], # currency/MWh
+                        carrier = params['carrier'], # commodity/carrier
+                        build_year = params['build_year'], # year available from
+                        lifetime = params['lifetime'], # years
+                        start_up_cost = params['start_up_cost'], # currency/MW
+                        shut_down_cost = params['shut_down_cost'], # currency/MW
+                        committable = params['committable'], # UNIT COMMITMENT
+                        ramp_limit_start_up = params['ramp_limit_start_up'], # 
+                        ramp_limit_shut_down = params['ramp_limit_shut_down'], # 
+                        min_up_time = params['min_up_time'], # 
+                        min_down_time = params['min_down_time'], # 
+                        is_blend_or_ccs = params['is_blend_or_ccs'],
+                        generation_blend_share = params['generation_blend_share'] #                             
+                    )
 
             elif technology in network.storage_units.carrier.unique():
                 
@@ -304,7 +304,10 @@ def PrepareNetworkForCFE(
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-            
+    
+    # print(network.generators)
+    # network.generators_t.p_max_pu.to_csv('generators_p-max-pu.csv')
+    # breakpoint()
     return network
 
 
