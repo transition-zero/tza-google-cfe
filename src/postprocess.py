@@ -45,6 +45,8 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
     # ------------------------------------------------------------------
     # C&I Portfolio Capacity [GW]
 
+    print('Creating C&I portfolio capacity plot')
+
     fig, ax0, ax1 = cplt.bar_plot_2row(width_ratios=[1,10], figsize=(6,4))
 
     expanded_capacity = (
@@ -141,6 +143,8 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
     
     # ------------------------------------------------------------------
     # Generation mix by scenario for C&I and parent node
+
+    print('Creating C&I and parent node generation plot')
 
     generation_mix = (
         pd.concat(
@@ -253,6 +257,8 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
 
     # ------------------------------------------------------------------
     # Capacity mix by scenario for C&I and parent node
+
+    print('Creating C&I and parent node capacity plot')
 
     capacity_mix = (
         pd.concat(
@@ -836,8 +842,8 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
     )
 
     # ------------------------------------------------------------------
-    # Generation mix by scenario
-    print('Creating generation mix plot')
+    # System generation mix by scenario
+    print('Creating system generation mix plot')
 
     generation_mix = (
         pd.concat(
@@ -932,20 +938,20 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
     # save plot
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/generation_mix.png'
+            path_to_run_dir, 'results/system_generation_mix.png'
         ),
         bbox_inches='tight'
     )
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/generation_mix.svg'
+            path_to_run_dir, 'results/system_generation_mix.svg'
         ),
         bbox_inches='tight'
     )
 
     # ------------------------------------------------------------------
-    # Capacity mix by scenario
-    print('Creating capacity maix plot')
+    # System capacity mix by scenario
+    print('Creating system capacity mix plot')
 
     capacity_mix = (
         pd.concat(
@@ -1040,13 +1046,13 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
     # save plot
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/capacity_mix.png'
+            path_to_run_dir, 'results/system_capacity_mix.png'
         ),
         bbox_inches='tight'
     )
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/capacity_mix.svg'
+            path_to_run_dir, 'results/system_capacity_mix.svg'
         ),
         bbox_inches='tight'
     )
