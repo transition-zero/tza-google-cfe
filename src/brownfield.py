@@ -37,19 +37,14 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         network = (
         Model.load_csv_from_dir(
             configs['paths']['path_to_model'], 
-            #run['stock_model'], 
-            frequency = configs['global_vars']['frequency'],
-            timesteps = configs['global_vars']['timesteps'],
-            #select_nodes=configs['global_vars']['select_nodes'], 
-            years=[ configs['global_vars']['year'] ],
-            #backstop=run['backstop'],
+            year=[ configs['global_vars']['year'] ],
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
     )
 
     # ensure p_nom is extendable in the brownfield network
-    network.generators['p_nom_extendable']      = True
-    network.storage_units['p_nom_extendable']   = True
+    #network.generators['p_nom_extendable']      = True
+    #network.storage_units['p_nom_extendable']   = True
     network.links['p_nom_extendable']           = run['allow_grid_expansion']
 
     # set p_nom_min to prevent early decommissioning of assets

@@ -66,6 +66,7 @@ def GetGridCFE(
     total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
     # return CFE score
+
     return (total_clean_generation / total_generation).round(2).tolist()
 
 
@@ -97,13 +98,13 @@ def RunBrownfieldSimulation(run, configs):
         buses_with_ci_load=run["nodes_with_ci_load"],
         ci_load_fraction=run["ci_load_fraction"],
         technology_palette=configs["technology_palette"][run["palette"]],
-        p_nom_extendable=False,
+        p_nom_extendable=True,
     )
 
     print("prepared network for CFE")
     print("Begin solving...")
     # solver_options = {"Method": "barrier", "Presolve": 2, "Threads": 4, "Cores": 2}
-    N_BROWNFIELD.optimize(solver_name=configs["global_vars"]["solver"])
+    N_BROWNFIELD.optimize(solver_name=configs["global_vars"]["solver"], solver_options = {"DualReductions": 0})
     brownfield_path = os.path.join(
         configs["paths"]["output_model_runs"],
         run["name"],
