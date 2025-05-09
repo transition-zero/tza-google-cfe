@@ -47,12 +47,16 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         )
     )
 
-    # ensure p_nom is extendable in the brownfield network
-    network.generators['p_nom_extendable']      = True
-    # network.storage_units['p_nom_extendable']   = True
-    network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('lithium')] = True
-    network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('pumped')] = False
-    network.links['p_nom_extendable']           = run['allow_grid_expansion']
+    # if expansion is set to True, set p_nom_extendable to True for generators and storage units
+    # otherwise if False, leaves propreties as they are (in case some are already set to True and others to False)
+    if run["allow_generation_expansion"]:
+        network.generators['p_nom_extendable'] = run["allow_generation_expansion"]
+    if run["allow_storage_expansion"]:
+        network.storage_units['p_nom_extendable']   = run["allow_storage_expansion"]
+    if run["allow_grid_expansion"]:
+        network.links['p_nom_extendable']   = run["allow_grid_expansion"]
+    # network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('lithium')] = True
+    # network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('pumped')] = False
 
     # set p_nom_min to prevent early decommissioning of assets
     network.generators['p_nom_min']      = network.generators['p_nom']

@@ -84,11 +84,13 @@ model_runs:
     cfe_score:
       - 0.6
       # - 0.7
-      - 0.8
+      # - 0.8
       # - 0.9
-      - 1.0
+      # - 1.0
     ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
+    allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
 technology_palette:
