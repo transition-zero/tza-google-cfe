@@ -5,9 +5,17 @@ import pandas as pd
 import pypsa
 
 from tz_pypsa.constraints import (
+    constr_cumulative_p_nom,
     constr_bus_self_sufficiency,
+    constr_bus_individual_self_sufficiency,
+    constr_min_annual_generation,
+    constr_policy_targets,
     constr_max_annual_utilisation,
-    constr_policy_targets
+    constr_min_annual_utilisation_links,
+    constr_max_annual_utilisation_links,
+    constr_min_annual_utilisation_generator,
+    constr_max_annual_utilisation_generator,
+    constr_cofiring_ccs_generation_join_plant
 )
 
 from src import brownfield, cfe, helpers, postprocess
@@ -115,19 +123,59 @@ def RunBrownfieldSimulation(run, configs):
 
     # lp_model = N_BROWNFIELD.optimize.create_model()
     N_BROWNFIELD.optimize.create_model()
+    
+    # Implement all the constraints, as defined in the configs
+    # Bus self-sufficiency constraint
+    if configs["constraints"]["bus_self_sufficiency"]["enable"]:
+        constr_bus_self_sufficiency(N_BROWNFIELD, 
+                                    min_self_sufficiency = configs["constraints"]["bus_self_sufficiency"]["fraction"])
+    
+    # Bus self-sufficiency constraint, individually set
+    if configs["constraints"]["bus_individual_self_sufficiency"]["enable"]:
+        constr_bus_individual_self_sufficiency(N_BROWNFIELD)
+    
+    # Policy constraints
+    if configs["constraints"]["policy_targets"]["enable"]:
+        constr_policy_targets(N_BROWNFIELD, 
+                              stock_model = run["stock_model"])
+        
+    # Minimum annual generation constraint
+    if configs["constraints"]["min_annual_generation"]["enable"]:
+        constr_min_annual_generation(N_BROWNFIELD, 
+                                    lhs_generator = configs["constraints"]["min_annual_generation"]["generator"],
+                                    rhs_min_generation = configs["constraints"]["min_annual_generation"]["fraction"])
+    
+    # Minimum annual link utlisation constraint
+    if configs["constraints"]["min_utilisation_links"]["enable"]:
+        constr_min_annual_utilisation_links(N_BROWNFIELD,
+                                            carriers = configs["constraints"]["min_utilisation_links"]["carriers"])
+    
+    # Maximum annual link utlisation constraint
+    if configs["constraints"]["max_utilisation_links"]["enable"]:
+        constr_max_annual_utilisation_links(N_BROWNFIELD,
+                                            carriers = configs["constraints"]["max_utilisation_links"]["carriers"])
 
-    # BUS SELF SUFFICIENCY CONSTRAINT
-    constr_bus_self_sufficiency(N_BROWNFIELD, 
-                                min_self_sufficiency = 0.6)
+    # Minimum annual utilisation constraint on a generator level
+    if configs["constraints"]["min_utilisation_generator"]["enable"]:
+        constr_min_annual_utilisation_generator(N_BROWNFIELD,
+                                                carriers = configs["constraints"]["min_utilisation_generator"])
+    
+    # Maximum annual utilisation constraint on a generator level
+    if configs["constraints"]["max_utilisation_generator"]["enable"]:
+        constr_max_annual_utilisation_generator(N_BROWNFIELD,
+                                                carriers = configs["constraints"]["max_utilisation_generator"])
 
-    # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
-    constr_max_annual_utilisation(N_BROWNFIELD, 
-                                  max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas','oil','geothermal'])
+    # Maximum annual utilisation constraint
+    if configs["constraints"]["max_utilisation"]["enable"]:
+        constr_max_annual_utilisation(N_BROWNFIELD, 
+                                      max_utilisation = configs["constraints"]["max_utilisation"]["fraction"],
+                                      carriers = configs["constraints"]["max_utilisation"]["carriers"])
 
-    # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
-    constr_policy_targets(N_BROWNFIELD, 
-                          stock_model = run["stock_model"])
+    # Cofiring CCS generation constraint
+    if configs["constraints"]["cofiring_ccs_gen"]["enable"]:
+        constr_cofiring_ccs_generation_join_plant(N_BROWNFIELD, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator"])
 
     N_BROWNFIELD.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 
