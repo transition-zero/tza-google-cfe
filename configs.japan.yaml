@@ -12,7 +12,7 @@
 paths:
   brownfield_models: "networks/brownfield/"
   output_model_runs: "outputs/model_runs/" # path to save model run outputs
-  path_to_model: '/home/DanWelsby/pypsa/tza-pypsa/stock_models/Japan'
+  path_to_model: '/tza-pypsa/stock_models/Japan'
 global_vars:
   years: 2030 # year of the model run
   frequency: 1h # time resolution of the model run (should be 1h for CFE)
