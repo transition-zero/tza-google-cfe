@@ -312,10 +312,6 @@ def PrepareNetworkForCFE(
             else:
                 raise ValueError(f"Invalid technology: {technology}")
     
-    print(network.generators)
-    network.generators.to_csv('generators_cfe_blend.csv')
-    breakpoint()
-
     return network
 
 
