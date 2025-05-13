@@ -54,7 +54,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
             #select_nodes=configs['global_vars']['select_nodes'], 
-            year=[ configs['global_vars']['year'] ],
+            years=[ configs['global_vars']['years'] ],
             #backstop=run['backstop'],
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
@@ -68,8 +68,8 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         network.storage_units['p_nom_extendable']   = run["allow_storage_expansion"]
     if run["allow_grid_expansion"]:
         network.links['p_nom_extendable']   = run["allow_grid_expansion"]
-    # network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('lithium')] = True
-    # network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('pumped')] = False
+    network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('lithium')] = True
+    network.storage_units.p_nom_extendable.loc[network.storage_units.index.str.contains('pumped')] = False
 
     # set p_nom_min to prevent early decommissioning of assets
     network.generators['p_nom_min']      = network.generators['p_nom']
@@ -130,12 +130,12 @@ def ApplyBrownfieldConstraints(network, run, configs) -> pypsa.Network:
     # Minimum annual utilisation constraint on a generator level
     if configs["constraints"]["min_utilisation_generator"]["enable"]:
         constr_min_annual_utilisation_generator(network,
-                                                carriers = configs["constraints"]["min_utilisation_generator"])
+                                                carriers = configs["constraints"]["min_utilisation_generator"]["carriers"])
     
     # Maximum annual utilisation constraint on a generator level
     if configs["constraints"]["max_utilisation_generator"]["enable"]:
         constr_max_annual_utilisation_generator(network,
-                                                carriers = configs["constraints"]["max_utilisation_generator"])
+                                                carriers = configs["constraints"]["max_utilisation_generator"]["carriers"])
 
     # Maximum annual utilisation constraint
     if configs["constraints"]["max_utilisation"]["enable"]:
