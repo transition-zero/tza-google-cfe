@@ -1479,6 +1479,34 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
             bbox_inches='tight'
         )
 
+    # ------------------------------------------------------------------
+    # MONTHLY HEATMAP OF CFE SCORE
+
+    for k in solved_networks.keys():
+        n = solved_networks[k].copy()
+
+        fig, ax = cplt.plot_monthly_cfe_hmap(n, ci_identifier='C&I')
+
+        # set fname
+        if 'n_bf' in k:
+            fname = '2030 Reference Scenario'
+            fig.suptitle(f'{fname}', y=0.95, fontsize=14)
+        elif 'n_am' in k:
+            fname = '100% Annual Matching'
+            fig.suptitle(f'{fname}', y=0.95, fontsize=14)
+        elif 'n_hm' in k:
+            fname = k.split('_')[2]
+            cfe_score = int( fname.replace('CFE','') )
+            fig.suptitle(f'{cfe_score}% clean procurement: hour-by-hour\n\n', y=0.95, fontproperties=work_sans_font_medium, fontsize=14)
+
+        # save plot
+        fig.savefig(
+            os.path.join(
+                path_to_run_dir, f'results/monthly_hmap_score_{fname}.png'
+            ),
+            bbox_inches='tight'
+        )
+
 
 def aggregate_capacity(
         scenarios,

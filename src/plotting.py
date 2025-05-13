@@ -97,6 +97,61 @@ def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
     return f, ax0, ax1
 
 
+def plot_monthly_cfe_hmap(n, ci_identifier='C&I'):
+    '''Plot the CFE score as a heatmap
+    '''
+
+    # Add Work Sans font to matplotlib
+    work_sans_path_light = './assets/WorkSans-Light.ttf'
+    work_sans_path_medium = './assets/WorkSans-Medium.ttf'
+    work_sans_font = fm.FontProperties(fname=work_sans_path_light)
+    work_sans_font_medium = fm.FontProperties(fname=work_sans_path_medium)
+    
+    cfe_t = cget.get_cfe_score_ts(n, ci_identifier)
+    cfe_t.index = cfe_t.index 
+    cfe_t['Hour'] = cfe_t.index.hour + 1
+    cfe_t['Day'] = cfe_t.index.day
+    cfe_t['Month'] = cfe_t.index.month
+
+    # heatmap plotting per month
+    fig, axes = plt.subplots(nrows=4, ncols=3, 
+                            figsize=(10,12), 
+                            sharex=True, sharey=True)
+    axes = axes.flatten()
+
+    months_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    cbar_ax = fig.add_axes([.91, .3, .03, .4])
+
+    for i, (month, group) in enumerate(cfe_t.groupby('Month', sort=False)):
+        # Pivot to get days on y-axis, hours on x-axis
+        pivot_table = group.pivot_table(index='Day', columns='Hour', values='CFE Score', aggfunc='mean')
+        sns.heatmap(
+            pivot_table,
+            ax=axes[i],
+            cmap=sns.color_palette("blend:#000000,#c4ffdc", as_cmap=True),
+            cbar=i == 0,
+            square=True,
+            xticklabels=11,
+            yticklabels=15,
+            linecolor='white',
+            linewidths=0.1,
+            vmin=0,
+            vmax=1,
+            cbar_ax=None if i else cbar_ax
+            )
+        axes[i].set_title(months_name[i])
+        axes[i].invert_yaxis()
+        axes[i].set_xlabel('')
+        axes[i].set_ylabel('')
+        axes[i].set_xticklabels(['Morning', 'Noon', 'Evening'], fontproperties=work_sans_font)
+
+    cbar = fig.colorbar(axes[0].collections[0], cax=cbar_ax)
+    cbar.set_ticks([0.0, 1.0])
+    cbar.set_ticklabels(['100% Dirty', '100% Clean'])
+    return fig,axes
+
+
 def bar_plot_2row(
         width_ratios=[1,8],
         figsize=(10, 5),
@@ -224,4 +279,9 @@ def tech_color_palette():
         'Uranium': '#ee9dda',
         'Transmission': '#ba63da',
         'AC': '#ba63da',
+        'Fossil part of CCGT blended with hydrogen': '#d9d9d9',
+        'Clean part of CCGT blended with hydrogen': '#f3f3f3',
+        'Fossil part of coal cofired with biomass': '#b18873',
+        'Clean part of coal cofired with biomass': '#fe8348',
+        'Long Duration Storage': '#69b2f5',
     }
