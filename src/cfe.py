@@ -162,9 +162,8 @@ def PrepareNetworkForCFE(
                     ['value']
                     .to_dict()
                 )
-
+       
                 # get capacity factors if technology is renewable and extendable
-                
                 generator_names = network.generators.index[
                     (network.generators["type"] == technology) & (network.generators["bus"] == bus
                                                                   )
@@ -202,7 +201,7 @@ def PrepareNetworkForCFE(
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
-                            carrier = params['carrier'], # commodity/carrier
+                            carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
                             start_up_cost = params['start_up_cost'], # currency/MW
@@ -213,7 +212,7 @@ def PrepareNetworkForCFE(
                             min_up_time = params['min_up_time'], # 
                             min_down_time = params['min_down_time'],
                             is_blend_or_ccs = params['is_blend_or_ccs'],
-                            generation_blend_share = params['generation_blend_share'], #
+                            generation_blend_share = network.generators.loc[generator].generation_blend_share, #
                             min_utilisation_rate = params['min_utilisation_rate'], 
                             max_utilisation_rate = params['max_utilisation_rate'] 
                         )
@@ -239,7 +238,7 @@ def PrepareNetworkForCFE(
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
-                            carrier = params['carrier'], # commodity/carrier
+                            carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
                             start_up_cost = params['start_up_cost'], # currency/MW
@@ -250,7 +249,7 @@ def PrepareNetworkForCFE(
                             min_up_time = params['min_up_time'], # 
                             min_down_time = params['min_down_time'], # 
                             is_blend_or_ccs = params['is_blend_or_ccs'],
-                            generation_blend_share = params['generation_blend_share'],
+                            generation_blend_share = network.generators.loc[generator].generation_blend_share,
                             min_utilisation_rate = params['min_utilisation_rate'], 
                             max_utilisation_rate = params['max_utilisation_rate']  #                             
                         )
@@ -316,6 +315,7 @@ def PrepareNetworkForCFE(
     print(network.generators)
     network.generators.to_csv('generators_cfe_blend.csv')
     breakpoint()
+
     return network
 
 

@@ -37,7 +37,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
         network = (
         Model.load_csv_from_dir(
             configs['paths']['path_to_model'], 
-            year=[ configs['global_vars']['year'] ],
+            years=[ configs['global_vars']['years'] ],
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
     )
