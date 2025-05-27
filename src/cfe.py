@@ -166,14 +166,15 @@ def PrepareNetworkForCFE(
 
                 # get capacity factors if technology is renewable, ensuring correct technology and bus is used
                 generator_names = network.generators.index[
-                    ((network.generators["type"] == technology) & (network.generators["bus"] == bus) & (network.generators["p_nom_extendable"] == True))
+                    ((network.generators["type"] == technology) & (network.generators["bus"] == bus) 
+                     & (network.generators["p_nom_extendable"] == True))
                 ]
                 cf = network.generators_t.p_max_pu[generator_names]
+
                 if cf.empty:
                     cf = params['p_max_pu']
                 else:
                     cf = cf.iloc[:,0].values
-
 
                 for generator in generator_names:
                     
@@ -181,7 +182,7 @@ def PrepareNetworkForCFE(
                     # add generator
                         network.add(
                             'Generator', # PyPSA component
-                            generator + '-' + 'PPA' + '-' + 'Clean', # generator name
+                            generator + '-ext-' + 'PPA' + '-' + 'Clean', # generator name
                             type = technology, # technology type (e.g., solar, gas-ccgt etc.)
                             bus = ci_bus_name, # region/bus/balancing zone
                             # ---
@@ -195,7 +196,7 @@ def PrepareNetworkForCFE(
                             ramp_limit_down = params['ramp_limit_down'], # per unit
                             # ---
                             # universal technology parameters
-                            p_nom_extendable = p_nom_extendable, # can the model build more?
+                            p_nom_extendable = params['p_nom_extendable'], # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
@@ -218,7 +219,7 @@ def PrepareNetworkForCFE(
 
                         network.add(
                             'Generator', # PyPSA component
-                            generator + '-' + 'PPA' + '-' + 'Fossil', # generator name
+                            generator + '-ext-' + 'PPA' + '-' + 'Fossil', # generator name
                             type = technology, # technology type (e.g., solar, gas-ccgt etc.)
                             bus = ci_bus_name, # region/bus/balancing zone
                             # ---
@@ -232,7 +233,7 @@ def PrepareNetworkForCFE(
                             ramp_limit_down = params['ramp_limit_down'], # per unit
                             # ---
                             # universal technology parameters
-                            p_nom_extendable = p_nom_extendable, # can the model build more?
+                            p_nom_extendable = params['p_nom_extendable'], # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
@@ -311,7 +312,7 @@ def PrepareNetworkForCFE(
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-            
+    
     return network
 
 
