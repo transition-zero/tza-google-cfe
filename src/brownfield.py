@@ -140,7 +140,7 @@ def ApplyBrownfieldConstraints(network, run, configs) -> pypsa.Network:
     # Maximum annual utilisation constraint
     if configs["constraints"]["max_utilisation"]["enable"]:
         constr_max_annual_utilisation(network, 
-                                      max_utilisation = configs["constraints"]["max_utilisation"]["fraction"],
+                                      max_utilisation_rate = configs["constraints"]["max_utilisation"]["fraction"],
                                       carriers = configs["constraints"]["max_utilisation"]["carriers"])
 
     # Cofiring CCS generation constraint
