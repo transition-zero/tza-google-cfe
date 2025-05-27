@@ -4,12 +4,6 @@ import sys
 import pandas as pd
 import pypsa
 
-from tz_pypsa.constraints import (
-    constr_bus_self_sufficiency,
-    constr_max_annual_utilisation,
-    constr_policy_targets
-)
-
 from src import brownfield, cfe, helpers, postprocess
 
 
@@ -115,20 +109,8 @@ def RunBrownfieldSimulation(run, configs):
 
     # lp_model = N_BROWNFIELD.optimize.create_model()
     N_BROWNFIELD.optimize.create_model()
-
-    # BUS SELF SUFFICIENCY CONSTRAINT
-    constr_bus_self_sufficiency(N_BROWNFIELD, 
-                                min_self_sufficiency = 0.6)
-
-    # # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
-    constr_max_annual_utilisation(N_BROWNFIELD, 
-                                  max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas','oil','geothermal'])
-
-    # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
-    constr_policy_targets(N_BROWNFIELD, 
-                          stock_model = run["stock_model"])
-
+    brownfield.ApplyBrownfieldConstraints(N_BROWNFIELD, run, configs)
+    
     N_BROWNFIELD.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 
     brownfield_path = os.path.join(
@@ -225,8 +207,13 @@ def RunRES100(
         # ---------------------------------------------------------------
         N_RES_100.model.add_constraints(
             CI_GridExport.sum()
-            <= CI_Demand * configs["global_vars"]["maximum_excess_export"],
+            <= CI_Demand * configs["global_vars"]["maximum_excess_export_res100"],
         )
+
+        # Apply all the original brownfield constraints
+        # ---------------------------------------------------------------
+        brownfield.ApplyBrownfieldConstraints(N_RES_100, run, configs)
+
     N_RES_100.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
 
     N_RES_100.export_to_netcdf(
@@ -291,8 +278,11 @@ def RunCFE(
         run["nodes_with_ci_load"],
         ci_identifier,
         CFE_Score,
-        configs["global_vars"]["maximum_excess_export"],
+        configs["global_vars"]["maximum_excess_export_cfe"],
     )
+
+    # (Re)apply original brownfield constraints
+    brownfield.ApplyBrownfieldConstraints(N_CFE, run, configs)
 
     # optimise
     N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
@@ -314,9 +304,9 @@ def RunCFE(
             run["nodes_with_ci_load"],
             ci_identifier,
             CFE_Score,
-            configs["global_vars"]["maximum_excess_export"],
+            configs["global_vars"]["maximum_excess_export_cfe"],
         )
-
+        print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
         N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
         GridCFE = GetGridCFE(N_CFE, ci_identifier)
         count += 1
@@ -387,12 +377,12 @@ if __name__ == "__main__":
         # 100% RES SIMULATION
         RES_TARGET = 100
         print(f"Computing annual matching scenario (RES Target: {int(RES_TARGET)}%)...")
-        RunRES100(N_BROWNFIELD, ci_identifier=ci_identifier)
+        RunRES100(N_BROWNFIELD, ci_identifier=ci_identifier, run=run, configs=configs)
 
         # Compute hourly matching scenarios
         for CFE_Score in run["cfe_score"]:
             print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}...")
-            RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score, ci_identifier=ci_identifier)
+            RunCFE(N_BROWNFIELD, CFE_Score=CFE_Score, ci_identifier=ci_identifier, run=run, configs=configs)
 
     # ----------------------------------------------------------------------
     # MAKE PLOTS FOR EACH SCENARIO

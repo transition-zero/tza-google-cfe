@@ -3,13 +3,6 @@ import os
 import click
 import pypsa
 
-from tz_pypsa.constraints import (
-    constr_cumulative_p_nom,
-    constr_bus_self_sufficiency,
-    constr_policy_targets,
-    constr_max_annual_utilisation
-)
-
 from run.run_scenarios import RunBrownfieldSimulation, RunCFE, RunRES100
 from src import brownfield, cfe, helpers, postprocess
 
@@ -52,27 +45,11 @@ def solve_brownfield_network(run, configs, with_cfe: bool) -> pypsa.Network:
         )
     else:
         final_brownfield = tza_brownfield_network
-    # final_brownfield.optimize(solver_name=configs["global_vars"]["solver"])
-
-    # lp_model = final_brownfield.optimize.create_model()
-
+    
     final_brownfield.optimize.create_model()
+    brownfield.ApplyBrownfieldConstraints(final_brownfield, run, configs)
 
-    # BUS SELF SUFFICIENCY CONSTRAINT
-    constr_bus_self_sufficiency(final_brownfield, 
-                                min_self_sufficiency = 0.6)
-
-    # FOSSIL FUEL UTILIZATION RATE CONSTRAINT (AVAILABILITY FACTOR)
-    constr_max_annual_utilisation(final_brownfield, 
-                                  max_utilisation_rate = 0.85, 
-                                  carriers = ['coal','gas','oil','geothermal'])
-
-    # CONSTRAINTS FROM TARGETS AND POLICIES SHEET
-    constr_policy_targets(final_brownfield, 
-                          stock_model = run["stock_model"])
-
-    final_brownfield.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
-
+    final_brownfield.optimize(solver_name=configs["global_vars"]["solver"])
     return final_brownfield
 
 
@@ -88,8 +65,9 @@ def run_scenarios(configs):
         N_BROWNFIELD = RunBrownfieldSimulation(run, configs)
         RES_TARGET = 100
         print(f"Computing annual matching scenario (RES Target: {int(RES_TARGET)}%)...")
+        N_BROWNFIELD_original = helpers.load_brownfield_network(run, configs)
         RunRES100(
-            N_BROWNFIELD,
+            N_BROWNFIELD_original,
             ci_identifier=ci_identifier,
             run=run,
             res_target=RES_TARGET,
@@ -108,7 +86,7 @@ def run_scenarios(configs):
         path_to_run_dir = os.path.join(
             configs["paths"]["output_model_runs"], run["name"]
         )
-        postprocess.plot_results(path_to_run_dir)
+        postprocess.plot_results(path_to_run_dir,run["nodes_with_ci_load"][0])
     print("*" * 100)
 
 
@@ -194,14 +172,14 @@ def run_full_cfe(config):
 @cli.command()
 @click.option("--config", default="configs.yaml", help="Path to the configuration file")
 def run_plots(
-    configs,
+    config,
 ):
-    configs = helpers.load_configs(configs)
-    for run in configs["model_runs"]:
+    config = helpers.load_configs(config)
+    for run in config["model_runs"]:
         path_to_run_dir = os.path.join(
-            configs["paths"]["output_model_runs"], run["name"]
+            config["paths"]["output_model_runs"], run["name"]
         )
-        postprocess.plot_results(path_to_run_dir)
+        postprocess.plot_results(path_to_run_dir,config["model_runs"][0]["nodes_with_ci_load"][0])
 
 
 if __name__ == "__main__":
