@@ -182,7 +182,7 @@ def PrepareNetworkForCFE(
                     # add generator
                         network.add(
                             'Generator', # PyPSA component
-                            generator + '-ext-' + 'PPA' + '-' + 'Clean', # generator name
+                            ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + '-' + 'Clean', # generator name
                             type = technology, # technology type (e.g., solar, gas-ccgt etc.)
                             bus = ci_bus_name, # region/bus/balancing zone
                             # ---
@@ -196,7 +196,7 @@ def PrepareNetworkForCFE(
                             ramp_limit_down = params['ramp_limit_down'], # per unit
                             # ---
                             # universal technology parameters
-                            p_nom_extendable = params['p_nom_extendable'], # can the model build more?
+                            p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
@@ -219,7 +219,7 @@ def PrepareNetworkForCFE(
 
                         network.add(
                             'Generator', # PyPSA component
-                            generator + '-ext-' + 'PPA' + '-' + 'Fossil', # generator name
+                            ci_bus_name + '-' + technology + '-ext-' + str(params['build_year']) + '-' + 'PPA' + '-' + 'Fossil', # generator name
                             type = technology, # technology type (e.g., solar, gas-ccgt etc.)
                             bus = ci_bus_name, # region/bus/balancing zone
                             # ---
@@ -233,7 +233,7 @@ def PrepareNetworkForCFE(
                             ramp_limit_down = params['ramp_limit_down'], # per unit
                             # ---
                             # universal technology parameters
-                            p_nom_extendable = params['p_nom_extendable'], # can the model build more?
+                            p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
                             marginal_cost = params['marginal_cost'], # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
