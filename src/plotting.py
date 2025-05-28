@@ -35,14 +35,16 @@ def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
 
     cost = (
         cget
-        .get_total_ci_procurement_cost(n, n_reference)
+        .get_total_ci_procurement_cost(n)
         .pivot_table(
             columns='carrier', 
             values='annual_system_cost [M$]'
         )
-        .drop([i for i in cget.get_total_ci_procurement_cost(n, n_reference).carrier.unique() if i not in ci_techs.values], axis=1)
+        .drop([i for i in cget.get_total_ci_procurement_cost(n).carrier.unique() if i not in ci_techs.values], axis=1)
         .div(1e3)
     )
+    if cost.empty: # in the case where there are no C&I nodes in the brownfield network
+        cost = pd.DataFrame(0, index=[0], columns=ci_techs.values)
 
     cost.plot(
         kind='bar', 

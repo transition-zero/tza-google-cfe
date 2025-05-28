@@ -1462,10 +1462,10 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
         # set fname
         if 'n_bf' in k:
             fname = '2030 Reference Scenario'
-            ax0.set_title(f'{fname}', loc='center', fontsize=14)
+            ax0.set_title(f'{fname}', loc='left', fontproperties=work_sans_font_medium, fontsize=14)
         elif 'n_am' in k:
             fname = '100% Annual Matching'
-            ax0.set_title(f'{fname}', loc='center', fontsize=14)
+            ax0.set_title(f'{fname}', loc='left', fontproperties=work_sans_font_medium, fontsize=14)
         elif 'n_hm' in k:
             fname = k.split('_')[2]
             cfe_score = int( fname.replace('CFE','') )
@@ -1483,7 +1483,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
 
     # ------------------------------------------------------------------
     # MONTHLY HEATMAP OF CFE SCORE
-
+    print('Creating monthly heatmap of CFE score')
     for k in solved_networks.keys():
         n = solved_networks[k].copy()
 
