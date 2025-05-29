@@ -73,7 +73,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
         expanded_capacity
         .loc[expanded_capacity['Scenario'] == '100% RES']
         .drop(['Scenario','CFE Score'], axis=1)
-        .query(" ~carrier.isin(['Transmission']) ")
+        .query(" ~carrier.isin(['Transmission','AC']) ")
         .pivot_table(columns='carrier', values='capacity')
         .div(1e3)
         .rename(index={'capacity':'100% RES'})
@@ -82,7 +82,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
         expanded_capacity
         .query("Scenario.str.contains('CFE')")
         .sort_values('CFE Score')
-        .query(" ~carrier.isin(['Transmission']) ")
+        .query(" ~carrier.isin(['Transmission','AC']) ")
         .pivot_table(index='CFE Score', columns='carrier', values='capacity')
         .div(1e3)
     )
