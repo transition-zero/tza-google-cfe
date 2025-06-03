@@ -88,7 +88,7 @@ def PostProcessBrownfield(n: pypsa.Network, ci_identifier: str):
     return n
 
 
-def RunBrownfieldSimulation(run, configs):
+def RunBrownfieldSimulation(run, configs, env=None):
 
     """Setup and run the brownfield simulation"""
 
@@ -104,14 +104,17 @@ def RunBrownfieldSimulation(run, configs):
 
     print("prepared network for CFE")
     print("Begin solving...")
-    # solver_options = {"Method": "barrier", "Presolve": 2, "Threads": 4, "Cores": 2}
-    # N_BROWNFIELD.optimize(solver_name=configs["global_vars"]["solver"])
 
     # lp_model = N_BROWNFIELD.optimize.create_model()
     N_BROWNFIELD.optimize.create_model()
     brownfield.ApplyBrownfieldConstraints(N_BROWNFIELD, run, configs)
-    
-    N_BROWNFIELD.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
+
+    N_BROWNFIELD.optimize.solve_model(
+        solver_name=configs["solver"]["name"],
+        solver_options=configs["solver_options"][configs["solver"]["options"]],
+        io_api="direct",
+        env=env,
+    )
 
     brownfield_path = os.path.join(
         configs["paths"]["output_model_runs"],
@@ -133,6 +136,7 @@ def RunRES100(
     configs: dict,
     res_target: int = 100,
     # bus : str,
+    env=None,
 ):
     """Sets up the 100% RES (annual matching) simulation"""
 
@@ -214,7 +218,12 @@ def RunRES100(
         # ---------------------------------------------------------------
         brownfield.ApplyBrownfieldConstraints(N_RES_100, run, configs)
 
-    N_RES_100.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
+    N_RES_100.optimize.solve_model(
+        solver_name=configs["solver"]["name"],
+        solver_options=configs["solver_options"][configs["solver"]["options"]],
+        io_api="direct",
+        env=env,
+    )
 
     N_RES_100.export_to_netcdf(
         os.path.join(
@@ -234,7 +243,7 @@ def RunRES100(
 
 
 def RunCFE(
-    N_BROWNFIELD: pypsa.Network, CFE_Score, ci_identifier: str, run: dict, configs: dict
+    N_BROWNFIELD: pypsa.Network, CFE_Score, ci_identifier: str, run: dict, configs: dict, env=None
 ):
     """Run 24/7 CFE scenario"""
 
@@ -285,7 +294,12 @@ def RunCFE(
     brownfield.ApplyBrownfieldConstraints(N_CFE, run, configs)
 
     # optimise
-    N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
+    N_CFE.optimize.solve_model(
+        solver_name=configs["solver"]["name"],
+        solver_options=configs["solver_options"][configs["solver"]["options"]],
+        io_api="direct",
+        env=env,
+    )
 
     # get GridCFE
     GridCFE = GetGridCFE(N_CFE, ci_identifier)
@@ -298,6 +312,10 @@ def RunCFE(
         GridSupplyCFE[f"iteration_{count}"].sum()
         - GridSupplyCFE[f"iteration_{count-1}"].sum()
     ) > 0.01 and count < max_iterations:
+        # Remove constraints from the previous iteration before applying for the current iteration
+        N_CFE.model.remove_constraints(
+            [c for c in N_CFE.model.constraints if "cfe-constraint" in c]
+        )
         N_CFE = cfe.apply_cfe_constraint(
             N_CFE,
             GridCFE,
@@ -307,7 +325,12 @@ def RunCFE(
             configs["global_vars"]["maximum_excess_export_cfe"],
         )
         print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
-        N_CFE.optimize.solve_model(solver_name=configs["global_vars"]["solver"])
+        N_CFE.optimize.solve_model(
+            solver_name=configs["solver"]["name"],
+            solver_options=configs["solver_options"][configs["solver"]["options"]],
+            io_api="direct",
+            env=env,
+        )
         GridCFE = GetGridCFE(N_CFE, ci_identifier)
         count += 1
         GridSupplyCFE[f"iteration_{count}"] = GridCFE
