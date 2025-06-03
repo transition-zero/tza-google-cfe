@@ -8,9 +8,9 @@ from src import brownfield, cfe, helpers, postprocess
 
 
 def GetGridCFE(
-    n: pypsa.Network,
-    # bus : str,
+    n: pypsa.Network,   
     ci_identifier: str,
+    run: dict
 ):
     """
 
@@ -38,32 +38,37 @@ def GetGridCFE(
 
     """
 
-    # get global clean carriers
+    
+
+        # get global clean carriers
     global_clean_carriers = [
         i
         for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
         if i in n.generators.carrier.tolist()
     ]
 
-    # get clean generators in R
-    R_clean_generators = n.generators.loc[
-        # clean carriers
-        (n.generators.carrier.isin(global_clean_carriers))
-        &
-        # exclude assets not in R
-        # (n.generators.index.str.contains(bus)) &
-        # exclude C&I assets
-        (~n.generators.index.str.contains(ci_identifier))
-    ].index
+    for bus in run["nodes_with_ci_load"]:
+        # get clean generators in R
+        R_clean_generators = n.generators.loc[
+            # clean carriers
+            (n.generators.carrier.isin(global_clean_carriers))
+            &
+            #exclude assets not in R
+            (n.generators.index.str.contains(bus)) &
+            # exclude C&I assets
+            (~n.generators.index.str.contains(ci_identifier))
+        ].index
 
-    # get all generators
-    R_all_generators = n.generators.loc[
-        (~n.generators.index.str.contains(ci_identifier))
-    ].index
+        # get all generators
+        R_all_generators = n.generators.loc[
+            (~n.generators.index.str.contains(ci_identifier))
+            &
+            (n.generators.index.str.contains(bus)) 
+        ].index
 
-    # calculate CFE sceore
-    total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
-    total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
+        # calculate CFE sceore
+        total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
+        total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
     # return CFE score
     return (total_clean_generation / total_generation).round(2).tolist()
@@ -302,7 +307,7 @@ def RunCFE(
     )
 
     # get GridCFE
-    GridCFE = GetGridCFE(N_CFE, ci_identifier)
+    GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
     count += 1
     GridSupplyCFE[f"iteration_{count}"] = GridCFE
 
@@ -331,7 +336,7 @@ def RunCFE(
             io_api="direct",
             env=env,
         )
-        GridCFE = GetGridCFE(N_CFE, ci_identifier)
+        GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
         count += 1
         GridSupplyCFE[f"iteration_{count}"] = GridCFE
 
