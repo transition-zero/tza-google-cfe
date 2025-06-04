@@ -661,7 +661,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
             'load' : [solved_networks[k].loads_t.p_set.filter(regex='C&I').sum().sum() for k in solved_networks.keys()],
             'emissions' : [
                 np.sum(
-                    solved_networks[k].links_t.p0.filter(regex='C&I').filter(regex='Import').values.flatten() @ np.array(cget.GetGridCFE(solved_networks[k], ci_identifier='C&I'))
+                    solved_networks[k].links_t.p0.filter(regex='C&I').filter(regex='Import').values.flatten() @ np.array(cget.GetGridCFE(solved_networks[k], ci_identifier='C&I', run=dict[nodes_with_ci_loads]))
                 ) 
                 for k in solved_networks.keys()
             ],
