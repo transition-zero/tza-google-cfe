@@ -73,7 +73,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
         expanded_capacity
         .loc[expanded_capacity['Scenario'] == '100% RES']
         .drop(['Scenario','CFE Score'], axis=1)
-        .query(" ~carrier.isin(['Transmission']) ")
+        .query(" ~carrier.isin(['Transmission','AC']) ")
         .pivot_table(columns='carrier', values='capacity')
         .div(1e3)
         .rename(index={'capacity':'100% RES'})
@@ -82,7 +82,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
         expanded_capacity
         .query("Scenario.str.contains('CFE')")
         .sort_values('CFE Score')
-        .query(" ~carrier.isin(['Transmission']) ")
+        .query(" ~carrier.isin(['Transmission','AC']) ")
         .pivot_table(index='CFE Score', columns='carrier', values='capacity')
         .div(1e3)
     )
@@ -661,7 +661,7 @@ def plot_results(path_to_run_dir: str, nodes_with_ci_loads):
             'load' : [solved_networks[k].loads_t.p_set.filter(regex='C&I').sum().sum() for k in solved_networks.keys()],
             'emissions' : [
                 np.sum(
-                    solved_networks[k].links_t.p0.filter(regex='C&I').filter(regex='Import').values.flatten() @ np.array(cget.GetGridCFE(solved_networks[k], ci_identifier='C&I'))
+                    solved_networks[k].links_t.p0.filter(regex='C&I').filter(regex='Import').values.flatten() @ np.array(cget.GetGridCFE(solved_networks[k], ci_identifier='C&I', run=dict[nodes_with_ci_loads]))
                 ) 
                 for k in solved_networks.keys()
             ],
