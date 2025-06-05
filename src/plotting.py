@@ -8,7 +8,7 @@ import matplotlib.font_manager as fm
 from . import get as cget
 from . import plotting as cplt
 
-def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
+def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, run, ci_identifier='C&I'):
     '''Plot the CFE score as a heatmap
     '''
 
@@ -18,7 +18,7 @@ def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
     work_sans_font = fm.FontProperties(fname=work_sans_path_light)
     work_sans_font_medium = fm.FontProperties(fname=work_sans_path_medium)
 
-    cfe_t = cget.get_cfe_score_ts(n, ci_identifier)
+    cfe_t = cget.get_cfe_score_ts(n, run, ci_identifier,)
     cfe_t.index = cfe_t.index #.tz_localize('UTC').tz_convert('Asia/Singapore')
     cfe_t['Hour'] = cfe_t.index.hour + 1
     cfe_t['Day'] = cfe_t.index.day
@@ -35,14 +35,16 @@ def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
 
     cost = (
         cget
-        .get_total_ci_procurement_cost(n, n_reference)
+        .get_total_ci_procurement_cost(n)
         .pivot_table(
             columns='carrier', 
             values='annual_system_cost [M$]'
         )
-        .drop([i for i in cget.get_total_ci_procurement_cost(n, n_reference).carrier.unique() if i not in ci_techs.values], axis=1)
+        .drop([i for i in cget.get_total_ci_procurement_cost(n).carrier.unique() if i not in ci_techs.values], axis=1)
         .div(1e3)
     )
+    if cost.empty: # in the case where there are no C&I nodes in the brownfield network
+        cost = pd.DataFrame(0, index=[0], columns=ci_techs.values)
 
     cost.plot(
         kind='bar', 
@@ -97,7 +99,7 @@ def plot_cfe_hmap(n, n_reference, ymax, fields_to_plot, ci_identifier='C&I'):
     return f, ax0, ax1
 
 
-def plot_monthly_cfe_hmap(n, ci_identifier='C&I'):
+def plot_monthly_cfe_hmap(n, run, ci_identifier='C&I'):
     '''Plot the CFE score as a heatmap
     '''
 
@@ -106,8 +108,8 @@ def plot_monthly_cfe_hmap(n, ci_identifier='C&I'):
     work_sans_path_medium = './assets/WorkSans-Medium.ttf'
     work_sans_font = fm.FontProperties(fname=work_sans_path_light)
     work_sans_font_medium = fm.FontProperties(fname=work_sans_path_medium)
-    
-    cfe_t = cget.get_cfe_score_ts(n, ci_identifier)
+
+    cfe_t = cget.get_cfe_score_ts(n, run, ci_identifier)
     cfe_t.index = cfe_t.index 
     cfe_t['Hour'] = cfe_t.index.hour + 1
     cfe_t['Day'] = cfe_t.index.day
@@ -284,4 +286,7 @@ def tech_color_palette():
         'Fossil part of coal cofired with biomass': '#b18873',
         'Clean part of coal cofired with biomass': '#fe8348',
         'Long Duration Storage': '#69b2f5',
+        'Liquid Air Energy Storage': '#69b2f5',
+        'Grid Imports': '#e3c1f0',
+        'Grid Exports': '#ba63da',
     }
