@@ -97,8 +97,8 @@ def PrepareNetworkForCFE(
             bus0=bus, 
             bus1=ci_bus_name, 
             p_nom=0,
-            p_nom_extendable=True, # keep this as True to prevent infeasibilities
-            # add small capital and marginal costs to prevent model infeasibilities
+            p_nom_extendable=True,
+            carrier="AC",  # Adding AC carrier for electricity
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
@@ -110,7 +110,7 @@ def PrepareNetworkForCFE(
             bus1=bus,
             p_nom=0,
             p_nom_extendable=p_nom_extendable,
-            # add small capital and marginal costs to prevent model infeasibilities
+            carrier="AC",  # Adding AC carrier for electricity
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
@@ -123,7 +123,7 @@ def PrepareNetworkForCFE(
             bus1=ci_storage_bus_name, 
             p_nom=0,
             p_nom_extendable=p_nom_extendable,
-            # add small capital and marginal costs to prevent model infeasibilities
+            carrier="AC",  # Adding AC carrier for electricity
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
@@ -135,7 +135,7 @@ def PrepareNetworkForCFE(
             bus1=ci_bus_name, 
             p_nom=0,
             p_nom_extendable=p_nom_extendable,
-            # add small capital and marginal costs to prevent model infeasibilities
+            carrier="AC",  # Adding AC carrier for electricity
             marginal_cost=0.01, 
             capital_cost=0.01,
         )

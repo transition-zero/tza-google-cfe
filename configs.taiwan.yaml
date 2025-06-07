@@ -13,6 +13,7 @@ paths:
   brownfield_models: "networks/brownfield/"
   output_model_runs: "outputs/model_runs/" # path to save model run outputs
   path_to_model: 'C:/Users/jy/Projects/tza-pypsa/stock_models/Taiwan'
+
 global_vars:
   year: 2030 # year of the model run
   frequency: 1h # time resolution of the model run (should be 1h for CFE)
@@ -23,6 +24,50 @@ global_vars:
   maximum_excess_export_cfe: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid under CFE scenarios
   maximum_excess_export_res100: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
 
+constraints:
+  bus_self_sufficiency: # constraint is set by user
+    enable: false
+    fraction: 0.6
+    buses:
+      - 'TWN'
+  bus_individual_self_sufficiency: # constraints are predefined in network
+    enable: false
+  policy_targets:
+    enable: false
+  min_annual_generation:
+    enable: false
+    generator: 'example01'
+    fraction: 0.2
+  min_utilisation_links:
+    enable: false
+    carriers:
+      - 'AC'
+  max_utilisation_links:
+    enable: false
+    carriers:
+      - 'AC'
+  min_utilisation_generator: # fraction is predefined in network
+    enable: false
+    carriers:
+      - 'coal'
+  max_utilisation_generator: # fraction is predefined in network
+    enable: false
+    carriers:
+      - 'coal'
+  max_utilisation: # fraction is set by user
+    enable: false
+    fraction: 0.8
+    carriers:
+      - 'coal'
+      - 'gas'
+      - 'oil'
+      - 'geothermal'
+  cofiring_ccs_gen:
+    enable: false
+    clean_generator:
+      - 'hydrogen'
+    fossil_generator:
+      - 'coal'
 
 model_runs:
   - name: TWN_P1_TWN
@@ -51,8 +96,8 @@ technology_palette:
     - Batteries
 
 solver:
-  name: gurobi
-  options: gurobi-default
+  name: highs
+  options: highs-default
 
 solver_options:
   highs-default:
