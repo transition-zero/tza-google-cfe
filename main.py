@@ -98,7 +98,7 @@ def run_scenarios(configs):
         path_to_run_dir = os.path.join(
             configs["paths"]["output_model_runs"], run["name"]
         )
-        postprocess.plot_results(path_to_run_dir,run["nodes_with_ci_load"][0])
+        postprocess.plot_results(path_to_run_dir,run,run["nodes_with_ci_load"][0])
     print("*" * 100)
 
 
