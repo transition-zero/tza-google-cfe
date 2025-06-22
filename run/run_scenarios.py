@@ -38,8 +38,6 @@ def GetGridCFE(
 
     """
 
-    
-
         # get global clean carriers
     global_clean_carriers = [
         i

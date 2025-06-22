@@ -1,11 +1,13 @@
 import os
-
 import click
 import gurobipy
 import pypsa
-
 from run.run_scenarios import RunBrownfieldSimulation, RunCFE, RunRES100
 from src import brownfield, cfe, helpers, postprocess
+from tz_pypsa.constraints import (
+    constr_min_annual_utilisation_generator,
+    constr_max_annual_utilisation_generator,
+)
 
 
 def build_brownfield_network(run, configs) -> None:
@@ -47,15 +49,20 @@ def solve_brownfield_network(run, configs, with_cfe: bool, env=None) -> pypsa.Ne
     else:
         final_brownfield = tza_brownfield_network
     
+    # Create the model first
     final_brownfield.optimize.create_model()
+
+    # Apply other constraints
     brownfield.ApplyBrownfieldConstraints(final_brownfield, run, configs)
 
-    final_brownfield.optimize(
+    # Solve the model
+    final_brownfield.optimize.solve_model(
         solver_name=configs["solver"]["name"],
         solver_options=configs["solver_options"][configs["solver"]["options"]],
         io_api="direct",
         env=env,
     )
+
     return final_brownfield
 
 
@@ -148,7 +155,7 @@ def solve_brownfield(config, with_cfe: bool):
         run_name = run["name"]
         output_dir = os.path.join(configs["paths"]["output_model_runs"])
         os.makedirs(output_dir, exist_ok=True)
-        solved_brownfield_network = solve_brownfield_network(run, configs, with_cfe, env=env)
+        solved_brownfield_network = solve_brownfield_network(run, configs, with_cfe=True, env=env)
         solved_brownfield_network.export_to_netcdf(
             os.path.join(output_dir, f"{run_name}.nc")
         )

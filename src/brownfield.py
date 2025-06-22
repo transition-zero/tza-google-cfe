@@ -55,7 +55,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
             timesteps = configs['global_vars']['timesteps'],
             #select_nodes=configs['global_vars']['select_nodes'], 
             years=[ configs['global_vars']['year'] ],
-            #backstop=run['backstop'],
+            backstop=False,
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
     )
