@@ -1357,9 +1357,14 @@ def plot_ci_unit_cost_of_electricity(solved_networks, path_to_run_dir, work_sans
             )
         )
         .fillna(0)
+        # We calculate unit costs in two ways:
+        # unit cost a (i.e. where the PPA manager handles PPA supply and export revenue, and the C&I consumer manages imports and import costs themselves)
+        # unit cost b (where the PPA manager handles everything on behalf of the C&I consumer, with all costs divided by all electricity delivered)
         .assign(unit_cost_a=lambda df: df['ppa_unit_cost'] + df['import_unit_cost'] + df['export_unit_cost'])
+        .assign(unit_cost_b=lambda df: (df['capex'] + df['opex'] + df['import_cost'] + df['export_revenue'])/(df['ci_load'] + df['grid_exports']))
     )
 
+    ### Plot unit cost a
     res_unit_cost = (
         unit_cost
         .loc[unit_cost['unit_cost_a'] != 0]
@@ -1370,6 +1375,7 @@ def plot_ci_unit_cost_of_electricity(solved_networks, path_to_run_dir, work_sans
         .rename(index={0:'100% RES'})
         # .set_index('100% RES')
     )
+    print(res_unit_cost)
 
     cfe_unit_cost = (
         unit_cost
@@ -1455,6 +1461,107 @@ def plot_ci_unit_cost_of_electricity(solved_networks, path_to_run_dir, work_sans
         ),
         bbox_inches='tight'
     )
+
+     ### Plot unit cost b
+    fig, ax0, ax1 = cplt.bar_plot_2row(figsize=(6,4), width_ratios=[1,10])
+
+    res_unit_cost = (
+        unit_cost
+        .loc[unit_cost['unit_cost_b'] != 0]
+        .loc[unit_cost['Scenario'] == '100% RES']
+        .loc[:, ['CFE Score', 'carrier', 'unit_cost_b']]
+        .pivot_table(index='CFE Score', columns='carrier', values='unit_cost_b')
+        .assign(**{'Net Cost': lambda df: df.sum(axis=1)})
+        .rename(index={0:'100% RES'})
+        # .set_index('100% RES')
+    )
+    print(res_unit_cost)
+
+    cfe_unit_cost = (
+        unit_cost
+        .loc[unit_cost['unit_cost_b'] != 0]
+        .query("Scenario.str.contains('CFE')")
+        .sort_values('CFE Score')
+        .loc[:, ['CFE Score', 'carrier', 'unit_cost_b']]
+        .pivot_table(index='CFE Score', columns='carrier', values='unit_cost_b')
+        .assign(**{'Net Cost': lambda df: df.sum(axis=1)})
+    )
+
+    # save df
+    (pd.concat([res_unit_cost, cfe_unit_cost], axis=0)).to_csv(os.path.join(path_to_run_dir, 'results/06b_unit_cost.csv'), index=True)
+
+    colors = cplt.tech_color_palette()
+    res_unit_cost.drop(columns=['Net Cost'], errors='ignore').plot(
+        kind='bar', stacked=True, ax=ax0, legend=False,
+        color=[colors.get(x, '#333333') for x in res_unit_cost.columns if x != 'Net Cost']
+    )
+    cfe_unit_cost.drop(columns=['Net Cost'], errors='ignore').plot(
+        kind='bar', stacked=True, ax=ax1, legend=True,
+        color=[colors.get(x, '#333333') for x in cfe_unit_cost.columns if x != 'Net Cost']
+    )
+    
+    ax0.scatter(
+        x=res_unit_cost.index,
+        y=res_unit_cost['Net Cost'],
+        color='black',
+        marker='x',
+        s=40,
+        label='Net Cost'
+    )
+
+    ax1.scatter(
+        x=np.arange(len(cfe_unit_cost)),
+        y=cfe_unit_cost['Net Cost'],
+        color='black',
+        marker='x',
+        s=40,
+        label='Net Cost'
+    )
+    
+    ax0.set_ylabel('Unit Cost (USD/MWh)', fontproperties=work_sans_font)
+    ax1.set_xlabel('CFE Score [%]', fontproperties=work_sans_font)
+    ax0.set_xlabel('')
+
+    for ax in [ax0, ax1]:
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontproperties=work_sans_font)
+        for label in ax.get_yticklabels():
+            label.set_fontproperties(work_sans_font)
+        ax.yaxis.grid(True, linestyle=':', linewidth=0.5)
+        sns.despine(ax=ax, left=False)
+
+    # Remove legend title and box, make sure labels are displayed in the same order as in the plot
+    handles, labels = ax1.get_legend_handles_labels()
+    order = [cfe_unit_cost.columns.tolist().index(label) for label in labels if label in cfe_unit_cost.columns]
+    sorted_handles_labels = sorted(zip(order, handles, labels), key=lambda x: -x[0])
+    sorted_handles, sorted_labels = zip(*[(h, l) for _, h, l in sorted_handles_labels])
+
+    legend = ax1.legend(sorted_handles, sorted_labels, bbox_to_anchor=(1, 0.5), ncol=1)
+    legend.set_title(None)
+    legend.get_frame().set_linewidth(0)
+
+    # Set font of the legend
+    for text in legend.get_texts():
+        text.set_fontproperties(work_sans_font)
+
+    # Adjust horizontal space between ax0 and ax1
+    fig.subplots_adjust(wspace=0.1)
+
+    # save plot
+    fig.savefig(
+        os.path.join(
+            path_to_run_dir, 'results/06b_unit_cost.png'
+        ),
+        bbox_inches='tight'
+    )
+
+     # save plot
+    fig.savefig(
+        os.path.join(
+            path_to_run_dir, 'results/06b_unit_cost.svg'
+        ),
+        bbox_inches='tight'
+    )
+
 
 def plot_ci_unit_cost_of_electricity_alt(solved_networks, 
                                          path_to_run_dir, 
@@ -1569,7 +1676,7 @@ def plot_ci_unit_cost_of_electricity_alt(solved_networks,
     )
 
     # save df
-    (pd.concat([res_unit_cost, cfe_unit_cost], axis=0)).round(2).to_csv(os.path.join(path_to_run_dir, 'results/06b_unit_cost.csv'), index=True)
+    (pd.concat([res_unit_cost, cfe_unit_cost], axis=0)).round(2).to_csv(os.path.join(path_to_run_dir, 'results/06c_unit_cost.csv'), index=True)
 
     fig, ax0, ax1 = cplt.bar_plot_2row(figsize=(6,4), width_ratios=[1,10])
     colors = cplt.tech_color_palette()
@@ -1631,7 +1738,7 @@ def plot_ci_unit_cost_of_electricity_alt(solved_networks,
     # save plot
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/06b_unit_cost.png'
+            path_to_run_dir, 'results/06c_unit_cost.png'
         ),
         bbox_inches='tight'
     )
@@ -1639,7 +1746,7 @@ def plot_ci_unit_cost_of_electricity_alt(solved_networks,
      # save plot
     fig.savefig(
         os.path.join(
-            path_to_run_dir, 'results/06b_unit_cost.svg'
+            path_to_run_dir, 'results/06c_unit_cost.svg'
         ),
         bbox_inches='tight'
     )
