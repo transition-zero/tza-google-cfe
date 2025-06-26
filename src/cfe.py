@@ -310,9 +310,11 @@ def PrepareNetworkForCFE(
                 #     cyclic_state_of_charge=True,
                 # )
 
+
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-    
+
+    network.generators.to_csv('generators.csv')    
     return network
 
 
