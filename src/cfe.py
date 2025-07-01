@@ -226,6 +226,7 @@ def PrepareNetworkForCFE(
                 network.add(
                     "StorageUnit",
                     ci_bus_name + '-' + params['carrier'],
+                    type = technology,
                     bus = ci_storage_bus_name,
                     p_nom_extendable = p_nom_extendable,
                     cyclic_state_of_charge=True,
