@@ -74,9 +74,12 @@ def get_ci_cost_summary(n : pypsa.Network) -> pd.DataFrame:
     df.loc[:, 'capex'] = df['p_nom_opt'] * df['capital_cost']
     df.loc[:, 'opex'] = df['dispatch'] * df['marginal_cost']
 
+    # marginal price of the brownfield bus
+    ci_brown_bus = n.buses[n.buses.index.str.contains('C&I')].index.str.split('C&I').str[0].str.strip()[0]
+
     # calculate import costs
     import_links_t = n.links_t.p0.filter(regex='C&I').filter(regex='Import').sum(axis=1)
-    import_link_p = n.buses_t.marginal_price.filter(regex='^(?!.*C&I)').mean(axis=1)
+    import_link_p = n.buses_t.marginal_price[ci_brown_bus]
     import_cost = ( import_links_t * import_link_p ).sum() 
 
     # append to df
