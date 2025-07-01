@@ -1353,7 +1353,7 @@ def plot_ci_unit_cost_of_electricity(solved_networks, path_to_run_dir, work_sans
                 0
             ),
             ppa_unit_cost=lambda df: np.where(
-                df['carrier'] != 'Grid Imports',
+                (df['carrier'] != 'Grid Imports') & (df['carrier'] != 'Grid Exports'),
                 (1/(df['ci_load'] - df['grid_imports'] + df['grid_exports'])) * df['ppa_weighting'] * df['total_costs'],
                 0
             ),
