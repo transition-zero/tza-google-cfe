@@ -146,7 +146,7 @@ def ApplyBrownfieldConstraints(network, run, configs) -> pypsa.Network:
     # Cofiring CCS generation constraint
     if configs["constraints"]["cofiring_ccs_gen"]["enable"]:
         constr_cofiring_ccs_generation_join_plant(network, 
-                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator"],
-                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator"])
-    
+                                                  clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator"],
+                                                  fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator"])
+
     return network

@@ -1,5 +1,5 @@
 version = 1
-revision = 1
+revision = 2
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version < '3.12'",
@@ -477,7 +477,7 @@ requires-dist = [
     { name = "plotly", specifier = ">=6.0.0" },
     { name = "pypsa", specifier = ">=0.32.0" },
     { name = "seaborn", specifier = ">=0.13.2" },
-    { name = "tza-pypsa", git = "https://github.com/transition-zero/tza-pypsa.git?rev=v0.0.4" },
+    { name = "tza-pypsa", git = "https://github.com/transition-zero/tza-pypsa.git?rev=v0.0.5" },
 ]
 
 [[package]]
@@ -1593,7 +1593,7 @@ wheels = [
 [[package]]
 name = "tza-pypsa"
 version = "0.0.1"
-source = { git = "https://github.com/transition-zero/tza-pypsa.git?rev=v0.0.4#eee547042420fffbd0446e10448216d3530029ea" }
+source = { git = "https://github.com/transition-zero/tza-pypsa.git?rev=v0.0.5#8152065852f93e72d74bf757da5a91faed79f789" }
 dependencies = [
     { name = "cartopy" },
     { name = "h5netcdf" },
