@@ -1,4 +1,6 @@
 import pypsa
+import numpy as np
+import pandas as pd
 
 def PrepareNetworkForCFE(
         network: pypsa.Network, 
@@ -169,7 +171,13 @@ def PrepareNetworkForCFE(
                     ((network.generators["type"] == technology) & (network.generators["bus"] == bus) 
                      & (network.generators["p_nom_extendable"] == True))
                 ]
-                cf = network.generators_t.p_max_pu[generator_names]
+
+                for generator in generator_names:
+                    if network.generators.loc[generator].is_blend_or_ccs:
+                        cf_int = np.ones((8760,1))
+                        cf = pd.DataFrame(cf_int)
+                    else:
+                        cf = network.generators_t.p_max_pu[generator_names]
 
                 if cf.empty:
                     cf = params['p_max_pu']
@@ -314,7 +322,6 @@ def PrepareNetworkForCFE(
             else:
                 raise ValueError(f"Invalid technology: {technology}")
 
-    network.generators.to_csv('generators.csv')    
     return network
 
 
