@@ -54,7 +54,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
             frequency = configs['global_vars']['frequency'],
             timesteps = configs['global_vars']['timesteps'],
             #select_nodes=configs['global_vars']['select_nodes'], 
-            year=[ configs['global_vars']['year'] ],
+            years=[ configs['global_vars']['year'] ],
             #backstop=run['backstop'],
             set_global_constraints=configs['global_vars']['set_global_constraints'],
         )
@@ -145,8 +145,41 @@ def ApplyBrownfieldConstraints(network, run, configs) -> pypsa.Network:
 
     # Cofiring CCS generation constraint
     if configs["constraints"]["cofiring_ccs_gen"]["enable"]:
-        constr_cofiring_ccs_generation_join_plant(network, 
-                                                  clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator"],
-                                                  fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator"])
+        if run["nodes_with_ci_load"] == ['JPN01']:
+            constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN01"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN01"])
+        elif run["nodes_with_ci_load"] == ['JPN02']:
+            constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN02"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN02"])            
+        elif run["nodes_with_ci_load"] == ['JPN03']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN03"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN03"])        
+        elif run["nodes_with_ci_load"] == ['JPN04']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN04"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN04"])        
+        elif run["nodes_with_ci_load"] == ['JPN05']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN05"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN05"])        
+        elif run["nodes_with_ci_load"] == ['JPN06']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN06"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN06"])         
+        elif run["nodes_with_ci_load"] == ['JPN07']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN07"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN07"])         
+        elif run["nodes_with_ci_load"] == ['JPN08']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN08"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN08"])         
+        elif run["nodes_with_ci_load"] == ['JPN09']:
+                constr_cofiring_ccs_generation_join_plant(network, 
+                                                clean_generator = configs["constraints"]["cofiring_ccs_gen"]["clean_generator_JPN09"],
+                                                fossil_generator = configs["constraints"]["cofiring_ccs_gen"]["fossil_generator_JPN09"])         
 
     return network
