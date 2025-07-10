@@ -206,7 +206,7 @@ def PrepareNetworkForCFE(
                             # universal technology parameters
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
+                            marginal_cost = network.generators.loc[generator].marginal_cost, # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
@@ -243,7 +243,7 @@ def PrepareNetworkForCFE(
                             # universal technology parameters
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
+                            marginal_cost = network.generators.loc[generator].marginal_cost, # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
