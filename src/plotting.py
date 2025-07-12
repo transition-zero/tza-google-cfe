@@ -272,6 +272,7 @@ def tech_color_palette():
         'Gas Unspecified': '#bababa',
         'Lignite': '#322f34',
         'Liquified Natural Gas': '#bababa',
+        'Liquid Air Energy Storage': '#69b2f5',
         'Natural Gas': '#bababa',
         'Naphtha': '#bababa',
         'Sub-bituminous Coal': '#322f34',

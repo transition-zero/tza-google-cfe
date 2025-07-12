@@ -74,9 +74,12 @@ def get_ci_cost_summary(n : pypsa.Network) -> pd.DataFrame:
     df.loc[:, 'capex'] = df['p_nom_opt'] * df['capital_cost']
     df.loc[:, 'opex'] = df['dispatch'] * df['marginal_cost']
 
+    # marginal price of the brownfield bus
+    ci_brown_bus = n.buses[n.buses.index.str.contains('C&I')].index.str.split('C&I').str[0].str.strip()[0]
+
     # calculate import costs
     import_links_t = n.links_t.p0.filter(regex='C&I').filter(regex='Import').sum(axis=1)
-    import_link_p = n.buses_t.marginal_price.filter(regex='^(?!.*C&I)').mean(axis=1)
+    import_link_p = n.buses_t.marginal_price[ci_brown_bus]
     import_cost = ( import_links_t * import_link_p ).sum() 
 
     # append to df
@@ -196,6 +199,23 @@ def get_emissions(n: pypsa.Network) -> float:
         .sum()
         .sum()
     )
+
+def get_ci_parent_emissions(n: pypsa.Network, nodes_with_ci_loads) -> float:
+    '''Returns hourly emissions in tonnes CO2-eq for the C&I bus
+    '''
+    ci_parent_generators = n.generators[n.generators.index.str.contains(nodes_with_ci_loads)]
+    ci_parent_generators_t = n.generators_t.p[ci_parent_generators.index]
+    ci_parent_load = 1/(n.loads_t.p.filter(regex=nodes_with_ci_loads).filter(regex='^(?!.*C&I)'))
+    emissions = (
+        (
+            ci_parent_generators_t
+            / ci_parent_generators.efficiency 
+            * ci_parent_generators.carrier.map(n.carriers.co2_emissions)
+        )
+        .sum(axis=1)
+    )
+    emissions_intensity = emissions * ci_parent_load.squeeze()
+    return emissions_intensity
 
 
 def get_unit_cost(n : pypsa.Network) -> pd.DataFrame:
