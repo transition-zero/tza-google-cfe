@@ -192,12 +192,12 @@ technology_palette:
   palette_1:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
-    # - wind-onshore
+    - wind-onshore
     - battery
   palette_2:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
-    # - wind-onshore
+    - wind-onshore
     - battery
     - long-duration-storage
     - hydro-storage
