@@ -184,6 +184,7 @@ def PrepareNetworkForCFE(
                     # unique technology parameters by bus
                     p_nom = 0, # starting capacity (MW)
                     p_nom_min = 0, # minimum capacity (MW)
+                    # p_nom_max = params['p_nom_max'], # maximum capacity (MW)
                     p_max_pu = cf, # capacity factor
                     p_min_pu = params['p_min_pu'], # minimum capacity factor
                     efficiency = params['efficiency'], # efficiency
@@ -229,6 +230,7 @@ def PrepareNetworkForCFE(
                     type = technology,
                     bus = ci_storage_bus_name,
                     p_nom_extendable = p_nom_extendable,
+                    # p_nom_max = params['p_nom_max'], # maximum capacity (MW)
                     cyclic_state_of_charge=True,
                     max_hours=params['max_hours'],
                     build_year=params['build_year'],

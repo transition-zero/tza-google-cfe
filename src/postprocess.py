@@ -1781,6 +1781,51 @@ def plot_system_costs_vs_benefits(solved_networks, path_to_run_dir, work_sans_fo
     # get results for reference scenario
     ref = cost_results.query("Scenario == 'Reference'")
 
+    # DEBUG: Save cost_results to CSV for inspection
+    print("\n" + "="*60)
+    print("DEBUGGING COST CALCULATION ISSUE")
+    print("="*60)
+    cost_results.to_csv(os.path.join(path_to_run_dir, 'debug_cost_results.csv'))
+    print(f"Full cost_results saved to: {os.path.join(path_to_run_dir, 'debug_cost_results.csv')}")
+    
+    # DEBUG: Print reference scenario info
+    print(f"\nReference scenario shape: {ref.shape}")
+    print("Reference scenario data:")
+    print(ref.to_string())
+    ref.to_csv(os.path.join(path_to_run_dir, 'debug_reference_costs.csv'))
+    print(f"Reference costs saved to: {os.path.join(path_to_run_dir, 'debug_reference_costs.csv')}")
+    
+    # DEBUG: Check each scenario
+    scenarios = [s for s in cost_results.Scenario.unique().tolist() if s != 'Reference']
+    print(f"\nNon-reference scenarios: {scenarios}")
+    
+    for s in scenarios:
+        scenario_data = cost_results.query(f"Scenario == '{s}'")
+        print(f"\nScenario '{s}' shape: {scenario_data.shape}")
+        print(f"Scenario '{s}' data:")
+        print(scenario_data.to_string())
+        scenario_data.to_csv(os.path.join(path_to_run_dir, f'debug_{s}_costs.csv'))
+        print(f"Scenario '{s}' costs saved to: {os.path.join(path_to_run_dir, f'debug_{s}_costs.csv')}")
+        
+        # Check if shapes match
+        if ref.shape != scenario_data.shape:
+            print(f"WARNING: Shape mismatch! Reference: {ref.shape}, {s}: {scenario_data.shape}")
+            
+            # Show which components are different
+            ref_index = set(ref.index)
+            scenario_index = set(scenario_data.index)
+            missing_in_scenario = ref_index - scenario_index
+            extra_in_scenario = scenario_index - ref_index
+            
+            if missing_in_scenario:
+                print(f"Components in Reference but missing in {s}: {missing_in_scenario}")
+            if extra_in_scenario:
+                print(f"Components in {s} but missing in Reference: {extra_in_scenario}")
+    
+    print("="*60)
+    print("END DEBUG INFO")
+    print("="*60 + "\n")
+
     # loop through each scenario and calculate cost delta
     cost_delta = pd.concat(
         [
