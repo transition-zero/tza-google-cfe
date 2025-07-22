@@ -318,7 +318,6 @@ def PrepareNetworkForCFE(
                 #     cyclic_state_of_charge=True,
                 # )
 
-
             else:
                 raise ValueError(f"Invalid technology: {technology}")
 
@@ -392,31 +391,39 @@ def apply_cfe_constraint(
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
+            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
+            name=f"cfe-constraint-hourly-matching-{bus}",
         )
 
         # Constraint 2: CFE target - note the CI_PPA_Fossil is offset by the share of fossil production which must be exported (set by CFE score)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
+            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
+            name=f"cfe-constraint-target-{bus}",
+ 
         )
 
         # Constraint 3: Excess
         # ---------------------------------------------------------------
         n.model.add_constraints(
             CI_GridExport.sum() <= sum(CI_Demand) * max_excess_export,
+            name=f"cfe-constraint-excess-{bus}",
         )
 
         # Constraint 4: Battery can only be charged by clean PPA (not grid)
         # ---------------------------------------------------------------
         n.model.add_constraints(
             CI_PPA_Clean >= CI_StorageCharge,
+            name=f"cfe-constraint-storage-{bus}",
         )
 
         #Constraint 5: Force fossil fuel production (from blended or CCS) to be exported
 
         n.model.add_constraints(
-            CI_GridExport >= CI_PPA_Fossil * CFE_Score
+            CI_GridExport >= CI_PPA_Fossil * CFE_Score,
+            name=f"cfe-constraint-fossil-excess-{bus}",
         )
 
+    # n.generators.to_csv('generators_tp3_check.csv')
+    
     return n
