@@ -21,8 +21,8 @@ global_vars:
   ci_label: C&I # this is a unique identifier for all CFE attributes in the network
   enable_fossil_charging: false # if true, the model will allow batteries to be charged by fossil fuels
   set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
-  maximum_excess_export_cfe: 1 # maximum fraction of excess electricity that can be sold from C&I asset to grid under CFE scenarios
-  maximum_excess_export_res100: 1 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
+  maximum_excess_export_cfe: 2 # maximum fraction of excess electricity that can be sold from C&I asset to grid under CFE scenarios
+  maximum_excess_export_res100: 2 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
 
 constraints:
   bus_self_sufficiency: # constraint is set by user
@@ -51,7 +51,7 @@ constraints:
     carriers: 'Oil|Biomass'
   max_utilisation_generator: # fraction is predefined in network
     enable: true
-    carriers: 'Coal|LNG'
+    carriers: 'Coal|LNG|Geothermal'
   max_utilisation: # fraction is set by user
     enable: false
     fraction: 0.8
@@ -65,27 +65,27 @@ constraints:
     clean_generator_JPN01: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN01 C&I Grid-blending-blueH2-gas-unspecified-ext-2030-PPA-Clean','JPN01 C&I Grid-blending-blueNH3-coal-unspecified-ext-2030-PPA-Clean','JPN01 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
 
 model_runs:
-  # - name: TWN_P1_BuildConstraints
-  #   palette: palette_1
-  #   stock_model: Taiwan
-  #   select_nodes:
-  #     - TWN       
-  #   nodes_with_ci_load:
-  #     - TWN
-  #   cfe_score:
-  #     - 0.7
-  #     - 0.8
-  #     - 0.9
-  #     - 0.95
-  #     - 0.99
-  #     - 1.0
-  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_generation_expansion: false # if true, the model will allow generation expansion
-  #   allow_storage_expansion: false # if true, the model will allow storage expansion
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name: TWN_P1_006
+    palette: palette_1
+    stock_model: Taiwan
+    select_nodes:
+      - TWN       
+    nodes_with_ci_load:
+      - TWN
+    cfe_score:
+      - 0.7
+      - 0.8
+      - 0.9
+      - 0.95
+      - 0.99
+      - 1.0
+    ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    allow_generation_expansion: false # if true, the model will allow generation expansion
+    allow_storage_expansion: false # if true, the model will allow storage expansion
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
-  - name: TWN_P2_testing
+  - name: TWN_P2_005
     palette: palette_2
     stock_model: Taiwan
     select_nodes:
@@ -93,11 +93,11 @@ model_runs:
     nodes_with_ci_load:
       - TWN
     cfe_score:
-      # - 0.7
-      # - 0.8
-      # - 0.9
-      # - 0.95
-      # - 0.99
+      - 0.7
+      - 0.8
+      - 0.9
+      - 0.95
+      - 0.99
       - 1.0
     ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_generation_expansion: false # if true, the model will allow generation expansion
@@ -116,11 +116,11 @@ technology_palette:
     - 'onshorewind-unspecified'
     - 'Batteries'
     - 'LAES'
-  palette_3:
-    - 'solar-unspecified'
-    - 'onshorewind-unspecified'
-    - 'Batteries'
-    - 'LAES'
+  # palette_3:
+  #   - 'solar-unspecified'
+  #   - 'onshorewind-unspecified'
+  #   - 'Batteries'
+  #   - 'LAES'
     # - 'Coal'
     # - 'LNG'
 
