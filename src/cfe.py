@@ -197,6 +197,7 @@ def PrepareNetworkForCFE(
                             # unique technology parameters by bus
                             p_nom = 0, # starting capacity (MW)
                             p_nom_min = 0, # minimum capacity (MW)
+                            p_nom_max = params['p_nom_max'], # maximum capacity (MW)
                             p_max_pu = cf, # capacity factor
                             p_min_pu = params['p_min_pu'], # minimum capacity factor
                             efficiency = params['efficiency'], # efficiency
@@ -234,6 +235,7 @@ def PrepareNetworkForCFE(
                             # unique technology parameters by bus
                             p_nom = 0, # starting capacity (MW)
                             p_nom_min = 0, # minimum capacity (MW)
+                            p_nom_max = params['p_nom_max'], # maximum capacity (MW)
                             p_max_pu = cf, # capacity factor
                             p_min_pu = params['p_min_pu'], # minimum capacity factor
                             efficiency = params['efficiency'], # efficiency
@@ -320,7 +322,8 @@ def PrepareNetworkForCFE(
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-
+            
+    network.generators.to_csv('generators.csv')
     return network
 
 

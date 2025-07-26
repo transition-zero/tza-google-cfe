@@ -61,13 +61,13 @@ constraints:
       - 'oil'
       - 'geothermal'
   cofiring_ccs_gen:
-    enable: true
+    enable: false
     clean_generator_TWN: ['TWN-BlueH2-2030_endo','TWN-GasCCSSequestered-2030_endo','TWN C&I Grid-blending-blueH2-gas-unspecified-ext-2030-PPA-Clean','TWN C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
     fossil_generator_TWN: ['TWN-BlueH2_Gas-2030_endo','TWN-GasCCSLeaked-2030_endo','TWN C&I Grid-blending-blueH2-gas-unspecified-ext-2030-PPA-Fossil','TWN C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: TWN_P3_007
-    palette: palette_3
+  - name: TWN_testing
+    palette: palette_1
     stock_model: Taiwan
     select_nodes:
       - TWN       
