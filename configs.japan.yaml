@@ -62,57 +62,57 @@ constraints:
       - 'oil'
       - 'geothermal'
   cofiring_ccs_gen:
-    enable: true
-    clean_generator_JPN01: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN01 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN02: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN02 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN03: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN03 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN04: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN04 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN05: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN05 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN06: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN06 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN07: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN07 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN08: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN08 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    clean_generator_JPN09: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo','JPN09 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
-    fossil_generator_JPN01: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN01 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN02: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN02 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN03: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN03 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN04: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN04 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN05: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN05 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN06: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN06 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN07: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN07 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN08: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN08 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
-    fossil_generator_JPN09: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo','JPN09 C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
+    enable: True
+    clean_generator_JPN01: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN02: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN03: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN04: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN05: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN06: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN07: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN08: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    clean_generator_JPN09: ['JPN01-BlueNH3-2030_exo','JPN01-GasCCSSequestered-2030_exo','JPN01-BlueH2-2030_endo','JPN01-BlueNH3-2030_endo','JPN01-GasCCSSequestered-2030_endo','JPN02-BlueH2-2030_endo','JPN02-BlueNH3-2030_endo','JPN02-GasCCSSequestered-2030_endo','JPN03-BlueH2-2030_endo','JPN03-BlueNH3-2030_endo','JPN03-GasCCSSequestered-2030_endo','JPN04-BlueH2-2030_exo','JPN04-BlueNH3-2030_exo','JPN04-BlueH2-2030_endo','JPN04-BlueNH3-2030_endo','JPN04-GasCCSSequestered-2030_endo','JPN05-BlueH2-2030_endo','JPN05-BlueNH3-2030_endo','JPN05-GasCCSSequestered-2030_endo','JPN06-BlueNH3-2030_exo','JPN06-BlueH2-2030_endo','JPN06-BlueNH3-2030_endo','JPN06-GasCCSSequestered-2030_endo','JPN07-BlueH2-2030_endo','JPN07-BlueNH3-2030_endo','JPN07-GasCCSSequestered-2030_endo','JPN08-BlueH2-2030_endo','JPN08-BlueNH3-2030_endo','JPN08-GasCCSSequestered-2030_endo','JPN09-BlueH2-2030_endo','JPN09-BlueNH3-2030_endo','JPN09-GasCCSSequestered-2030_endo']
+    fossil_generator_JPN01: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN02: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN03: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN04: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN05: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN06: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN07: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN08: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
+    fossil_generator_JPN09: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
 
 
 model_runs:
-  # - name: JPN_P3_JPN03_008
-  #   palette: palette_3
-  #   stock_model: Japan
-  #   select_nodes:
-  #     - JPN01
-  #     - JPN02
-  #     - JPN03
-  #     - JPN04
-  #     - JPN05
-  #     - JPN06
-  #     - JPN07
-  #     - JPN08
-  #     - JPN09                       
-  #   nodes_with_ci_load:
-  #     - JPN03
-  #   cfe_score:
-  #     - 0.7
-  #     - 0.8
-  #     - 0.9
-  #     - 0.95
-  #     - 0.99
-  #     - 1.0
-  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   allow_generation_expansion: false
-  #   allow_storage_expansion: false
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P3_JPN02_008
-    palette: palette_3
+  - name: JPN_P1_JPN03_UpdatedStorage
+    palette: palette_1
+    stock_model: Japan
+    select_nodes:
+      - JPN01
+      - JPN02
+      - JPN03
+      - JPN04
+      - JPN05
+      - JPN06
+      - JPN07
+      - JPN08
+      - JPN09                       
+    nodes_with_ci_load:
+      - JPN03
+    cfe_score:
+      - 0.7
+      # - 0.8
+      # - 0.9
+      # # - 0.95
+      # - 0.99
+      # - 1.0
+    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    allow_generation_expansion: false
+    allow_storage_expansion: false
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name: JPN_P1_JPN02_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -127,8 +127,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN02
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -138,8 +138,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P3_JPN01_008
-    palette: palette_3
+  - name: JPN_P1_JPN01_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -154,8 +154,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN01
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -165,8 +165,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN04_008
-    palette: palette_3
+  - name: JPN_P1_JPN04_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -181,8 +181,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN04
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -192,8 +192,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN05_008
-    palette: palette_3
+  - name: JPN_P1_JPN05_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -208,8 +208,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN05
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -219,8 +219,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
-  - name: JPN_P3_JPN06_008
-    palette: palette_3
+  - name: JPN_P1_JPN06_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -235,8 +235,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN06
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -246,8 +246,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN07_008
-    palette: palette_3
+  - name: JPN_P1_JPN07_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -262,8 +262,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN07
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -273,8 +273,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P3_JPN08_008
-    palette: palette_3
+  - name: JPN_P1_JPN08_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -289,8 +289,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN08
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
@@ -300,8 +300,8 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN09_008
-    palette: palette_3
+  - name: JPN_P1_JPN09_UpdatedStorage
+    palette: palette_1
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -316,8 +316,8 @@ model_runs:
     nodes_with_ci_load:
       - JPN09
     cfe_score:
-      - 0.7
-      - 0.8
+      # - 0.7
+      # - 0.8
       - 0.9
       - 0.95
       - 0.99
