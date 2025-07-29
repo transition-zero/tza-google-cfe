@@ -179,6 +179,7 @@ def PrepareNetworkForCFE(
                     else:
                         cf = network.generators_t.p_max_pu[generator_names]
 
+                print(generator_names)
                 if cf.empty:
                     cf = params['p_max_pu']
                 else:
@@ -206,7 +207,7 @@ def PrepareNetworkForCFE(
                             # universal technology parameters
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
+                            marginal_cost = network.generators.loc[generator].marginal_cost, # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
@@ -220,7 +221,7 @@ def PrepareNetworkForCFE(
                             is_blend_or_ccs = params['is_blend_or_ccs'],
                             generation_blend_share = network.generators.loc[generator].generation_blend_share, #
                             min_utilisation_rate = params['min_utilisation_rate'], 
-                            max_utilisation_rate = params['max_utilisation_rate'] 
+                            max_utilisation_rate = params['max_utilisation_rate']  
                         )
                     
                     else:
@@ -243,7 +244,7 @@ def PrepareNetworkForCFE(
                             # universal technology parameters
                             p_nom_extendable = p_nom_extendable, # can the model build more?
                             capital_cost = params['capital_cost'], # currency/MW
-                            marginal_cost = params['marginal_cost'], # currency/MWh
+                            marginal_cost = network.generators.loc[generator].marginal_cost, # currency/MWh
                             carrier = network.generators.loc[generator].carrier, # commodity/carrier
                             build_year = params['build_year'], # year available from
                             lifetime = params['lifetime'], # years
@@ -267,7 +268,9 @@ def PrepareNetworkForCFE(
                     network
                     .storage_units
                     .loc[ 
-                        network.storage_units.carrier == technology
+                        ((network.storage_units["carrier"] == technology)
+                        & (network.storage_units["bus"] == bus)
+                        & (network.storage_units["p_nom_extendable"] == True))
                     ]
                     .groupby(by='type')
                     .first()
@@ -290,6 +293,7 @@ def PrepareNetworkForCFE(
                     efficiency_store=params['efficiency_store'],
                     efficiency_dispatch=params['efficiency_dispatch'],
                     standing_loss=params['standing_loss'],
+                    lifetime=params['lifetime']
                 )
                 
                 '''
@@ -317,7 +321,6 @@ def PrepareNetworkForCFE(
                 #     p_nom_extendable=True,
                 #     cyclic_state_of_charge=True,
                 # )
-
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
@@ -392,31 +395,40 @@ def apply_cfe_constraint(
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge
+            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
+            name=f"cfe-constraint-hourly-matching-{bus}",
         )
 
         # Constraint 2: CFE target - note the CI_PPA_Fossil is offset by the share of fossil production which must be exported (set by CFE score)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score, 
+            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
+            name=f"cfe-constraint-target-{bus}",
+ 
         )
 
         # Constraint 3: Excess
         # ---------------------------------------------------------------
         n.model.add_constraints(
             CI_GridExport.sum() <= sum(CI_Demand) * max_excess_export,
+            name=f"cfe-constraint-excess-{bus}",
         )
 
         # Constraint 4: Battery can only be charged by clean PPA (not grid)
         # ---------------------------------------------------------------
         n.model.add_constraints(
             CI_PPA_Clean >= CI_StorageCharge,
+            name=f"cfe-constraint-storage-{bus}",
         )
 
         #Constraint 5: Force fossil fuel production (from blended or CCS) to be exported
 
         n.model.add_constraints(
-            CI_GridExport >= CI_PPA_Fossil * CFE_Score
+            CI_GridExport >= CI_PPA_Fossil * CFE_Score,
+            name=f"cfe-constraint-fossil-excess-{bus}",
         )
 
+    n.generators.to_csv('generators_tp3_check.csv')
+    n.storage_units.to_csv('storage_units_check.csv')
+    
     return n

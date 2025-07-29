@@ -130,9 +130,8 @@ def RunBrownfieldSimulation(run, configs, env=None):
 
     print(brownfield_path)
     N_BROWNFIELD.export_to_netcdf(brownfield_path)
-
+    
     return N_BROWNFIELD
-
 
 def RunRES100(
     N_BROWNFIELD: pypsa.Network,
@@ -426,6 +425,6 @@ if __name__ == "__main__":
             run["name"],
         )
 
-        postprocess.plot_results(path_to_run_dir)
+        #postprocess.plot_results(path_to_run_dir)
 
     print("*" * 100)
