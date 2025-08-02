@@ -55,9 +55,9 @@ On Windows
 .venv\Scripts\activate
 ```
 
-Install depedencies: 
+Install dependencies: 
 ```bash 
-uv add -r pyproject.toml
+uv sync
 ```
 
 Using `mamba`: 

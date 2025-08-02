@@ -84,8 +84,8 @@ constraints:
 
 
 model_runs:
-  - name: JPN_P1_JPN03_UpdatedStorage
-    palette: palette_1
+  - name: JPN_P3_JPN03_Sen_NoLAES
+    palette: palette_3
     stock_model: Japan
     select_nodes:
       - JPN01
@@ -100,233 +100,233 @@ model_runs:
     nodes_with_ci_load:
       - JPN03
     cfe_score:
-      - 0.7
+      # - 0.7
       # - 0.8
       # - 0.9
-      # # - 0.95
+      # - 0.95
       # - 0.99
-      # - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P1_JPN02_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN02
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
       - 1.0
     ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P1_JPN01_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN01
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P1_JPN04_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN04
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P1_JPN05_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN05
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
-  - name: JPN_P1_JPN06_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN06
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P1_JPN07_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN07
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P1_JPN08_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN08
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P1_JPN09_UpdatedStorage
-    palette: palette_1
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN09
-    cfe_score:
-      # - 0.7
-      # - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
+  # - name: JPN_P1_JPN02_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN02
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: JPN_P1_JPN01_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN01
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
+  # - name: JPN_P1_JPN04_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN04
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
+  # - name: JPN_P1_JPN05_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN05
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
+  # - name: JPN_P1_JPN06_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN06
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
+  # - name: JPN_P1_JPN07_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN07
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: JPN_P1_JPN08_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN08
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
+  # - name: JPN_P1_JPN09_006
+  #   palette: palette_1
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN09
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     # - 0.9 
+  #     # - 0.95
+  #     # - 0.99
+  #     # - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
 
 
 
@@ -347,7 +347,7 @@ technology_palette:
     - solar-unspecified
     - onshorewind-unspecified
     - Batteries
-    - LAES
+    # - LAES
     # - blending-blueH2-gas-unspecified
     # - blending-blueNH3-coal-unspecified
     - gas-CCS-unspecified

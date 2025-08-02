@@ -84,88 +84,88 @@ constraints:
 
 
 model_runs:
-  # - name: JPN_P3_JPN03_008_JapanStorage_Test
-  #   palette: palette_3
-  #   stock_model: Japan
-  #   select_nodes:
-  #     - JPN01
-  #     - JPN02
-  #     - JPN03
-  #     - JPN04
-  #     - JPN05
-  #     - JPN06
-  #     - JPN07
-  #     - JPN08
-  #     - JPN09                       
-  #   nodes_with_ci_load:
-  #     - JPN03
-  #   cfe_score:
-  #     # - 0.7
-  #     # - 0.8
-  #     # - 0.9
-  #     # - 0.95
-  #     # - 0.99
-  #     - 1.0
-  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   allow_generation_expansion: false
-  #   allow_storage_expansion: false
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  # - name: JPN_P3_JPN02_008_MalaysiaStorage
-  #   palette: palette_3
-  #   stock_model: Japan
-  #   select_nodes:
-  #     - JPN01
-  #     - JPN02
-  #     - JPN03
-  #     - JPN04
-  #     - JPN05
-  #     - JPN06
-  #     - JPN07
-  #     - JPN08
-  #     - JPN09                       
-  #   nodes_with_ci_load:
-  #     - JPN02
-  #   cfe_score:
-  #     - 0.7
-  #     # - 0.8
-  #     # - 0.9
-  #     # - 0.95
-  #     # - 0.99
-  #     - 1.0
-  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   allow_generation_expansion: false
-  #   allow_storage_expansion: false
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  # - name: JPN_P3_JPN01_008_MalaysiaStorage
-  #   palette: palette_3
-  #   stock_model: Japan
-  #   select_nodes:
-  #     - JPN01
-  #     - JPN02
-  #     - JPN03
-  #     - JPN04
-  #     - JPN05
-  #     - JPN06
-  #     - JPN07
-  #     - JPN08
-  #     - JPN09                       
-  #   nodes_with_ci_load:
-  #     - JPN01
-  #   cfe_score:
-  #     # - 0.7
-  #     # - 0.8
-  #     # - 0.9
-  #     # - 0.95
-  #     # - 0.99
-  #     - 1.0
-  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   allow_generation_expansion: false
-  #   allow_storage_expansion: false
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN04_008_MalaysiaStorage
+  - name: JPN_P3_JPN03_009_BuildConstraint_MalysiaStorage
+    palette: palette_3
+    stock_model: Japan
+    select_nodes:
+      - JPN01
+      - JPN02
+      - JPN03
+      - JPN04
+      - JPN05
+      - JPN06
+      - JPN07
+      - JPN08
+      - JPN09                       
+    nodes_with_ci_load:
+      - JPN03
+    cfe_score:
+      - 0.7
+      # - 0.8
+      # - 0.9
+      # - 0.95
+      # - 0.99
+      - 1.0
+    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    allow_generation_expansion: false
+    allow_storage_expansion: false
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name: JPN_P3_JPN02_009_BuildConstraint_MalaysiaStorage
+    palette: palette_3
+    stock_model: Japan
+    select_nodes:
+      - JPN01
+      - JPN02
+      - JPN03
+      - JPN04
+      - JPN05
+      - JPN06
+      - JPN07
+      - JPN08
+      - JPN09                       
+    nodes_with_ci_load:
+      - JPN02
+    cfe_score:
+      - 0.7
+      # - 0.8
+      # - 0.9
+      # - 0.95
+      # - 0.99
+      - 1.0
+    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    allow_generation_expansion: false
+    allow_storage_expansion: false
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name: JPN_P3_JPN01_009_BuildConstraint_MalaysiaStorage
+    palette: palette_3
+    stock_model: Japan
+    select_nodes:
+      - JPN01
+      - JPN02
+      - JPN03
+      - JPN04
+      - JPN05
+      - JPN06
+      - JPN07
+      - JPN08
+      - JPN09                       
+    nodes_with_ci_load:
+      - JPN01
+    cfe_score:
+      - 0.7
+      # - 0.8
+      # - 0.9
+      # - 0.95
+      # - 0.99
+      - 1.0
+    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+    allow_generation_expansion: false
+    allow_storage_expansion: false
+    backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
+  - name: JPN_P3_JPN04_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
@@ -192,7 +192,7 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN05_008_MalaysiaStorage
+  - name: JPN_P3_JPN05_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
@@ -219,7 +219,7 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential) 
-  - name: JPN_P3_JPN06_008_MalaysiaStorage
+  - name: JPN_P3_JPN06_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
@@ -246,14 +246,14 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN07_008_MalaysiaStorage
+  - name: JPN_P3_JPN07_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
       - JPN01
       - JPN02
       - JPN03
-      - JPN04
+      - JPN04 
       - JPN05
       - JPN06
       - JPN07
@@ -273,7 +273,7 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN_P3_JPN08_008_MalaysiaStorage
+  - name: JPN_P3_JPN08_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
@@ -300,7 +300,7 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)    
-  - name: JPN_P3_JPN09_008_MalaysiaStorage
+  - name: JPN_P3_JPN09_009_BuildConstraint_MalaysiaStorage
     palette: palette_3
     stock_model: Japan
     select_nodes:
