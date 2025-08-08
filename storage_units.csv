@@ -7,3 +7,4 @@ TWN-Batteries-2030_endo,TWN,PQ,Batteries,0.0,0.0,True,0.0,595.77,-1.0,1.0,0.0,0.
 TWN-Batteries-2030_exo,TWN,PQ,Batteries,1553.9,0.0,False,1553.9,inf,-1.0,1.0,0.0,0.0,1.0,Batteries,0.0,0.0,0.0,0.0,208033.68749282122,True,2030,15.0,0.0,False,,False,True,6.0,0.95,0.95,0.0,0.0,0.0,32504.0,1791537.0
 TWN-LAES-2030_endo,TWN,PQ,LAES,0.0,0.0,True,0.0,inf,-1.0,1.0,0.0,0.0,1.0,LAES,0.0,0.0,0.0,0.0,470576.2097787173,True,2030,40.0,0.0,False,,False,True,168.0,0.85,0.7,0.0,0.0,0.0,108858.0,6000000.0
 TWN C&I Grid-Batteries,TWN C&I Storage,PQ,,0.0,0.0,False,0.0,inf,-1.0,1.0,0.0,0.0,1.0,Batteries,0.0,0.0,0.0,0.0,208033.68749282122,True,2030,inf,0.0,False,,True,True,6.0,0.95,0.95,0.0,0.0,0.0,,
+TWN C&I Grid-LAES,TWN C&I Storage,PQ,,0.0,0.0,False,0.0,inf,-1.0,1.0,0.0,0.0,1.0,LAES,0.0,0.0,0.0,0.0,470576.2097787173,True,2030,inf,0.0,False,,True,True,168.0,0.85,0.7,0.0,0.0,0.0,,

@@ -61,20 +61,191 @@ constraints:
       - 'oil'
       - 'geothermal'
   cofiring_ccs_gen:
-    enable: false
+    enable: true
     clean_generator_TWN: ['TWN-BlueH2-2030_endo','TWN-GasCCSSequestered-2030_endo','TWN C&I Grid-blending-blueH2-gas-unspecified-ext-2030-PPA-Clean','TWN C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Clean']
     fossil_generator_TWN: ['TWN-BlueH2_Gas-2030_endo','TWN-GasCCSLeaked-2030_endo','TWN C&I Grid-blending-blueH2-gas-unspecified-ext-2030-PPA-Fossil','TWN C&I Grid-gas-CCS-unspecified-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: TWN_testing
-    palette: palette_1
+  # - name: TWN_P1_008
+  #   palette: palette_1
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P1_008_NucRec
+  #   palette: palette_1
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # # - name: TWN_P1_008_Sen_DemandHigh
+  #   palette: palette_1
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.055 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P1_008_Sen_DemandLow
+  #   palette: palette_1
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.045 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P2_007
+  #   palette: palette_2
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P2_007_NucRec
+  #   palette: palette_2
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P2_007_Sen_DemandHigh
+  #   palette: palette_2
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.055 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P2_007_Sen_DemandLow
+  #   palette: palette_2
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.045 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P3_010_NucRec
+  #   palette: palette_3
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.05 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name: TWN_P3_010_GovTarget
+    palette: palette_3
     stock_model: Taiwan
     select_nodes:
       - TWN       
     nodes_with_ci_load:
       - TWN
     cfe_score:
-      - 0.7
+      # - 0.7
       # - 0.8
       # - 0.9
       # - 0.95
@@ -85,6 +256,44 @@ model_runs:
     allow_storage_expansion: false # if true, the model will allow storage expansion
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P3_010_DemandHigh
+  #   palette: palette_3
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.055 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name: TWN_P3_010_DemandLow
+  #   palette: palette_3
+  #   stock_model: Taiwan
+  #   select_nodes:
+  #     - TWN       
+  #   nodes_with_ci_load:
+  #     - TWN
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.045 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_generation_expansion: false # if true, the model will allow generation expansion
+  #   allow_storage_expansion: false # if true, the model will allow storage expansion
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
 technology_palette:
   #### only palette 1 is currently supported
