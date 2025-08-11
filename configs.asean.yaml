@@ -14,18 +14,150 @@ paths:
  output_model_runs: "outputs/model_runs/" # path to save model run outputs
 
 global_vars:
-  years: 2030 # year of the model run
+  year: 2030 # year of the model run
   frequency: 1h # time resolution of the model run (should be 1h for CFE)
   timesteps: 8760 # number of timesteps in the model run (e.g., 24 = 1 day)
-  solver: highs # solver used to solve the optimization problem
+  solver: gurobi # solver used to solve the optimization problem
   ci_label: C&I # this is a unique identifier for all CFE attributes in the network
   enable_fossil_charging: false # if true, the model will allow batteries to be charged by fossil fuels
   set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
-  maximum_excess_export: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid
+  maximum_excess_export_cfe: 0.15 # maximum fraction of excess electricity that can be sold from C&I asset to grid under CFE scenarios
+  maximum_excess_export_res100: 0.15 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
+
+constraints:
+  bus_self_sufficiency: # minimum self-sufficiency for a bus
+    enable: false
+    fraction: 0.6
+    buses:
+      - 'SGPXX'
+      - 'MYSPE'
+      - 'MYSSK'
+      - 'MYSSH'
+      - 'IDNKA'
+      - 'THASO'
+      - 'THACE'
+      - 'THANO'
+      # - 'BTMSL'
+  bus_individual_self_sufficiency: # Bus self-sufficiency constraint, individually set
+    enable: false
+  max_utilisation: # maximum annual generation for a carrier
+    enable: false
+    fraction: 0.85
+    carriers: 'coal|gas|oil|geothermal|biomass' 
+  policy_targets:
+    enable: true
+  cofiring_ccs_gen:
+    enable: true
+    clean_generator: ['MYSPE-coal-biomass-cofiring-clean-ext-2030',
+                      'MYSPE-coal-ammonia-cofiring-clean-ext-2030',
+                      'MYSPE-combined-cycle-hydrogen-clean-ext-2030',
+                      'MYSSK-combined-cycle-hydrogen-clean-ext-2030',
+                      'SGPXX-combined-cycle-hydrogen-clean-ext-2030',
+                      # 'MYSPE C&I Grid-coal-biomass-cofiring-clean-ext-2030-PPA-Clean',
+                      # 'MYSPE C&I Grid-coal-ammonia-cofiring-clean-ext-2030-PPA-Clean',
+                      # 'MYSPE C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Clean',
+                      # 'MYSSK C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Clean',
+                      # 'SGPXX C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Clean',
+                      ]
+      # - 'MYSPE-coal-biomass-cofiring-clean-ext-2030'
+      # - 'MYSPE-coal-ammonia-cofiring-clean-ext-2030'
+      # - 'MYSPE-combined-cycle-hydrogen-clean-ext-2030'
+      # - 'MYSSK-combined-cycle-hydrogen-clean-ext-2030'
+      # - 'SGPXX-combined-cycle-hydrogen-clean-ext-2030'
+    fossil_generator: ['MYSPE-coal-biomass-cofiring-fossil-ext-2030',
+                      'MYSPE-coal-ammonia-cofiring-fossil-ext-2030',
+                      'MYSPE-combined-cycle-hydrogen-fossil-ext-2030',
+                      'MYSSK-combined-cycle-hydrogen-fossil-ext-2030',
+                      'SGPXX-combined-cycle-hydrogen-fossil-ext-2030',
+                      # 'MYSPE C&I Grid-coal-biomass-cofiring-clean-ext-2030-PPA-Fossil',
+                      # 'MYSPE C&I Grid-coal-ammonia-cofiring-clean-ext-2030-PPA-Fossil',
+                      # 'MYSPE C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Fossil',
+                      # 'MYSSK C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Fossil',
+                      # 'SGPXX C&I Grid-combined-cycle-hydrogen-clean-ext-2030-PPA-Fossil',
+                      ]
+      # - 'MYSPE-coal-biomass-cofiring-fossil-ext-2030'
+      # - 'MYSPE-coal-ammonia-cofiring-fossil-ext-2030'
+      # - 'MYSPE-combined-cycle-hydrogen-fossil-ext-2030'
+      # - 'MYSSK-combined-cycle-hydrogen-fossil-ext-2030'
+      # - 'SGPXX-combined-cycle-hydrogen-fossil-ext-2030'
+  min_annual_generation:
+    enable: false
+    generator: 'example01'
+    fraction: 0.2
+  min_utilisation_links:
+    enable: true
+    carriers: 'BTMSL'
+  max_utilisation_links:
+    enable: false
+    carriers: 'BTMSL'
+  min_utilisation_generator: # fraction is predefined in network
+    enable: false
+    carriers: 'solar'
+  max_utilisation_generator: # fraction is predefined in network
+    enable: true
+    carriers: 'coal|gas|oil|geothermal|biomass' 
 
 model_runs:
-  - name: trial_run_SGPXX_27Mar_brownfield
-    palette: palette_1
+  # - name:  MYSPE_14Jul_TP1_newDR_withWON
+  #   palette: palette_1
+  #   stock_model: ASEAN
+  #   select_nodes:
+  #     - SGPXX
+  #     - MYSPE
+  #     - MYSSK
+  #     - MYSSH
+  #     - IDNKA
+  #     - THASO
+  #     - THACE
+  #     - THANO
+  #     - BTMSL
+  #   nodes_with_ci_load:
+  #     # - SGPXX # voluntary involvement on CFE: 4.27% (0.0427)
+  #     - MYSPE # voluntary involvement on CFE: 5.81% (0.0581)
+  #     # - MYSSK # voluntary involvement on CFE: 3.28% (0.0328)
+  #   cfe_score:
+  #     - 0.70
+  #     - 0.80
+  #     - 0.90
+  #     - 0.95
+  #     - 0.99
+  #     - 1.00
+  #   ci_load_fraction: 0.0581 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false # if true, the model will allow most of generation expansion, if false, will leave as it
+  #   allow_storage_expansion: false # if true, the model will allow most of storage expansion, if false, will leave as it
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  # - name:  MYSSK_14Jul_TP1_newDR_withWON
+  #   palette: palette_1
+  #   stock_model: ASEAN
+  #   select_nodes:
+  #     - SGPXX
+  #     - MYSPE
+  #     - MYSSK
+  #     - MYSSH
+  #     - IDNKA
+  #     - THASO
+  #     - THACE
+  #     - THANO
+  #     - BTMSL
+  #   nodes_with_ci_load:
+  #     # - SGPXX # voluntary involvement on CFE: 4.27% (0.0427)
+  #     # - MYSPE # voluntary involvement on CFE: 5.81% (0.0581)
+  #     - MYSSK # voluntary involvement on CFE: 3.28% (0.0328)
+  #   cfe_score:
+  #     - 0.70
+  #     - 0.80
+  #     - 0.90
+  #     - 0.95
+  #     - 0.99
+  #     - 1.00
+  #   ci_load_fraction: 0.0328 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false # if true, the model will allow most of generation expansion, if false, will leave as it
+  #   allow_storage_expansion: false # if true, the model will allow most of storage expansion, if false, will leave as it
+  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
+  - name:  SGPXX_14Jul_TP2_newDR_noWON
+    palette: palette_2
     stock_model: ASEAN
     select_nodes:
       - SGPXX
@@ -36,138 +168,27 @@ model_runs:
       - THASO
       - THACE
       - THANO
+      - BTMSL
     nodes_with_ci_load:
-      - SGPXX # Ci_load_fraction: 0.31, voluntary involvement on CFE: 0.08
+      - SGPXX # voluntary involvement on CFE: 4.27% (0.0427)
+      # - MYSPE # voluntary involvement on CFE: 5.81% (0.0581)
+      # - MYSSK # voluntary involvement on CFE: 3.28% (0.0328)
     cfe_score:
-      # - 0.10
-      # - 0.15
-      # - 0.20
-      # - 0.25
-      # - 0.30
-      # - 0.35
-      # - 0.40
-      # - 0.45
-      # - 0.50
-      # - 0.55
-      - 0.60
-      # - 0.65
       - 0.70
-      # - 0.75
       - 0.80
-      # - 0.85
       - 0.90
       - 0.95
-      # - 0.96
-      # - 0.97
-      # - 0.98
-      # - 0.99
+      - 0.99
       - 1.00
-    ci_load_fraction: 0.08 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+    ci_load_fraction: 0.0427 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
     allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    # allow_pumped_hydro_expansion: false # if true, the model will allow pumped hydro expansion
+    allow_generation_expansion: false # if true, the model will allow most of generation expansion, if false, will leave as it
+    allow_storage_expansion: false # if true, the model will allow most of storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
 
-  # - name: refactor-nov-2024
-  #   palette: palette_1
-  #   stock_model: ASEAN
-  #   select_nodes:
-  #     #### here we can take a subset of nodes from the stock model
-  #     - SGPXX
-  #     - MYSSK
-  #     - MYSPE
-  #     - MYSSH
-  #     # - IDNSM
-  #     # - IDNJW
-  #     # - IDNNU
-  #     # - IDNKA
-  #     # - IDNSL
-  #     # - IDNML
-  #     # - IDNPP
-  #     # - PHLLU
-  #     # - PHLVI
-  #     # - PHLMI
-  #     # - BRNXX
-  #     # - MMRXX
-  #     # - THANO
-  #     # - THASO
-  #     # - THACE
-  #     # - VNMNO
-  #     # - VNMCE
-  #     # - VNMSO
-  #     # - KHMXX
-  #     # - LAOXX
-  #   nodes_with_ci_load:
-  #     #### Define which nodes (buses) we want to have a C&I load with a 24/7 CFE PPA
-  #     #### ((Note: we can only model C&I at one node at a time right now. Multi-node C&I is WIP.))
-  #     - SGPXX
-  #   cfe_score:
-  #     #### percentage of C&I electricity demand that is met by carbon-free energy PPA (0.10 = 10% CFE matching)
-  #     # - 0.10
-  #     # - 0.15
-  #     # - 0.20
-  #     # - 0.25
-  #     # - 0.30
-  #     # - 0.35
-  #     # - 0.40
-  #     # - 0.45
-  #     # - 0.50
-  #     # - 0.55
-  #     - 0.60
-  #     # - 0.65
-  #     - 0.70
-  #     # - 0.75
-  #     - 0.80
-  #     # - 0.85
-  #     - 0.90
-  #     # - 0.95
-  #     # - 0.96
-  #     # - 0.97
-  #     # - 0.98
-  #     # - 0.99
-  #     - 1.00
-  #   ci_load_fraction: 0.2 # percentage of bus-level demand is attributed to C&I (e.g., 0.2 = 20% of bus demand is C&I)
-  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-  #   backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-
-  # - name: prelim-run-MYS-oct-2024
-  #   palette: palette_1
-  #   stock_model: ASEAN
-  #   select_nodes:
-  #     - MYSSK
-  #   nodes_with_ci_load:
-  #     - MYSSK
-  #   ci_load_fraction: 0.2 # percentage of nodal demand is attributed to C&I
-  #   cfe_score:
-  #     # percentage of C&I electricity demand that is met by carbon-free energy PPA
-  #     # 0.10 = 10% CFE matching
-  #     # - 0.10
-  #     # - 0.15
-  #     # - 0.20
-  #     # - 0.25
-  #     # - 0.30
-  #     # - 0.35
-  #     # - 0.40
-  #     # - 0.45
-  #     # - 0.50
-  #     # - 0.55
-  #     - 0.60
-  #     - 0.65
-  #     - 0.70
-  #     - 0.75
-  #     - 0.80
-  #     - 0.85
-  #     - 0.90
-  #     - 0.95
-  #     - 0.96
-  #     - 0.97
-  #     - 0.98
-  #     - 0.99
-  #     - 1.00
-  #   allow_grid_expansion: false
-  #   backstop: false
 
 technology_palette:
-  #### only palette 1 is currently supported
+  
   palette_1:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
@@ -177,14 +198,72 @@ technology_palette:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
     - wind-onshore
-    - hydro-unspecified
-    - bioenergy-unspecified
     - battery
+    - long-duration-storage
+    - hydro-storage
   palette_3:
     - photovoltaic-unspecified
     - wind-offshore-unspecified
     - wind-onshore
-    - hydro-unspecified
-    - bioenergy-unspecified
     - battery
-    - hydrogen???
+    - long-duration-storage
+    - hydro-storage
+    - coal-biomass-cofiring-fossil
+    - coal-biomass-cofiring-clean
+    - combined-cycle-hydrogen-fossil
+    - combined-cycle-hydrogen-clean
+    - coal-ammonia-cofiring-fossil
+    - coal-ammonia-cofiring-clean
+
+solver:
+  name: gurobi
+  options: gurobi-default
+
+solver_options:
+  highs-default:
+    # refer to https://ergo-code.github.io/HiGHS/dev/options/definitions/
+    threads: 1
+    solver: "ipm"
+    run_crossover: "off"
+    small_matrix_value: 1e-6
+    large_matrix_value: 1e9
+    primal_feasibility_tolerance: 1e-5
+    dual_feasibility_tolerance: 1e-5
+    ipm_optimality_tolerance: 1e-4
+    parallel: "on"
+    random_seed: 123
+  highs-simplex:
+    solver: "simplex"
+    parallel: "on"
+    primal_feasibility_tolerance: 1e-5
+    dual_feasibility_tolerance: 1e-5
+    random_seed: 123
+  gurobi-default:
+    threads: 8
+    method: 2 # barrier
+    crossover: 0
+    BarConvTol: 1.e-6
+    Seed: 123
+    AggFill: 0
+    PreDual: 0
+    GURO_PAR_BARDENSETHRESH: 200
+  gurobi-numeric-focus:
+    NumericFocus: 3       # Favour numeric stability over speed
+    method: 2             # barrier
+    crossover: 0          # do not use crossover
+    BarHomogeneous: 1     # Use homogeneous barrier if standard does not converge
+    BarConvTol: 1.e-5
+    FeasibilityTol: 1.e-4
+    OptimalityTol: 1.e-4
+    ObjScale: -0.5
+    threads: 8
+    Seed: 123
+  gurobi-fallback:        # Use gurobi defaults
+    crossover: 0
+    method: 2             # barrier
+    BarHomogeneous: 1     # Use homogeneous barrier if standard does not converge
+    BarConvTol: 1.e-5
+    FeasibilityTol: 1.e-5
+    OptimalityTol: 1.e-5
+    Seed: 123
+    threads: 8

@@ -25,7 +25,7 @@ def build_brownfield_network(run, configs) -> None:
     brownfield_network.export_to_netcdf(os.path.join(output_dir, f"{run_name}.nc"))
 
 
-def solve_brownfield_network(run, configs, with_cfe: bool, env=None) -> pypsa.Network:
+def solve_brownfield_network(run, configs, with_cfe: bool, env=None, env=None) -> pypsa.Network:
     """
     Sets up and optimizes a brownfield network.
     Parameters:
@@ -49,7 +49,7 @@ def solve_brownfield_network(run, configs, with_cfe: bool, env=None) -> pypsa.Ne
     
     final_brownfield.optimize.create_model()
     brownfield.ApplyBrownfieldConstraints(final_brownfield, run, configs)
-
+     
     final_brownfield.optimize(
         solver_name=configs["solver"]["name"],
         solver_options=configs["solver_options"][configs["solver"]["options"]],
@@ -200,7 +200,6 @@ def run_plots(
             config["paths"]["output_model_runs"], run["name"]
         )
         #postprocess.plot_results(path_to_run_dir,run,run["nodes_with_ci_load"][0])
-
 
 if __name__ == "__main__":
     cli()
