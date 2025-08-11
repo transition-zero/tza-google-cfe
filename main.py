@@ -25,7 +25,7 @@ def build_brownfield_network(run, configs) -> None:
     brownfield_network.export_to_netcdf(os.path.join(output_dir, f"{run_name}.nc"))
 
 
-def solve_brownfield_network(run, configs, with_cfe: bool, env=None, env=None) -> pypsa.Network:
+def solve_brownfield_network(run, configs, with_cfe: bool, env=None) -> pypsa.Network:
     """
     Sets up and optimizes a brownfield network.
     Parameters:
