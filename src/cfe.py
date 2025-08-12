@@ -173,7 +173,7 @@ def PrepareNetworkForCFE(
                 ]
 
                 for generator in generator_names:
-                    if network.generators.loc[generator].is_blend_or_ccs:
+                    if network.generators.loc[generator].is_blend_or_ccs is True:
                         cf_int = np.ones((8760,1))
                         cf = pd.DataFrame(cf_int)
                     else:
