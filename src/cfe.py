@@ -179,7 +179,6 @@ def PrepareNetworkForCFE(
                     else:
                         cf = network.generators_t.p_max_pu[generator_names]
 
-                print(generator_names)
                 if cf.empty:
                     cf = params['p_max_pu']
                 else:
@@ -430,7 +429,7 @@ def apply_cfe_constraint(
             name=f"cfe-constraint-fossil-excess-{bus}",
         )
 
-    n.generators.to_csv('generators_tp3_check.csv')
-    n.storage_units.to_csv('storage_units_check.csv')
+    # n.generators.to_csv('generators_tp3_check.csv')
+    # n.storage_units.to_csv('storage_units_check.csv')
     
     return n
