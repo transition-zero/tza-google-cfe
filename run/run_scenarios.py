@@ -297,6 +297,8 @@ def RunCFE(
     # (Re)apply original brownfield constraints
     brownfield.ApplyBrownfieldConstraints(N_CFE, run, configs)
 
+    print(N_CFE.model.constraints)
+
     # optimise
     N_CFE.optimize.solve_model(
         solver_name=configs["solver"]["name"],

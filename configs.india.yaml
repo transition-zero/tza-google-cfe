@@ -12,7 +12,7 @@
 paths:
   brownfield_models: "networks/brownfield/"
   output_model_runs: "outputs/model_runs/" # path to save model run outputs
-  path_to_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  path_to_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
 global_vars:
   year: 2030 # year of the model run
   frequency: 1h # time resolution of the model run (should be 1h for CFE)
@@ -21,7 +21,7 @@ global_vars:
   enable_fossil_charging: false # if true, the model will allow batteries to be charged by fossil fuels
   set_global_constraints: false # if true, the model will set global constraints from tza-pypsa (keep False here)
   maximum_excess_export_cfe: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid under CFE scenarios
-  maximum_excess_export_res100: 0.20 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
+  maximum_excess_export_res100: 1.00 # maximum fraction of excess electricity that can be sold from C&I asset to grid under annual matching
 
 constraints:
   bus_self_sufficiency: # constraint is set by user
@@ -64,15 +64,13 @@ constraints:
       - 'geothermal'
   cofiring_ccs_gen:
     enable: false
-    clean_generator:
-      - 'hydrogen'
-    fossil_generator:
-      - 'coal'
+    clean_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Clean']
+    fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDEA-tp2-20dc
-    palette: palette_2
-    stock_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  - name: INDEA-tp3-g4sl
+    palette: palette_3
+    stock_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
     select_nodes:
       - INDNO
       - INDEA
@@ -93,9 +91,9 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: INDNE-tp2-ixf7
-    palette: palette_2
-    stock_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  - name: INDNE-tp3-mmjj
+    palette: palette_3
+    stock_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
     select_nodes:
       - INDNO
       - INDEA
@@ -116,9 +114,9 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: INDNO-tp2-1mwk
-    palette: palette_2
-    stock_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  - name: INDNO-tp3-zps9
+    palette: palette_3
+    stock_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
     select_nodes:
       - INDNO
       - INDEA
@@ -139,9 +137,9 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: INDSO-tp2-mg93
-    palette: palette_2
-    stock_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  - name: INDSO-tp3-gdnj
+    palette: palette_3
+    stock_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
     select_nodes:
       - INDNO
       - INDEA
@@ -162,9 +160,9 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: INDWE-tp2-sa2b
-    palette: palette_2
-    stock_model: '/home/irfanm/tza-pypsa/stock_models/India'
+  - name: INDWE-tp3-1ld5
+    palette: palette_3
+    stock_model: '/home/irfanmohamed/tza-pypsa/stock_models/India'
     select_nodes:
       - INDNO
       - INDEA
@@ -185,7 +183,6 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-
 
 technology_palette:
   #### only palette 1 is currently supported
@@ -199,13 +196,11 @@ technology_palette:
     - 'battery'
     - 'laes'
   palette_3:
-    - photovoltaic-unspecified
-    - wind-offshore-unspecified
-    - wind-onshore
-    - hydro-unspecified
-    - bioenergy-unspecified
-    - battery
-    - hydrogen???
+    - 'wind-onshore'
+    - 'photovoltaic-unspecified'
+    - 'battery'
+    - 'laes'
+    - 'combined-cycle-h2'
 
 solver:
   name: gurobi

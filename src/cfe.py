@@ -270,8 +270,8 @@ def PrepareNetworkForCFE(
                     .storage_units
                     .loc[ 
                         ((network.storage_units["carrier"] == technology)
-                        & (network.storage_units["bus"] == bus)
-                        & (network.storage_units["p_nom_extendable"] == True))
+                        & (network.storage_units["bus"] == bus))
+                        # & (network.storage_units["p_nom_extendable"] == True))
                     ]
                     .groupby(by='type')
                     .first()
