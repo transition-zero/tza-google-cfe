@@ -112,4 +112,4 @@ MYSSK-gas-ccs-leaked-ext-2030,MYSSK,PQ,gas-ccs-leaked,0,0,TRUE,0,0,0,1,0,inf,0,1
 SGPXX-gas-ccs-leaked-ext-2030,SGPXX,PQ,gas-ccs-leaked,0,0,TRUE,0,0,0,1,0,inf,0,1,gas-leaked,105.708,0,TRUE,2030,30,476349.91,0.46,FALSE,0,0,0,0,0,1,0,1,1,0,0,1,0.3,1,0.85,0,3351253,124330
 MYSPE-gas-ccs-sequestered-ext-2030,MYSPE,PQ,gas-ccs-sequestered,0,0,TRUE,0,0,0,1,0,inf,0,1,gas-sequestered,71.929,0,TRUE,2030,30,476349.91,0.46,FALSE,0,0,0,0,0,1,0,1,1,0,0,1,0.7,1,0.85,0,3351253,124330
 MYSSK-gas-ccs-sequestered-ext-2030,MYSSK,PQ,gas-ccs-sequestered,0,0,TRUE,0,0,0,1,0,inf,0,1,gas-sequestered,71.929,0,TRUE,2030,30,476349.91,0.46,FALSE,0,0,0,0,0,1,0,1,1,0,0,1,0.7,1,0.85,0,3351253,124330
-SGPXX-gas-ccs-sequestered-ext-2030,SGPXX,PQ,gas-ccs-sequestered,0,0,TRUE,0,0,0,1,0,,,,gas-sequestered,105.708,,,,30,476349.91,0.46,FALSE,0,,,0,0,1,0,1,1,0,0,1,0.7,1,0.85,0,3351253,124330
+SGPXX-gas-ccs-sequestered-ext-2030,SGPXX,PQ,gas-ccs-sequestered,0,0,TRUE,0,0,0,1,0,inf,0,1,gas-sequestered,105.708,0,TRUE,2030,30,476349.91,0.46,FALSE,0,0,0,0,0,1,0,1,1,0,0,1,0.7,1,0.85,0,3351253,124330
