@@ -16,7 +16,7 @@ The PyPSA-ASEAN model is comprised of 8 nodes and 8 links. Here, each node repre
 
 ### Geographical scope
 
-The model covers a sub-set of the ASEAN region in 8 nodes and 8 links (represented as uni-directional hence 15 links in total given one is only one-way). The geographic and network coverage is shown in the table below.
+The model covers a sub-set of the ASEAN region in 8 nodes and 8 links (represented as uni-directional hence 15 links in total given one does not flow in both directions). The geographic and network coverage is shown in the table below.
 
 Country       | Code    | Nodes
 ---           | ---     | ---
