@@ -103,9 +103,6 @@ Example config files are provided for each country explored in this CFE project 
 
 In the config files provided, HiGHS - an open source linear optimisation solver - is currently set as the optimisation engine for solving each stock model. In the CFE project, Gurobi was also used and parameters are also provided in each config file.
 
-### Want to use, develop or support this project?
-We strongly welcome anyone interested in collaborating on this or future related projects. If you have any ideas, suggestions or encounter problems, feel invited to file issues or make pull requests on GitHub. To discuss ideas for the project, please contact [@Abhishek Shivakumar](mailto:abhishek@transitionzero.org).
-
 ## Acknowledgements
 
 We gratefully acknowledge the contributions of colleagues across TransitionZero — both current and former — who supported this work through
