@@ -75,7 +75,7 @@ def SetupBrownfieldNetwork(run, configs) -> pypsa.Network:
     network.generators['p_nom_min']      = network.generators['p_nom']
     network.storage_units['p_nom_min']   = network.storage_units['p_nom']
     network.links['p_nom_min']           = network.links['p_nom']
-
+    
     return network
 
 def ApplyBrownfieldConstraints(network, run, configs) -> pypsa.Network:

@@ -10,7 +10,7 @@ from src import brownfield, cfe, helpers, postprocess
 def GetGridCFE(
     n: pypsa.Network,   
     ci_identifier: str,
-    run: dict
+    run: dict,
 ):
     """
 
@@ -90,6 +90,7 @@ def PostProcessBrownfield(n: pypsa.Network, ci_identifier: str):
         getattr(n, c).loc[
             getattr(n, c).index.str.contains(ci_identifier), "p_nom_extendable"
         ] = True
+
     return n
 
 
@@ -131,8 +132,48 @@ def RunBrownfieldSimulation(run, configs, env=None):
     print(brownfield_path)
     N_BROWNFIELD.export_to_netcdf(brownfield_path)
 
-    return N_BROWNFIELD
+    # global_clean_carriers = [
+    #     i
+    #     for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
+    #     if i in N_BROWNFIELD.generators.carrier.tolist()
+    # ]
 
+    # #for bus in run["nodes_with_ci_load"]:
+    #     # get clean generators in R
+    # Additionality_Candidates = N_BROWNFIELD.generators.loc[
+    #     # clean carriers
+    #     (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
+    #     &
+    #     # isolate generators which satisfy additionality vintaging constraint
+    #     ((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
+    # ].index
+
+    # print(Additionality_Candidates)
+
+    return N_BROWNFIELD #, Additionality_Candidates
+
+def GetAdditionality_Candidates(
+    N_BROWNFIELD: pypsa.Network,
+    run: dict,
+    configs: dict,        
+):
+        global_clean_carriers = [
+        i
+        for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
+        if i in N_BROWNFIELD.generators.carrier.tolist()
+    ]
+
+    #for bus in run["nodes_with_ci_load"]:
+        # get clean generators in R
+        Additionality_Candidates = N_BROWNFIELD.generators.loc[
+        # clean carriers
+        (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
+        &
+        # isolate generators which satisfy additionality vintaging constraint
+        ((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
+        ].index
+
+        return Additionality_Candidates
 
 def RunRES100(
     N_BROWNFIELD: pypsa.Network,
@@ -147,7 +188,6 @@ def RunRES100(
 
     # make a copy of the brownfield
     N_RES_100 = N_BROWNFIELD  # .copy()
-
     # post-process to set what is expandable and non-expandable
     N_RES_100 = PostProcessBrownfield(N_RES_100, ci_identifier=ci_identifier)
 
@@ -293,6 +333,8 @@ def RunCFE(
         ci_identifier,
         CFE_Score,
         configs["global_vars"]["maximum_excess_export_cfe"],
+        run,
+        configs,
     )
 
     # (Re)apply original brownfield constraints

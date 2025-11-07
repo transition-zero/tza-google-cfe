@@ -2,6 +2,8 @@ import pypsa
 import numpy as np
 import pandas as pd
 
+from run import run_scenarios
+
 def PrepareNetworkForCFE(
         network: pypsa.Network, 
         buses_with_ci_load: list,
@@ -313,7 +315,7 @@ def PrepareNetworkForCFE(
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-
+            
     return network
 
 
@@ -324,12 +326,35 @@ def apply_cfe_constraint(
         ci_identifier : str, 
         CFE_Score : float,
         max_excess_export : float,
+        run,
+        configs,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
     for bus in ci_buses:
         # ---
         # fetch necessary variables to implement CFE
+        global_clean_carriers = [
+        i
+        for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+        if i in n.generators.carrier.tolist()
+        ]
+
+                # get clean generators in R
+        Additionality_Candidates = n.generators.loc[
+        # clean carriers
+        (n.generators.carrier.isin(global_clean_carriers))
+        &
+        (n.generators.index.str.contains(bus))
+        &
+        (~n.generators.index.str.contains(ci_identifier))
+        &
+        # isolate generators which satisfy additionality vintaging constraint
+        ((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
+        ].index        
+
+        print(Additionality_Candidates)
+        breakpoint()
 
         CI_Demand = (
             n.loads_t.p_set.filter(regex=bus).filter(regex=ci_identifier).values.flatten()
