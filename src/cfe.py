@@ -323,11 +323,11 @@ def apply_cfe_constraint(
         n : pypsa.Network, 
         GridCFE : list, 
         ci_buses : list, 
-        ci_identifier : str, 
+        ci_identifier : str,
         CFE_Score : float,
         max_excess_export : float,
-        run,
-        configs,
+        run: dict,
+        configs: dict,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
@@ -340,21 +340,30 @@ def apply_cfe_constraint(
         if i in n.generators.carrier.tolist()
         ]
 
-                # get clean generators in R
+        # get clean generators in R
         Additionality_Candidates = n.generators.loc[
         # clean carriers
         (n.generators.carrier.isin(global_clean_carriers))
         &
+        # generators in cfe bus
         (n.generators.index.str.contains(bus))
         &
+        # not include C&I assets
         (~n.generators.index.str.contains(ci_identifier))
         &
         # isolate generators which satisfy additionality vintaging constraint
         ((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
         ].index        
 
-        print(Additionality_Candidates)
-        breakpoint()
+        Additionality_Production_Gross = (
+        ((n.model.variables['Generator-p'].sel(
+            Generator=[i for i in Additionality_Candidates]
+        )))
+        .sum(dims='Generator')
+        )
+
+        # print(Additionality_Production_Gross)
+        # breakpoint()
 
         CI_Demand = (
             n.loads_t.p_set.filter(regex=bus).filter(regex=ci_identifier).values.flatten()
@@ -441,5 +450,11 @@ def apply_cfe_constraint(
             CI_GridExport >= CI_PPA_Fossil * CFE_Score,
             name=f"cfe-constraint-fossil-excess-{bus}",
         )
+
+        #Constraint 6: Ensure that sum of additionality candidate production is <= installed capacity
+
+        # n.model.add_constraints(
+        #     Additionality_Production_Gross <= (Additionality_Production_Greenfield * run['additionality_capacity_share']) + ((Additionality_Production_Brownfield) * (1 - run['additonality_capcaity_share']))
+        # )
     
     return n

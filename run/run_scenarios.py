@@ -3,6 +3,7 @@ import sys
 
 import pandas as pd
 import pypsa
+import numpy as np
 
 from src import brownfield, cfe, helpers, postprocess
 
@@ -47,14 +48,46 @@ def GetGridCFE(
         if i in n.generators.carrier.tolist()
     ]
 
-    for bus in run["nodes_with_ci_load"]:
-        # get clean generators in R
+    if run["local_grid_only"] == True:
+        
+        R_agg_clean_generators = []
+        R_agg_all_generators = []
+
+        for bus in run["grid_connected_buses"]:
+            # get clean generators in R
+            R_clean_generators = n.generators.loc[
+                # clean carriers
+                (n.generators.carrier.isin(global_clean_carriers))
+                &
+                #exclude assets not in R
+                (n.generators.index.str.contains(bus)) &
+                # exclude C&I assets
+                (~n.generators.index.str.contains(ci_identifier))
+            ].index
+
+            # get all generators
+            R_all_generators = n.generators.loc[
+                (~n.generators.index.str.contains(ci_identifier))
+                &
+                (n.generators.index.str.contains(bus)) 
+            ].index
+
+            # calculate CFE score
+            R_agg_all_generators.extend(R_all_generators)
+            R_agg_clean_generators.extend(R_clean_generators)
+
+        print(R_agg_all_generators)
+        print(R_agg_clean_generators)
+
+        total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+        total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+
+    else:
+
         R_clean_generators = n.generators.loc[
             # clean carriers
             (n.generators.carrier.isin(global_clean_carriers))
             &
-            #exclude assets not in R
-            (n.generators.index.str.contains(bus)) &
             # exclude C&I assets
             (~n.generators.index.str.contains(ci_identifier))
         ].index
@@ -62,8 +95,6 @@ def GetGridCFE(
         # get all generators
         R_all_generators = n.generators.loc[
             (~n.generators.index.str.contains(ci_identifier))
-            &
-            (n.generators.index.str.contains(bus)) 
         ].index
 
         # calculate CFE sceore
@@ -370,6 +401,8 @@ def RunCFE(
             ci_identifier,
             CFE_Score,
             configs["global_vars"]["maximum_excess_export_cfe"],
+            run,
+            configs,
         )
         print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
         N_CFE.optimize.solve_model(

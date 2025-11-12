@@ -113,7 +113,7 @@ def get_ci_cost_summary(n : pypsa.Network) -> pd.DataFrame:
 def GetGridCFE(
     n: pypsa.Network,   
     ci_identifier: str,
-    run: dict
+    run: dict,
 ):
     """
 
@@ -150,14 +150,43 @@ def GetGridCFE(
         if i in n.generators.carrier.tolist()
     ]
 
-    for bus in run["nodes_with_ci_load"]:
-        # get clean generators in R
+    if run["local_grid_only"] == True:
+        
+        R_agg_clean_generators = [].index
+        R_agg_all_generators = [].index
+        for bus in run["grid_connected_buses"]:
+            # get clean generators in R
+            R_clean_generators = n.generators.loc[
+                # clean carriers
+                (n.generators.carrier.isin(global_clean_carriers))
+                &
+                #exclude assets not in R
+                (n.generators.index.str.contains(bus)) &
+                # exclude C&I assets
+                (~n.generators.index.str.contains(ci_identifier))
+            ].index
+
+            # get all generators
+            R_all_generators = n.generators.loc[
+                (~n.generators.index.str.contains(ci_identifier))
+                &
+                (n.generators.index.str.contains(bus)) 
+            ].index
+
+            breakpoint()
+            # calculate CFE score
+            R_agg_all_generators.append(R_all_generators)
+            R_agg_clean_generators.append(R_clean_generators)
+
+        total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+        total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+
+    else:
+
         R_clean_generators = n.generators.loc[
             # clean carriers
             (n.generators.carrier.isin(global_clean_carriers))
             &
-            #exclude assets not in R
-            (n.generators.index.str.contains(bus)) &
             # exclude C&I assets
             (~n.generators.index.str.contains(ci_identifier))
         ].index
@@ -165,11 +194,9 @@ def GetGridCFE(
         # get all generators
         R_all_generators = n.generators.loc[
             (~n.generators.index.str.contains(ci_identifier))
-            &
-            (n.generators.index.str.contains(bus)) 
         ].index
 
-        # calculate CFE sceore
+        # calculate CFE score
         total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
         total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
