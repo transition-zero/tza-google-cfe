@@ -152,8 +152,9 @@ def GetGridCFE(
 
     if run["local_grid_only"] == True:
         
-        R_agg_clean_generators = [].index
-        R_agg_all_generators = [].index
+        R_agg_clean_generators = []
+        R_agg_all_generators = []
+
         for bus in run["grid_connected_buses"]:
             # get clean generators in R
             R_clean_generators = n.generators.loc[
@@ -173,10 +174,12 @@ def GetGridCFE(
                 (n.generators.index.str.contains(bus)) 
             ].index
 
-            breakpoint()
             # calculate CFE score
-            R_agg_all_generators.append(R_all_generators)
-            R_agg_clean_generators.append(R_clean_generators)
+            R_agg_all_generators.extend(R_all_generators)
+            R_agg_clean_generators.extend(R_clean_generators)
+
+        print(R_agg_all_generators)
+        print(R_agg_clean_generators)
 
         total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
         total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
@@ -196,7 +199,7 @@ def GetGridCFE(
             (~n.generators.index.str.contains(ci_identifier))
         ].index
 
-        # calculate CFE score
+        # calculate CFE sceore
         total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
         total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
