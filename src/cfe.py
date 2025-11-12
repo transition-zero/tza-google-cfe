@@ -109,6 +109,18 @@ def PrepareNetworkForCFE(
 
         network.add(
             "Link",
+            f"{bus} C&I Grid Imports Additionality PPA",
+            bus0=bus, 
+            bus1=ci_bus_name, 
+            p_nom=0,
+            p_nom_extendable=True, # keep this as True to prevent infeasibilities
+            # add small capital and marginal costs to prevent model infeasibilities
+            marginal_cost=0.01, 
+            capital_cost=0.01,
+        )
+
+        network.add(
+            "Link",
             f"{bus} C&I Grid Exports",
             bus0=ci_bus_name, 
             bus1=bus,
@@ -392,7 +404,14 @@ def apply_cfe_constraint(
 
         CI_GridImport = (
             n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i]
+                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' not in i]
+            )
+            .sum(dims='Link')
+        )
+
+        CI_GridImport_Additionality = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
             )
             .sum(dims='Link')
         )
@@ -418,14 +437,14 @@ def apply_cfe_constraint(
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
+            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_GridImport_Additionality + CI_StorageDischarge - CI_StorageCharge,
             name=f"cfe-constraint-hourly-matching-{bus}",
         )
 
         # Constraint 2: CFE target - note the CI_PPA_Fossil is offset by the share of fossil production which must be exported (set by CFE score)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
+            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) + (CI_GridImport_Additionality) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
             name=f"cfe-constraint-target-{bus}",
  
         )
@@ -451,10 +470,11 @@ def apply_cfe_constraint(
             name=f"cfe-constraint-fossil-excess-{bus}",
         )
 
-        #Constraint 6: Ensure that sum of additionality candidate production is <= installed capacity
+        #Constraint 6: Ensure that sum of additionality candidate flows into cfe bus is <= total production * max share of production
 
-        # n.model.add_constraints(
-        #     Additionality_Production_Gross <= (Additionality_Production_Greenfield * run['additionality_capacity_share']) + ((Additionality_Production_Brownfield) * (1 - run['additonality_capcaity_share']))
-        # )
+        n.model.add_constraints(
+            CI_GridImport_Additionality <= (Additionality_Production_Gross * run['additionality_capacity_share']),
+            name=f"cfe-constraint-additionality-flows-{bus}"
+        )
     
     return n
