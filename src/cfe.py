@@ -8,8 +8,11 @@ def PrepareNetworkForCFE(
         network: pypsa.Network, 
         buses_with_ci_load: list,
         ci_load_fraction: float,
+        ci_identifier: str,
         technology_palette: list,
         p_nom_extendable: bool,
+        local_grid_only: bool,
+        grid_connected_buses: list,
     ) -> pypsa.Network:
 
     """
@@ -94,31 +97,6 @@ def PrepareNetworkForCFE(
         #   - LocalGrid <-> C&I system
         #   - C&I system <-> C&I storage
 
-        # LocalGrid <-> C&I system
-        network.add(
-            "Link",
-            f"{bus} C&I Grid Imports",
-            bus0=bus, 
-            bus1=ci_bus_name, 
-            p_nom=0,
-            p_nom_extendable=True, # keep this as True to prevent infeasibilities
-            # add small capital and marginal costs to prevent model infeasibilities
-            marginal_cost=0.01, 
-            capital_cost=0.01,
-        )
-
-        network.add(
-            "Link",
-            f"{bus} C&I Grid Imports Additionality PPA",
-            bus0=bus, 
-            bus1=ci_bus_name, 
-            p_nom=0,
-            p_nom_extendable=True, # keep this as True to prevent infeasibilities
-            # add small capital and marginal costs to prevent model infeasibilities
-            marginal_cost=0.01, 
-            capital_cost=0.01,
-        )
-
         network.add(
             "Link",
             f"{bus} C&I Grid Exports",
@@ -155,6 +133,63 @@ def PrepareNetworkForCFE(
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
+
+        if local_grid_only == True:
+
+            for bus_nest in grid_connected_buses:
+
+                # LocalGrid <-> C&I system
+                network.add(
+                    "Link",
+                    f"{bus_nest} {ci_bus_name} C&I Grid Imports",
+                    bus0=bus_nest, 
+                    bus1=ci_bus_name, 
+                    p_nom=0,
+                    p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                    # add small capital and marginal costs to prevent model infeasibilities
+                    marginal_cost=0.01, 
+                    capital_cost=0.01,
+                )
+
+                network.add(
+                    "Link",
+                    f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                    bus0=bus_nest, 
+                    bus1=ci_bus_name, 
+                    p_nom=0,
+                    p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                    # add small capital and marginal costs to prevent model infeasibilities
+                    marginal_cost=0.01, 
+                    capital_cost=0.01,
+                )
+
+        else:         
+
+            for bus_nest in network.buses.index[~network.buses.index.str.contains(ci_identifier)]:
+
+                network.add(
+                    "Link",
+                    f"{bus_nest} {ci_bus_name} C&I Grid Imports",
+                    bus0=bus_nest, 
+                    bus1=ci_bus_name, 
+                    p_nom=0,
+                    p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                    # add small capital and marginal costs to prevent model infeasibilities
+                    marginal_cost=0.01, 
+                    capital_cost=0.01,
+                )
+
+                network.add(
+                    "Link",
+                    f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                    bus0=bus_nest, 
+                    bus1=ci_bus_name, 
+                    p_nom=0,
+                    p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                    # add small capital and marginal costs to prevent model infeasibilities
+                    marginal_cost=0.01, 
+                    capital_cost=0.01,
+                )
 
         # STEP 3:
         # Add generators and storages to C&I bus within the technology palette. 
@@ -366,7 +401,7 @@ def apply_cfe_constraint(
         # isolate generators which satisfy additionality vintaging constraint
         (((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
         &
-        # isolate generators tagged as contributing to additionality
+        # isolate generators tagged as contributing to additionality (user defined in network.generators)
         ((n.generators.additionality_candidate) == True)
         ].index        
 
