@@ -381,6 +381,7 @@ def apply_cfe_constraint(
     for bus in ci_buses:
         # ---
         # fetch necessary variables to implement CFE
+
         global_clean_carriers = [
         i
         for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
@@ -402,8 +403,73 @@ def apply_cfe_constraint(
         (((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
         &
         # isolate generators tagged as contributing to additionality (user defined in network.generators)
-        ((n.generators.additionality_candidate) == True)
-        ].index        
+        # ((n.generators.additionality_candidate) == True)
+        # &
+        # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        (n.generators.build_year < configs['global_vars']['year'])
+        ].index     
+
+        # if local_grid_only == True:
+            
+        #     for bus_nest in grid_connected_buses:
+
+        #         global_clean_carriers = [
+        #         i
+        #         for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+        #         if i in n.generators.carrier.tolist()
+        #         ]
+
+        #         # get clean generators in R
+        #         Additionality_Candidates = n.generators.loc[
+        #         # clean carriers
+        #         (n.generators.carrier.isin(global_clean_carriers))
+        #         &
+        #         # generators in cfe bus
+        #         (n.generators.index.str.contains(bus_nest))
+        #         &
+        #         # not include C&I assets
+        #         (~n.generators.index.str.contains(ci_identifier))
+        #         &
+        #         # isolate generators which satisfy additionality vintaging constraint
+        #         (((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
+        #         &
+        #         # isolate generators tagged as contributing to additionality (user defined in network.generators)
+        #         # ((n.generators.additionality_candidate) == True)
+        #         # &
+        #         # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        #         (n.generators.build_year < configs['global_vars']['year'])
+        #         ].index        
+
+        # else: 
+
+        #     for bus_nest in n.buses.index[~n.buses.index.str.contains(ci_identifier)]:
+
+        #         global_clean_carriers = [
+        #         i
+        #         for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+        #         if i in n.generators.carrier.tolist()
+        #         ]
+
+        #         # get clean generators in R
+        #         Additionality_Candidates = n.generators.loc[
+        #         # clean carriers
+        #         (n.generators.carrier.isin(global_clean_carriers))
+        #         &
+        #         # not include C&I assets
+        #         (~n.generators.index.str.contains(ci_identifier))
+        #         &
+        #         # isolate generators which satisfy additionality vintaging constraint
+        #         (((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
+        #         # &
+        #         # # isolate generators tagged as contributing to additionality (user defined in network.generators)
+        #         # ((n.generators.additionality_candidate) == True)
+        #         &
+        #         # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        #         (n.generators.build_year < configs['global_vars']['year'])
+        #         ].index     
+
+
+        print(Additionality_Candidates)
 
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(

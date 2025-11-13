@@ -222,6 +222,9 @@ def GetAdditionality_Candidates(
         &
         # isolate generators tagged as contributing to additionality (user defined in network.generators)
         ((N_BROWNFIELD.generators.additionality_candidate) == True)
+        &
+        # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        (N_BROWNFIELD.generators.build_year < configs['global_vars']['year'])
         ].index
 
         return Additionality_Candidates
