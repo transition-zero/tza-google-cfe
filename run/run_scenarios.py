@@ -215,7 +215,10 @@ def GetAdditionality_Candidates(
         (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
         &
         # isolate generators which satisfy additionality vintaging constraint
-        ((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
+        (((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
+        &
+        # isolate generators tagged as contributing to additionality (user defined in network.generators)
+        ((N_BROWNFIELD.generators.additionality_candidate) == True)
         ].index
 
         return Additionality_Candidates

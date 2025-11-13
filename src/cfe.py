@@ -364,7 +364,10 @@ def apply_cfe_constraint(
         (~n.generators.index.str.contains(ci_identifier))
         &
         # isolate generators which satisfy additionality vintaging constraint
-        ((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
+        (((n.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
+        &
+        # isolate generators tagged as contributing to additionality
+        ((n.generators.additionality_candidate) == True)
         ].index        
 
         Additionality_Production_Gross = (
