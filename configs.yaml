@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Test_Additionality_Link_ConstrainAdditionality
+  - name: INDWE_TP1_Test_Additionality_Link_NoConstrainAdditionality
     palette: palette_1
     stock_model: India
     select_nodes:
@@ -91,8 +91,8 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false
-    additionality_vintage_limit: 15 # set as 6 for testing
-    additionality_capacity_share: 0.05
+    existing_vintage_limit: 15 # set as 6 for testing
+    existing_capacity_share: 1
     local_grid_only: true
     grid_connected_buses: ['INDWE','INDNO','INDEA','INDSO']
   # - name: INDWE_TP1_Test_Global

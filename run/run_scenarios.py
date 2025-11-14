@@ -218,7 +218,7 @@ def GetAdditionality_Candidates(
         (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
         &
         # isolate generators which satisfy additionality vintaging constraint
-        (((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True)
+        (((N_BROWNFIELD.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
         &
         # isolate generators tagged as contributing to additionality (user defined in network.generators)
         ((N_BROWNFIELD.generators.additionality_candidate) == True)
@@ -389,6 +389,8 @@ def RunCFE(
         configs["global_vars"]["maximum_excess_export_cfe"],
         run,
         configs,
+        run["local_grid_only"],
+        run["grid_connected_buses"],
     )
 
     # (Re)apply original brownfield constraints
@@ -426,6 +428,8 @@ def RunCFE(
             configs["global_vars"]["maximum_excess_export_cfe"],
             run,
             configs,
+            run["local_grid_only"],            
+            run["grid_connected_buses"],
         )
         print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
         N_CFE.optimize.solve_model(
