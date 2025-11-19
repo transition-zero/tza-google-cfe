@@ -437,11 +437,11 @@ def apply_cfe_constraint(
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
-                # isolate generators tagged as contributing to additionality (user defined in network.generators)
-                # ((n.generators.additionality_candidate) == True)
-                # &
+                #isolate generators tagged as contributing to additionality (user defined in network.generators)
+                ((n.generators.additionality_candidate) == True)
+                &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
-                (n.generators.build_year < configs['global_vars']['year'])
+                (n.generators.build_year <= configs['global_vars']['year'])
                 ].index        
 
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
@@ -476,12 +476,12 @@ def apply_cfe_constraint(
                 &
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
-                # &
-                # # isolate generators tagged as contributing to additionality (user defined in network.generators)
-                # ((n.generators.additionality_candidate) == True)
+                &
+                # isolate generators tagged as contributing to additionality (user defined in network.generators)
+                ((n.generators.additionality_candidate) == True)
                 &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
-                (n.generators.build_year < configs['global_vars']['year'])
+                (n.generators.build_year <= configs['global_vars']['year'])
                 ].index     
 
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
@@ -495,6 +495,19 @@ def apply_cfe_constraint(
                 # Additionality_Production_Gross.extend(Additionality_Production_Gross_Int)
 
         print(Additionality_Candidates)
+        
+        for generator in Additionality_Candidates:
+
+            if n.generators.build_year[generator] + n.generators.lifetime[generator] >= configs["global_vars"]["year"]:
+            
+                marginal_cost_amend = (((n.generators.capital_cost[generator] * n.generators.p_nom[generator]) + (n.generators.annual_fixed_costs[generator] * n.generators.p_nom_opt[generator])) + ((n.generators.marginal_cost[generator] / n.generators.efficiency[generator]) * n.generators_t.p[generator]).sum()) / (n.generators_t.p[generator]).sum()
+                n.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
+
+            else: 
+
+                marginal_cost_amend = (((n.generators.annual_fixed_costs[generator] * n.generators.p_nom_opt[generator])) + ((n.generators.marginal_cost[generator] / n.generators.efficiency[generator]) * n.generators_t.p[generator]).sum()) / (n.generators_t.p[generator]).sum()
+                n.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
+                
 
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(
@@ -605,5 +618,5 @@ def apply_cfe_constraint(
             CI_GridImport_Additionality <= (Additionality_Production_Gross * run['existing_capacity_share']),
             name=f"cfe-constraint-additionality-flows-{bus}"
         )
-    
+
     return n

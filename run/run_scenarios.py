@@ -161,6 +161,7 @@ def RunBrownfieldSimulation(run, configs, env=None):
 
     # lp_model = N_BROWNFIELD.optimize.create_model()
     N_BROWNFIELD.optimize.create_model()
+
     brownfield.ApplyBrownfieldConstraints(N_BROWNFIELD, run, configs)
 
     N_BROWNFIELD.optimize.solve_model(
@@ -180,54 +181,39 @@ def RunBrownfieldSimulation(run, configs, env=None):
     print(brownfield_path)
     N_BROWNFIELD.export_to_netcdf(brownfield_path)
 
-    # global_clean_carriers = [
-    #     i
-    #     for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
-    #     if i in N_BROWNFIELD.generators.carrier.tolist()
-    # ]
-
-    # #for bus in run["nodes_with_ci_load"]:
-    #     # get clean generators in R
-    # Additionality_Candidates = N_BROWNFIELD.generators.loc[
-    #     # clean carriers
-    #     (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
-    #     &
-    #     # isolate generators which satisfy additionality vintaging constraint
-    #     ((N_BROWNFIELD.generators.build_year) + run['additionality_vintage_limit'] >= configs['global_vars']['year']) == True
-    # ].index
-
-    # print(Additionality_Candidates)
-
-    return N_BROWNFIELD #, Additionality_Candidates
+    return N_BROWNFIELD
 
 def GetAdditionality_Candidates(
     N_BROWNFIELD: pypsa.Network,
     run: dict,
     configs: dict,        
 ):
-        global_clean_carriers = [
-        i
-        for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
-        if i in N_BROWNFIELD.generators.carrier.tolist()
+    
+    global_clean_carriers = [
+    i
+    for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
+    if i in N_BROWNFIELD.generators.carrier.tolist()
     ]
 
     #for bus in run["nodes_with_ci_load"]:
-        # get clean generators in R
-        Additionality_Candidates = N_BROWNFIELD.generators.loc[
-        # clean carriers
-        (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
-        &
-        # isolate generators which satisfy additionality vintaging constraint
-        (((N_BROWNFIELD.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
-        &
-        # isolate generators tagged as contributing to additionality (user defined in network.generators)
-        ((N_BROWNFIELD.generators.additionality_candidate) == True)
-        &
-        # not allow new build in additionality (i.e. ensuring that this is existing capacity)
-        (N_BROWNFIELD.generators.build_year < configs['global_vars']['year'])
-        ].index
+    # get clean generators in R
+    Additionality_Candidates = N_BROWNFIELD.generators.loc[
+    # clean carriers
+    (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
+    &
+    # isolate generators which satisfy additionality vintaging constraint
+    (((N_BROWNFIELD.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
+    &
+    # isolate generators tagged as contributing to additionality (user defined in network.generators)
+    ((N_BROWNFIELD.generators.additionality_candidate) == True)
+    &
+    # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+    (N_BROWNFIELD.generators.build_year <= configs['global_vars']['year'])
+    & 
+    (N_BROWNFIELD.generators.bus.isin(run['grid_connected_buses']))
+    ].index
 
-        return Additionality_Candidates
+    return Additionality_Candidates
 
 def RunRES100(
     N_BROWNFIELD: pypsa.Network,
@@ -348,6 +334,20 @@ def RunCFE(
 
     N_CFE = PostProcessBrownfield(N_BROWNFIELD, ci_identifier=ci_identifier)
 
+    Additionality_Candidates = GetAdditionality_Candidates(N_BROWNFIELD, run, configs)
+    
+    for generator in Additionality_Candidates:
+
+        if N_CFE.generators.build_year[generator] + N_CFE.generators.lifetime[generator] >= configs["global_vars"]["year"]:
+            
+            marginal_cost_amend = (((N_CFE.generators.capital_cost[generator] * N_CFE.generators.p_nom[generator]) + (N_CFE.generators.annual_fixed_costs[generator] * N_CFE.generators.p_nom_opt[generator])) + ((N_CFE.generators.marginal_cost[generator] / N_CFE.generators.efficiency[generator]) * N_CFE.generators_t.p[generator]).sum()) / (N_CFE.generators_t.p[generator]).sum()
+            N_CFE.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
+
+        else: 
+
+            marginal_cost_amend = (((N_CFE.generators.annual_fixed_costs[generator] * N_CFE.generators.p_nom_opt[generator])) + ((N_CFE.generators.marginal_cost[generator] / N_CFE.generators.efficiency[generator]) * N_CFE.generators_t.p[generator]).sum()) / (N_CFE.generators_t.p[generator]).sum()
+            N_CFE.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
+
     # init linopy model
     N_CFE.optimize.create_model()
 
@@ -408,7 +408,7 @@ def RunCFE(
     GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
     count += 1
     GridSupplyCFE[f"iteration_{count}"] = GridCFE
-
+    N_CFE.generators.to_csv('check_CFE_generators.csv')
     # calculate difference between iterations with a maximum of 100 loops
     max_iterations = 100
     while (

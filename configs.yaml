@@ -33,7 +33,7 @@ constraints:
   bus_individual_self_sufficiency: # constraints are predefined in network
     enable: false
   policy_targets:
-    enable: true
+    enable: false
   min_annual_generation:
     enable: false
     generator: 'example01'
@@ -92,7 +92,7 @@ model_runs:
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false
     existing_vintage_limit: 15 # set as 6 for testing
-    existing_capacity_share: 0.
+    existing_capacity_share: 1
     local_grid_only: true
     grid_connected_buses: ['INDWE']
   # - name: INDWE_TP1_Test_Global
