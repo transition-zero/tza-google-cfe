@@ -73,6 +73,7 @@ def GetGridCFE(
                 (n.generators.index.str.contains(bus)) 
             ].index
 
+            #  isolates flows of clean electricity directly as PPA from brownfield grid
             R_additionality_exports = n.links.loc[
                 (n.links.index.str.contains('Additionality')) &
                 (n.links.index.str.contains(bus))
@@ -115,7 +116,7 @@ def GetGridCFE(
         total_clean_generation_additionality = n.links_t.p0[R_additionality_exports].sum(axis=1)
         total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
-    # return CFE score
+    # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
     return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
 
 
