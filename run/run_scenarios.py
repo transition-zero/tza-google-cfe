@@ -54,7 +54,7 @@ def GetGridCFE(
         R_agg_all_generators = []
         R_agg_additionality_exports = []
 
-        for bus in run["grid_connected_buses"]:
+        for bus in run["nodes_with_ci_load"]:
             # get clean generators in R
             R_clean_generators = n.generators.loc[
                 # clean carriers
@@ -334,23 +334,37 @@ def RunCFE(
 
     N_CFE = PostProcessBrownfield(N_BROWNFIELD, ci_identifier=ci_identifier)
 
-    Additionality_Candidates = GetAdditionality_Candidates(N_BROWNFIELD, run, configs)
-    
-    for generator in Additionality_Candidates:
-
-        if N_CFE.generators.build_year[generator] + N_CFE.generators.lifetime[generator] >= configs["global_vars"]["year"]:
-            
-            marginal_cost_amend = (((N_CFE.generators.capital_cost[generator] * N_CFE.generators.p_nom[generator]) + (N_CFE.generators.annual_fixed_costs[generator] * N_CFE.generators.p_nom_opt[generator])) + ((N_CFE.generators.marginal_cost[generator] / N_CFE.generators.efficiency[generator]) * N_CFE.generators_t.p[generator]).sum()) / (N_CFE.generators_t.p[generator]).sum()
-            N_CFE.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
-
-        else: 
-
-            marginal_cost_amend = (((N_CFE.generators.annual_fixed_costs[generator] * N_CFE.generators.p_nom_opt[generator])) + ((N_CFE.generators.marginal_cost[generator] / N_CFE.generators.efficiency[generator]) * N_CFE.generators_t.p[generator]).sum()) / (N_CFE.generators_t.p[generator]).sum()
-            N_CFE.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
-
     # init linopy model
     N_CFE.optimize.create_model()
 
+    # assign costs to additionality candidates
+    Additionality_Candidates = GetAdditionality_Candidates(N_BROWNFIELD, run, configs)
+
+    CI_GridImport_Additionality = (
+        N_CFE.model.variables['Link-p'].sel(
+            Link=[i for i in N_CFE.links.index if ci_identifier in i and 'Import' in i and 'Additionality' in i and 'PPA' in i]
+        )
+        .sum(dims='Link')
+    )
+
+    links_additionality = N_CFE.links.loc[N_CFE.links.index.str.contains('Additionality')].index
+
+    for generator in Additionality_Candidates:
+
+        if N_CFE.generators.build_year[generator] + N_CFE.generators.lifetime[generator] >= configs["global_vars"]["year"]:
+            # multiply by p_nom_opt because all generators in brownfield are non-extendable and network already optimised
+            N_BROWNFIELD.generators_t.marginal_cost[generator] = (((N_BROWNFIELD.generators.capital_cost[generator] * (N_BROWNFIELD.generators.p_nom_opt[generator]))) + ((N_BROWNFIELD.generators.marginal_cost[generator]) * N_BROWNFIELD.generators_t.p[generator]).sum()) / (N_BROWNFIELD.generators_t.p[generator]).sum()
+        else: 
+            N_BROWNFIELD.generators_t.marginal_cost[generator] = N_BROWNFIELD.generators.marginal_cost[generator]
+
+    marginal_cost = N_BROWNFIELD.generators_t.marginal_cost.max(axis=1).values
+
+    # assign marginal cost of additionality generators (maximum) to marginal cost of link between all connecting buses
+    for link in links_additionality:
+
+        N_CFE.links_t.marginal_cost[link] = marginal_cost
+
+    N_CFE.links_t.marginal_cost.to_csv('check_links.csv')
     # ---------------------------------------------------------------
     #
     #   ITERATIVELY SOLVE FOR GRID CFE
@@ -404,11 +418,11 @@ def RunCFE(
         env=env,
     )
 
+
     # get GridCFE
     GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
     count += 1
     GridSupplyCFE[f"iteration_{count}"] = GridCFE
-    N_CFE.generators.to_csv('check_CFE_generators.csv')
     # calculate difference between iterations with a maximum of 100 loops
     max_iterations = 100
     while (
@@ -459,6 +473,11 @@ def RunCFE(
             "cfe" + str(int(CFE_Score * 100)) + ".csv",
         )
     )
+
+    N_CFE.links_t.p0.to_csv(f'check_links_{(run["grid_connected_buses"])}.csv')
+    N_CFE.generators.to_csv(f'check_CFE_generators_{(run["grid_connected_buses"])}.csv')
+    N_CFE.generators_t.p.to_csv(f'check_CFE_generators_t_{(run["grid_connected_buses"])}.csv')
+    N_CFE.buses_t.marginal_price.to_csv(f'check_buses_marginal_price_{(run["grid_connected_buses"])}.csv')
 
     N_CFE.export_to_netcdf(
         os.path.join(

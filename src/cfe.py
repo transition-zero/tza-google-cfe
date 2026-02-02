@@ -151,6 +151,7 @@ def PrepareNetworkForCFE(
                     capital_cost=0.01,
                 )
 
+                # adding directly link between additionality candidates in other nodes and C&I bus
                 network.add(
                     "Link",
                     f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
@@ -179,6 +180,7 @@ def PrepareNetworkForCFE(
                     capital_cost=0.01,
                 )
 
+                # adding directly link between additionality candidates in other nodes and C&I bus
                 network.add(
                     "Link",
                     f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
@@ -496,26 +498,27 @@ def apply_cfe_constraint(
 
         print(Additionality_Candidates)
         
-        for generator in Additionality_Candidates:
-
-            if n.generators.build_year[generator] + n.generators.lifetime[generator] >= configs["global_vars"]["year"]:
-            
-                marginal_cost_amend = (((n.generators.capital_cost[generator] * n.generators.p_nom[generator]) + (n.generators.annual_fixed_costs[generator] * n.generators.p_nom_opt[generator])) + ((n.generators.marginal_cost[generator] / n.generators.efficiency[generator]) * n.generators_t.p[generator]).sum()) / (n.generators_t.p[generator]).sum()
-                n.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
-
-            else: 
-
-                marginal_cost_amend = (((n.generators.annual_fixed_costs[generator] * n.generators.p_nom_opt[generator])) + ((n.generators.marginal_cost[generator] / n.generators.efficiency[generator]) * n.generators_t.p[generator]).sum()) / (n.generators_t.p[generator]).sum()
-                n.generators.marginal_cost[generator] = marginal_cost_amend.round(2)
                 
-
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(
             Generator=[i for i in Additionality_Candidates]
         )))
         .sum(dims='Generator')
         )
+        
+        # for generator in Additionality_Candidates:
 
+        #     if n.generators.build_year[generator] + n.generators.lifetime[generator] >= configs["global_vars"]["year"] and (n.model.variables['Link-p'].sel(
+        #         Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
+        #     )) != 0:
+            
+        #         # multiply by p_nom_opt because all generators in brownfield are non-extendable and network already optimised
+        #         marginal_cost_amend = (((n.generators.capital_cost[generator] * (n.generators.p_nom_opt[generator] - n.generators.p_nom[generator]))) + ((n.generators.marginal_cost[generator]) * n.generators_t.p[generator]).sum()) / (n.generators_t.p[generator]).sum()
+        #         n.generators_t.marginal_cost[generator] = marginal_cost_amend.round(2)
+
+        #     else: 
+
+        #         n.generators_t.marginal_cost[generator] = n.generators.marginal_cost[generator]
         # print(Additionality_Production_Gross)
         # breakpoint()
 

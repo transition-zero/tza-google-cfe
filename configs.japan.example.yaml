@@ -87,7 +87,7 @@ constraints:
     fossil_generator: ['JPN01-BlueNH3_Coal-2030_exo','JPN01-GasCCSLeaked-2030_exo','JPN01-BlueH2_Gas-2030_endo','JPN01-BlueNH3_Coal-2030_endo','JPN01-GasCCSLeaked-2030_endo','JPN02-BlueH2_Gas-2030_endo','JPN02-BlueNH3_Coal-2030_endo','JPN02-GasCCSLeaked-2030_endo','JPN03-BlueH2_Gas-2030_endo','JPN03-BlueNH3_Coal-2030_endo','JPN03-GasCCSLeaked-2030_endo','JPN04-BlueH2_Gas-2030_exo','JPN04-BlueNH3_Coal-2030_exo','JPN04-BlueH2_Gas-2030_endo','JPN04-BlueNH3_Coal-2030_endo','JPN04-GasCCSLeaked-2030_endo','JPN05-BlueH2_Gas-2030_endo','JPN05-BlueNH3_Coal-2030_endo','JPN05-GasCCSLeaked-2030_endo','JPN06-BlueNH3_Coal-2030_exo','JPN06-BlueH2_Gas-2030_endo','JPN06-BlueNH3_Coal-2030_endo','JPN06-GasCCSLeaked-2030_endo','JPN07-BlueH2_Gas-2030_endo','JPN07-BlueNH3_Coal-2030_endo','JPN07-GasCCSLeaked-2030_endo','JPN08-BlueH2_Gas-2030_endo','JPN08-BlueNH3_Coal-2030_endo','JPN08-GasCCSLeaked-2030_endo','JPN09-BlueH2_Gas-2030_endo','JPN09-BlueNH3_Coal-2030_endo','JPN09-GasCCSLeaked-2030_endo']
 
 model_runs:
-  - name: JPN01_P1_Test
+  - name: JPN01_P1_Test_gaspricehourly
     palette: palette_1
     stock_model: Japan
     select_nodes:
@@ -115,62 +115,66 @@ model_runs:
     allow_generation_expansion: false
     allow_storage_expansion: false
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
-  - name: JPN01_P2_Test
-    palette: palette_2
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN01
-    cfe_score:
-      - 0.7
-      - 0.8
-      - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false 
-  - name: JPN01_P3_Test
-    palette: palette_3
-    stock_model: Japan
-    select_nodes:
-      - JPN01
-      - JPN02
-      - JPN03
-      - JPN04
-      - JPN05
-      - JPN06
-      - JPN07
-      - JPN08
-      - JPN09                       
-    nodes_with_ci_load:
-      - JPN01
-    cfe_score:
-      - 0.7
-      - 0.8
-      - 0.8
-      - 0.9
-      - 0.95
-      - 0.99
-      - 1.0
-    ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
-    allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
-    allow_generation_expansion: false
-    allow_storage_expansion: false
-    backstop: false     
+    existing_vintage_limit: 15 # set as 6 for testing
+    existing_capacity_share: 1
+    local_grid_only: true
+    grid_connected_buses: ['JPN01']
+  # - name: JPN01_P2_Test
+  #   palette: palette_2
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN01
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false 
+  # - name: JPN01_P3_Test
+  #   palette: palette_3
+  #   stock_model: Japan
+  #   select_nodes:
+  #     - JPN01
+  #     - JPN02
+  #     - JPN03
+  #     - JPN04
+  #     - JPN05
+  #     - JPN06
+  #     - JPN07
+  #     - JPN08
+  #     - JPN09                       
+  #   nodes_with_ci_load:
+  #     - JPN01
+  #   cfe_score:
+  #     - 0.7
+  #     - 0.8
+  #     - 0.8
+  #     - 0.9
+  #     - 0.95
+  #     - 0.99
+  #     - 1.0
+  #   ci_load_fraction: 0.031 # percentage of bus-level demand that is attributed to participating C&I consumers (e.g., 0.2 = 20% of bus demand is C&I)
+  #   allow_grid_expansion: false # if true, the model will allow interconnector (link) expansion
+  #   allow_generation_expansion: false
+  #   allow_storage_expansion: false
+  #   backstop: false     
 
 # as mentioned above, if a user wanted to run JPN02 (Tohoku) for each tech palette, the following example could be added
   # - name: JPN02_P1
@@ -287,8 +291,8 @@ technology_palette:
 
 
 solver:
-  name: highs
-  options: highs-default
+  name: gurobi
+  options: gurobi-default
 
 solver_options:
   highs-default:
