@@ -117,7 +117,7 @@ model_runs:
     backstop: false # if true, the model will run with a backstop technology (i.e., a generator with infinite supply potential)
     existing_vintage_limit: 15 # set as 6 for testing
     existing_capacity_share: 1
-    local_grid_only: true
+    neighbour_grids_only: true
     grid_connected_buses: ['JPN01']
   # - name: JPN01_P2_Test
   #   palette: palette_2

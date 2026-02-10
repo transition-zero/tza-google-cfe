@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Additionality_Link_ConstrainAdditionality_AllNeighbour_100pcAddition_2
+  - name: INDWE_TP1_Additionality_Link_ConstrainAdditionality_LocalGrid-True
     palette: palette_1
     stock_model: India
     select_nodes:
@@ -91,9 +91,10 @@ model_runs:
     allow_generation_expansion: false # if true, the model will allow generation expansion, if false, will leave as it
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false
-    existing_vintage_limit: 15 # set as 6 for testing
-    existing_capacity_share: 1
-    local_grid_only: true
+    existing_vintage_limit: 15 # limit set on age of plants which can contribute to cfe from other zones
+    existing_capacity_share: 1 # share of capacity which can be contracted in PPAs into cfe zone
+    neighbour_grids_only: true # boolean indicating whether all zones can contribute potential clean PPAs from capacity or whether user defined list 
+    # (grid_connected_buses) is taken instead
     grid_connected_buses: ['INDWE','INDNO','INDSO','INDEA']
   # - name: INDWE_TP1_Test_Additionality_Link_ConstrainAdditionality_Neighbour
   #   palette: palette_1
@@ -120,7 +121,7 @@ model_runs:
   #   backstop: false
   #   existing_vintage_limit: 15 # set as 6 for testing
   #   existing_capacity_share: 1
-  #   local_grid_only: true # if set to true, grid_connected_buses specified below, otherwise if set to false, a "global" grid score will be calculated
+  #   neighbour_grids_only: true # if set to true, grid_connected_buses specified below, otherwise if set to false, a "global" grid score will be calculated
   #   grid_connected_buses: ['INDWE','INDSO','INDEA','INDNO']    
   # - name: INDWE_TP1_Test_Global
   #   palette: palette_1
@@ -147,7 +148,7 @@ model_runs:
   #   backstop: false
   #   additionality_vintage_limit: 15 # set as 6 for testing
   #   additionality_capacity_share: 1
-  #   local_grid_only: false    
+  #   neighbour_grids_only: false    
   # - name: INDWE_TP3_Test_Additionality
   #   palette: palette_3
   #   stock_model: India
@@ -192,8 +193,8 @@ technology_palette:
     - combined-cycle-h2
 
 solver:
-  name: gurobi
-  options: gurobi-default
+  name: highs
+  options: highs-default
 
 solver_options:
   highs-default:

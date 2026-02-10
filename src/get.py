@@ -150,55 +150,20 @@ def GetGridCFE(
         if i in n.generators.carrier.tolist()
     ]
 
-    if run["local_grid_only"] == True:
+    #if run["neighbour_grids_only"] == True:
         
-        R_agg_clean_generators = []
-        R_agg_all_generators = []
-        R_agg_additionality_exports = []
+    R_agg_clean_generators = []
+    R_agg_all_generators = []
+    R_agg_additionality_exports = []
 
-        for bus in run["grid_connected_buses"]:
-            # get clean generators in R
-            R_clean_generators = n.generators.loc[
-                # clean carriers
-                (n.generators.carrier.isin(global_clean_carriers))
-                &
-                #exclude assets not in R
-                (n.generators.index.str.contains(bus)) &
-                # exclude C&I assets
-                (~n.generators.index.str.contains(ci_identifier))
-            ].index
-
-            # get all generators
-            R_all_generators = n.generators.loc[
-                (~n.generators.index.str.contains(ci_identifier))
-                &
-                (n.generators.index.str.contains(bus)) 
-            ].index
-
-            R_additionality_exports = n.links.loc[
-                (n.links.index.str.contains('Additionality')) &
-                (n.links.index.str.contains(bus))
-            ].index
-
-            # calculate CFE score
-            R_agg_all_generators.extend(R_all_generators)
-            R_agg_clean_generators.extend(R_clean_generators)
-            R_agg_additionality_exports.extend(R_additionality_exports)
-
-        print(R_agg_all_generators)
-        print(R_agg_clean_generators)
-        print(R_agg_additionality_exports)
-
-        total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
-        total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
-        total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
-
-    else:
-
+    for bus in run["grid_connected_buses"]:
+        # get clean generators in R
         R_clean_generators = n.generators.loc[
             # clean carriers
             (n.generators.carrier.isin(global_clean_carriers))
             &
+            #exclude assets not in R
+            (n.generators.index.str.contains(bus)) &
             # exclude C&I assets
             (~n.generators.index.str.contains(ci_identifier))
         ].index
@@ -206,16 +171,51 @@ def GetGridCFE(
         # get all generators
         R_all_generators = n.generators.loc[
             (~n.generators.index.str.contains(ci_identifier))
+            &
+            (n.generators.index.str.contains(bus)) 
         ].index
 
         R_additionality_exports = n.links.loc[
-            n.links.index.str.contains('Additionality')
+            (n.links.index.str.contains('Additionality')) &
+            (n.links.index.str.contains(bus))
         ].index
 
         # calculate CFE score
-        total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
-        total_clean_generation_additionality = n.links_t.p0[R_additionality_exports].sum(axis=1)
-        total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
+        R_agg_all_generators.extend(R_all_generators)
+        R_agg_clean_generators.extend(R_clean_generators)
+        R_agg_additionality_exports.extend(R_additionality_exports)
+
+    print(R_agg_all_generators)
+    print(R_agg_clean_generators)
+    print(R_agg_additionality_exports)
+
+    total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+    total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
+    total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+
+    # else:
+
+        # R_clean_generators = n.generators.loc[
+        #     # clean carriers
+        #     (n.generators.carrier.isin(global_clean_carriers))
+        #     &
+        #     # exclude C&I assets
+        #     (~n.generators.index.str.contains(ci_identifier))
+        # ].index
+
+        # # get all generators
+        # R_all_generators = n.generators.loc[
+        #     (~n.generators.index.str.contains(ci_identifier))
+        # ].index
+
+        # R_additionality_exports = n.links.loc[
+        #     n.links.index.str.contains('Additionality')
+        # ].index
+
+        # # calculate CFE score
+        # total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
+        # total_clean_generation_additionality = n.links_t.p0[R_additionality_exports].sum(axis=1)
+        # total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
 
     # return CFE score
     return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
