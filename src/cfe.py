@@ -441,9 +441,6 @@ def apply_cfe_constraint(
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
-                #isolate generators tagged as contributing to additionality (user defined in network.generators)
-                ((n.generators.additionality_candidate) == True)
-                &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
                 (n.generators.build_year <= configs['global_vars']['year'])
                 ].index        
@@ -473,9 +470,6 @@ def apply_cfe_constraint(
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
-                # isolate generators tagged as contributing to additionality (user defined in network.generators)
-                ((n.generators.additionality_candidate) == True)
-                &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
                 (n.generators.build_year <= configs['global_vars']['year'])
                 ].index     
@@ -486,11 +480,11 @@ def apply_cfe_constraint(
         print(Additionality_Candidates)
         
         # total generation from additionality candidates meeting criteria on when plant was built
-        # and location        
+        # and location. generator level "cfe_contribution" applied        
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(
             Generator=[i for i in Additionality_Candidates]
-        )))
+        )) * n.generators.cfe_contribution[Additionality_Candidates])
         .sum(dims='Generator')
         )
         
@@ -596,7 +590,7 @@ def apply_cfe_constraint(
         #Constraint 6: Ensure that sum of additionality candidate flows into cfe bus is <= total production * max share of production
 
         n.model.add_constraints(
-            CI_GridImport_Additionality <= (Additionality_Production_Gross * run['existing_capacity_share']),
+            CI_GridImport_Additionality <= (Additionality_Production_Gross),
             name=f"cfe-constraint-additionality-flows-{bus}"
         )
 

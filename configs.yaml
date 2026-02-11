@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Additionality_Link_ConstrainAdditionality_LocalGrid-True
+  - name: INDWE_TP1_Additionality_Link_ConstrainAdditionality_LocalGrid-Amend-5pc-check
     palette: palette_1
     stock_model: India
     select_nodes:
@@ -92,7 +92,7 @@ model_runs:
     allow_storage_expansion: false # if true, the model will allow storage expansion, if false, will leave as it
     backstop: false
     existing_vintage_limit: 15 # limit set on age of plants which can contribute to cfe from other zones
-    existing_capacity_share: 1 # share of capacity which can be contracted in PPAs into cfe zone
+    #existing_capacity_share: 1 # share of capacity which can be contracted in PPAs into cfe zone (no longer used as generator level now)
     neighbour_grids_only: true # boolean indicating whether all zones can contribute potential clean PPAs from capacity or whether user defined list 
     # (grid_connected_buses) is taken instead
     grid_connected_buses: ['INDWE','INDNO','INDSO','INDEA']
@@ -193,8 +193,8 @@ technology_palette:
     - combined-cycle-h2
 
 solver:
-  name: highs
-  options: highs-default
+  name: gurobi
+  options: gurobi-default
 
 solver_options:
   highs-default:

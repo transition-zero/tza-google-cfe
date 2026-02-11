@@ -177,7 +177,8 @@ def GetGridCFE(
 
         R_additionality_exports = n.links.loc[
             (n.links.index.str.contains('Additionality')) &
-            (n.links.index.str.contains(bus))
+            (n.links.index.str.contains(bus)) &
+            (n.links.bus0.str.contains(bus))
         ].index
 
         # calculate CFE score
