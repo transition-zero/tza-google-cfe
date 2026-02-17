@@ -342,7 +342,7 @@ def RunCFE(
 
         if N_CFE.generators.build_year[generator] + N_CFE.generators.lifetime[generator] >= configs["global_vars"]["year"]:
             # multiply by p_nom_opt because all generators in brownfield are non-extendable and network already optimised
-            N_BROWNFIELD.generators_t.marginal_cost[generator] = (((N_BROWNFIELD.generators.capital_cost[generator] * (N_BROWNFIELD.generators.p_nom_opt[generator]))) + ((N_BROWNFIELD.generators.marginal_cost[generator]) * N_BROWNFIELD.generators_t.p[generator]).sum()) / (N_BROWNFIELD.generators_t.p[generator]).sum()
+            N_BROWNFIELD.generators_t.marginal_cost[generator] = (((N_BROWNFIELD.generators.capital_cost[generator] * ((N_BROWNFIELD.generators.p_nom_opt[generator]) - (N_BROWNFIELD.generators.p_nom[generator])))) + ((N_BROWNFIELD.generators.marginal_cost[generator]) * N_BROWNFIELD.generators_t.p[generator]).sum()) / (N_BROWNFIELD.generators_t.p[generator]).sum()
         else: 
             N_BROWNFIELD.generators_t.marginal_cost[generator] = N_BROWNFIELD.generators.marginal_cost[generator]
 
@@ -353,7 +353,6 @@ def RunCFE(
 
         N_CFE.links_t.marginal_cost[link] = marginal_cost
 
-    N_CFE.links_t.marginal_cost.to_csv('check_links.csv')
     # ---------------------------------------------------------------
     #
     #   ITERATIVELY SOLVE FOR GRID CFE

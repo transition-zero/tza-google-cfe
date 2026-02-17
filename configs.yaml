@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Additionality_Link_ConstrainAdditionality_LocalGrid-Amend-5pc-check
+  - name: INDWE_TP1_Additionality_Individual_Link_5pc
     palette: palette_1
     stock_model: India
     select_nodes:

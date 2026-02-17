@@ -151,12 +151,12 @@ def GetGridCFE(
     ]
 
     #if run["neighbour_grids_only"] == True:
-        
+    
     R_agg_clean_generators = []
     R_agg_all_generators = []
     R_agg_additionality_exports = []
 
-    for bus in run["grid_connected_buses"]:
+    for bus in run["nodes_with_ci_load"]:
         # get clean generators in R
         R_clean_generators = n.generators.loc[
             # clean carriers
@@ -175,6 +175,7 @@ def GetGridCFE(
             (n.generators.index.str.contains(bus)) 
         ].index
 
+        #  isolates flows of clean electricity directly as PPA from brownfield grid
         R_additionality_exports = n.links.loc[
             (n.links.index.str.contains('Additionality')) &
             (n.links.index.str.contains(bus)) &
@@ -185,7 +186,7 @@ def GetGridCFE(
         R_agg_all_generators.extend(R_all_generators)
         R_agg_clean_generators.extend(R_clean_generators)
         R_agg_additionality_exports.extend(R_additionality_exports)
-
+    
     print(R_agg_all_generators)
     print(R_agg_clean_generators)
     print(R_agg_additionality_exports)
@@ -194,31 +195,7 @@ def GetGridCFE(
     total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
     total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
 
-    # else:
-
-        # R_clean_generators = n.generators.loc[
-        #     # clean carriers
-        #     (n.generators.carrier.isin(global_clean_carriers))
-        #     &
-        #     # exclude C&I assets
-        #     (~n.generators.index.str.contains(ci_identifier))
-        # ].index
-
-        # # get all generators
-        # R_all_generators = n.generators.loc[
-        #     (~n.generators.index.str.contains(ci_identifier))
-        # ].index
-
-        # R_additionality_exports = n.links.loc[
-        #     n.links.index.str.contains('Additionality')
-        # ].index
-
-        # # calculate CFE score
-        # total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
-        # total_clean_generation_additionality = n.links_t.p0[R_additionality_exports].sum(axis=1)
-        # total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
-
-    # return CFE score
+    # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
     return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
 
 

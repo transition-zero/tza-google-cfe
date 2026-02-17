@@ -417,10 +417,12 @@ def apply_cfe_constraint(
     for bus in ci_buses:
 
         if neighbour_grids_only == True:
-            
-            for bus_nest in grid_connected_buses:
+
+            Additionality_Candidates = []
+
+            for bus_nest in run["grid_connected_buses"]:
                 
-                Additionality_Candidates = []
+                
                 global_clean_carriers = [
                 i
                 for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
@@ -448,10 +450,11 @@ def apply_cfe_constraint(
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
 
         else: 
+            
+            Additionality_Candidates = []
 
             for bus_nest in n.buses.index[~n.buses.index.str.contains(ci_identifier)]:
 
-                Additionality_Candidates = [] 
                 #Additionality_Production_Gross = []   
                 global_clean_carriers = [
                 i
@@ -475,10 +478,9 @@ def apply_cfe_constraint(
                 ].index     
 
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
-
-
-        print(Additionality_Candidates)
         
+        print(Additionality_Candidates)
+
         # total generation from additionality candidates meeting criteria on when plant was built
         # and location. generator level "cfe_contribution" applied        
         Additionality_Production_Gross = (
@@ -593,5 +595,29 @@ def apply_cfe_constraint(
             CI_GridImport_Additionality <= (Additionality_Production_Gross),
             name=f"cfe-constraint-additionality-flows-{bus}"
         )
+
+        # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution of each generator
+        for bus in run["grid_connected_buses"]:
+
+            Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
+
+            Additionality_Production_Net_Bus = (
+            (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
+             * n.generators.cfe_contribution.loc[Additionality_Candidates_Bus].T
+            ).sum(dims='Generator')
+            )
+
+            Additionality_Links_Gross_Bus = (
+                n.model.variables['Link-p'].sel(
+                    Link=[i for i in n.links.loc[n.links.bus0.str.contains(bus)].index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
+                )
+                .sum(dims='Link')
+            )
+            
+            n.model.add_constraints(
+                Additionality_Links_Gross_Bus <= Additionality_Production_Net_Bus,
+                name=f"cfe-constraint-additionality-flows-individual-{bus}"
+            )
+
 
     return n
