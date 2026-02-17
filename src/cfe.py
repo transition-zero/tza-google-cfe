@@ -486,7 +486,7 @@ def apply_cfe_constraint(
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(
             Generator=[i for i in Additionality_Candidates]
-        )) * n.generators.cfe_contribution[Additionality_Candidates])
+        )) * n.generators.cfe_contribution.loc[Additionality_Candidates].T)
         .sum(dims='Generator')
         )
         
