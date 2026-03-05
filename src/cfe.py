@@ -12,7 +12,7 @@ def PrepareNetworkForCFE(
         technology_palette: list,
         p_nom_extendable: bool,
         neighbour_grids_only: bool,
-        grid_connected_buses: list,
+        ci_connected_buses: list,
     ) -> pypsa.Network:
 
     """
@@ -136,7 +136,7 @@ def PrepareNetworkForCFE(
 
         if neighbour_grids_only == True:
 
-            for bus_nest in grid_connected_buses:
+            for bus_nest in ci_connected_buses:
 
                 if bus_nest in buses_with_ci_load:
                     # LocalGrid <-> C&I system
@@ -410,7 +410,7 @@ def apply_cfe_constraint(
         run: dict,
         configs: dict,
         neighbour_grids_only: bool,
-        grid_connected_buses: list,
+        ci_connected_buses: list,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
@@ -420,7 +420,7 @@ def apply_cfe_constraint(
 
             Additionality_Candidates = []
 
-            for bus_nest in run["grid_connected_buses"]:
+            for bus_nest in ci_connected_buses:
                 
                 
                 global_clean_carriers = [
@@ -524,7 +524,7 @@ def apply_cfe_constraint(
             .sum(dims='Link')
         )
 
-        # Imports into CFE bus from additionality candidates on the brownfield of other nodes (candidates taken from run["grid_connected_buses"]).
+        # Imports into CFE bus from additionality candidates on the brownfield of other nodes (candidates taken from run["ci_connected_buses"]).
         CI_GridImport_Additionality = (
             n.model.variables['Link-p'].sel(
                 Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
@@ -597,7 +597,7 @@ def apply_cfe_constraint(
         )
 
         # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution of each generator
-        for bus in run["grid_connected_buses"]:
+        for bus in ci_connected_buses:
 
             Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
 

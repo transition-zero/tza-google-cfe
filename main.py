@@ -45,7 +45,7 @@ def solve_brownfield_network(run, configs, with_cfe: bool, env=None) -> pypsa.Ne
             technology_palette=configs["technology_palette"][run["palette"]],
             p_nom_extendable=False,
             neighbour_grids_only=run["neighbour_grids_only"],
-            grid_connected_buses=run["grid_connected_buses"],
+            ci_connected_buses=run["ci_connected_buses"],
         )
     else:
         final_brownfield = tza_brownfield_network

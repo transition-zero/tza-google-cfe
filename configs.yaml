@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Additionality_Individual_Link_0pc
+  - name: INDWE_TP1_Additionality_Individual_INDWEOnly_Link_5pc
     palette: palette_1
     stock_model: India
     select_nodes:
@@ -94,8 +94,8 @@ model_runs:
     existing_vintage_limit: 15 # limit set on age of plants which can contribute to cfe from other zones
     #existing_capacity_share: 1 # share of capacity which can be contracted in PPAs into cfe zone (no longer used as generator level now)
     neighbour_grids_only: true # boolean indicating whether all zones can contribute potential clean PPAs from capacity or whether user defined list 
-    # (grid_connected_buses) is taken instead
-    grid_connected_buses: ['INDWE','INDNO','INDSO','INDEA']
+    # (ci_connected_buses) is taken instead
+    ci_connected_buses: ['INDWE']
   # - name: INDWE_TP1_Test_Additionality_Link_ConstrainAdditionality_Neighbour
   #   palette: palette_1
   #   stock_model: India
@@ -121,8 +121,8 @@ model_runs:
   #   backstop: false
   #   existing_vintage_limit: 15 # set as 6 for testing
   #   existing_capacity_share: 1
-  #   neighbour_grids_only: true # if set to true, grid_connected_buses specified below, otherwise if set to false, a "global" grid score will be calculated
-  #   grid_connected_buses: ['INDWE','INDSO','INDEA','INDNO']    
+  #   neighbour_grids_only: true # if set to true, ci_connected_buses specified below, otherwise if set to false, a "global" grid score will be calculated
+  #   ci_connected_buses: ['INDWE','INDSO','INDEA','INDNO']    
   # - name: INDWE_TP1_Test_Global
   #   palette: palette_1
   #   stock_model: India

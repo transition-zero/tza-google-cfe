@@ -131,7 +131,7 @@ def RunBrownfieldSimulation(run, configs, env=None):
         technology_palette=configs["technology_palette"][run["palette"]],
         p_nom_extendable=False,
         neighbour_grids_only=run["neighbour_grids_only"],
-        grid_connected_buses=run["grid_connected_buses"],
+        ci_connected_buses=run["ci_connected_buses"],
     )
 
     print("prepared network for CFE")
@@ -185,7 +185,7 @@ def GetAdditionality_Candidates(
         # not allow new build in additionality (i.e. ensuring that this is existing capacity)
         (N_BROWNFIELD.generators.build_year <= configs['global_vars']['year'])
         & 
-        (N_BROWNFIELD.generators.bus.isin(run['grid_connected_buses']))
+        (N_BROWNFIELD.generators.bus.isin(run['ci_connected_buses']))
         ].index
 
     else:
@@ -392,7 +392,7 @@ def RunCFE(
         run,
         configs,
         run["neighbour_grids_only"],
-        run["grid_connected_buses"],
+        run["ci_connected_buses"],
     )
 
     # (Re)apply original brownfield constraints
@@ -431,7 +431,7 @@ def RunCFE(
             run,
             configs,
             run["neighbour_grids_only"],            
-            run["grid_connected_buses"],
+            run["ci_connected_buses"],
         )
         print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
         N_CFE.optimize.solve_model(
@@ -462,10 +462,10 @@ def RunCFE(
         )
     )
 
-    N_CFE.links_t.p0.to_csv(f'check_links_{(run["grid_connected_buses"])}.csv')
-    N_CFE.generators.to_csv(f'check_CFE_generators_{(run["grid_connected_buses"])}.csv')
-    N_CFE.generators_t.p.to_csv(f'check_CFE_generators_t_{(run["grid_connected_buses"])}.csv')
-    N_CFE.buses_t.marginal_price.to_csv(f'check_buses_marginal_price_{(run["grid_connected_buses"])}.csv')
+    N_CFE.links_t.p0.to_csv(f'check_links_{(run["ci_connected_buses"])}.csv')
+    N_CFE.generators.to_csv(f'check_CFE_generators_{(run["ci_connected_buses"])}.csv')
+    N_CFE.generators_t.p.to_csv(f'check_CFE_generators_t_{(run["ci_connected_buses"])}.csv')
+    N_CFE.buses_t.marginal_price.to_csv(f'check_buses_marginal_price_{(run["ci_connected_buses"])}.csv')
 
     N_CFE.export_to_netcdf(
         os.path.join(
