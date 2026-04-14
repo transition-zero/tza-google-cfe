@@ -68,7 +68,7 @@ constraints:
     fossil_generator_['INDWE']: ['INDWE C&I Grid-hydrogen-blend-ccgt-ext-2030-PPA-Fossil']
 
 model_runs:
-  - name: INDWE_TP1_Additionality_Individual_INDWEOnly_Link_5pc
+  - name: INDWE_TP1_Additionality_Individual_INDWEOnly_Link_5pc_TestPcDem0
     palette: palette_1
     stock_model: India
     select_nodes:
@@ -96,6 +96,7 @@ model_runs:
     neighbour_grids_only: true # boolean indicating whether all zones can contribute potential clean PPAs from capacity or whether user defined list 
     # (ci_connected_buses) is taken instead
     ci_connected_buses: ['INDWE']
+    cfe_existing_limit: 0.
   # - name: INDWE_TP1_Test_Additionality_Link_ConstrainAdditionality_Neighbour
   #   palette: palette_1
   #   stock_model: India

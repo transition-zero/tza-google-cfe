@@ -482,11 +482,11 @@ def apply_cfe_constraint(
         print(Additionality_Candidates)
 
         # total generation from additionality candidates meeting criteria on when plant was built
-        # and location. generator level "cfe_contribution" applied        
+        # and location. generator level "cfe_contribution_generator" applied        
         Additionality_Production_Gross = (
         ((n.model.variables['Generator-p'].sel(
             Generator=[i for i in Additionality_Candidates]
-        )) * n.generators.cfe_contribution.loc[Additionality_Candidates].T)
+        )) * n.generators.cfe_contribution_generator.loc[Additionality_Candidates].T)
         .sum(dims='Generator')
         )
         
@@ -596,14 +596,15 @@ def apply_cfe_constraint(
             name=f"cfe-constraint-additionality-flows-{bus}"
         )
 
-        # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution of each generator
+        # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution_generator
+        # of each generator
         for bus in ci_connected_buses:
 
             Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
 
             Additionality_Production_Net_Bus = (
             (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
-             * n.generators.cfe_contribution.loc[Additionality_Candidates_Bus].T
+             * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
             ).sum(dims='Generator')
             )
 
@@ -619,5 +620,12 @@ def apply_cfe_constraint(
                 name=f"cfe-constraint-additionality-flows-individual-{bus}"
             )
 
+        # Constraint 8: Ensure existing assets do not contribute more than the cfe_existing_limit parameter share of demand
+        # ---------------------------------------------------------------
+
+        n.model.add_constraints(
+            CI_Demand.sum() * run['cfe_existing_limit'] >= (CI_GridImport_Additionality).sum(),
+            name=f"cfe-constraint-existing-share-demand-{bus}",
+        )
 
     return n
