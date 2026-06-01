@@ -113,7 +113,7 @@ def get_ci_cost_summary(n : pypsa.Network) -> pd.DataFrame:
 def GetGridCFE(
     n: pypsa.Network,   
     ci_identifier: str,
-    run: dict
+    run: dict,
 ):
     """
 
@@ -150,6 +150,12 @@ def GetGridCFE(
         if i in n.generators.carrier.tolist()
     ]
 
+    #if run["neighbour_grids_only"] == True:
+    
+    R_agg_clean_generators = []
+    R_agg_all_generators = []
+    R_agg_additionality_exports = []
+
     for bus in run["nodes_with_ci_load"]:
         # get clean generators in R
         R_clean_generators = n.generators.loc[
@@ -169,12 +175,28 @@ def GetGridCFE(
             (n.generators.index.str.contains(bus)) 
         ].index
 
-        # calculate CFE sceore
-        total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
-        total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
+        #  isolates flows of clean electricity directly as PPA from brownfield grid
+        R_additionality_exports = n.links.loc[
+            (n.links.index.str.contains('Additionality')) &
+            (n.links.index.str.contains(bus)) &
+            (n.links.bus0.str.contains(bus))
+        ].index
 
-    # return CFE score
-    return (total_clean_generation / total_generation).round(2).tolist()
+        # calculate CFE score
+        R_agg_all_generators.extend(R_all_generators)
+        R_agg_clean_generators.extend(R_clean_generators)
+        R_agg_additionality_exports.extend(R_additionality_exports)
+    
+    print(R_agg_all_generators)
+    print(R_agg_clean_generators)
+    print(R_agg_additionality_exports)
+
+    total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+    total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
+    total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+
+    # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
+    return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
 
 
 def load_from_dir(path) -> dict:

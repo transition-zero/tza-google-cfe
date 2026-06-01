@@ -2,12 +2,17 @@ import pypsa
 import numpy as np
 import pandas as pd
 
+from run import run_scenarios
+
 def PrepareNetworkForCFE(
         network: pypsa.Network, 
         buses_with_ci_load: list,
         ci_load_fraction: float,
+        ci_identifier: str,
         technology_palette: list,
         p_nom_extendable: bool,
+        neighbour_grids_only: bool,
+        ci_connected_buses: list,
     ) -> pypsa.Network:
 
     """
@@ -92,19 +97,6 @@ def PrepareNetworkForCFE(
         #   - LocalGrid <-> C&I system
         #   - C&I system <-> C&I storage
 
-        # LocalGrid <-> C&I system
-        network.add(
-            "Link",
-            f"{bus} C&I Grid Imports",
-            bus0=bus, 
-            bus1=ci_bus_name, 
-            p_nom=0,
-            p_nom_extendable=True, # keep this as True to prevent infeasibilities
-            # add small capital and marginal costs to prevent model infeasibilities
-            marginal_cost=0.01, 
-            capital_cost=0.01,
-        )
-
         network.add(
             "Link",
             f"{bus} C&I Grid Exports",
@@ -141,6 +133,97 @@ def PrepareNetworkForCFE(
             marginal_cost=0.01, 
             capital_cost=0.01,
         )
+
+        if neighbour_grids_only == True:
+
+            for bus_nest in ci_connected_buses:
+
+                if bus_nest in buses_with_ci_load:
+                    # LocalGrid <-> C&I system
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )
+
+                    # adding direct link between additionality candidates in other nodes and C&I bus
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )
+
+                else:
+
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )
+
+
+        else:         
+
+            for bus_nest in network.buses.index[~network.buses.index.str.contains(ci_identifier)]:
+
+                if bus_nest in buses_with_ci_load:
+
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )
+
+                    # adding direct link between additionality candidates in other nodes and C&I bus
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )
+
+                else:
+
+                    network.add(
+                        "Link",
+                        f"{bus_nest} {ci_bus_name} C&I Grid Imports Additionality PPA",
+                        bus0=bus_nest, 
+                        bus1=ci_bus_name, 
+                        p_nom=0,
+                        p_nom_extendable=True, # keep this as True to prevent infeasibilities
+                        # add small capital and marginal costs to prevent model infeasibilities
+                        marginal_cost=0.01, 
+                        capital_cost=0.01,
+                    )                
 
         # STEP 3:
         # Add generators and storages to C&I bus within the technology palette. 
@@ -313,7 +396,7 @@ def PrepareNetworkForCFE(
 
             else:
                 raise ValueError(f"Invalid technology: {technology}")
-
+            
     return network
 
 
@@ -321,16 +404,92 @@ def apply_cfe_constraint(
         n : pypsa.Network, 
         GridCFE : list, 
         ci_buses : list, 
-        ci_identifier : str, 
+        ci_identifier : str,
         CFE_Score : float,
         max_excess_export : float,
+        run: dict,
+        configs: dict,
+        neighbour_grids_only: bool,
+        ci_connected_buses: list,
     ) -> pypsa.Network:
     '''Set CFE constraint
     '''
     for bus in ci_buses:
-        # ---
-        # fetch necessary variables to implement CFE
 
+        if neighbour_grids_only == True:
+
+            Additionality_Candidates = []
+
+            for bus_nest in ci_connected_buses:
+                
+                
+                global_clean_carriers = [
+                i
+                for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+                if i in n.generators.carrier.tolist()
+                ]
+
+                # get clean generators in R
+                Additionality_Candidates_Int = n.generators.loc[
+                # clean carriers
+                (n.generators.carrier.isin(global_clean_carriers))
+                &
+                # generators in bus within user defined connected buses
+                (n.generators.index.str.contains(bus_nest))
+                &
+                # not include C&I assets
+                (~n.generators.index.str.contains(ci_identifier))
+                &
+                # isolate generators which satisfy additionality vintaging constraint
+                (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
+                &
+                # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+                (n.generators.build_year <= configs['global_vars']['year'])
+                ].index        
+
+                Additionality_Candidates.extend(Additionality_Candidates_Int)
+
+        else: 
+            
+            Additionality_Candidates = []
+
+            for bus_nest in n.buses.index[~n.buses.index.str.contains(ci_identifier)]:
+
+                #Additionality_Production_Gross = []   
+                global_clean_carriers = [
+                i
+                for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+                if i in n.generators.carrier.tolist()
+                ]
+
+                # get clean generators in R
+                Additionality_Candidates_Int = n.generators.loc[
+                # clean carriers
+                (n.generators.carrier.isin(global_clean_carriers))
+                &
+                # not include C&I assets
+                (~n.generators.index.str.contains(ci_identifier))
+                &
+                # isolate generators which satisfy additionality vintaging constraint
+                (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
+                &
+                # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+                (n.generators.build_year <= configs['global_vars']['year'])
+                ].index     
+
+                Additionality_Candidates.extend(Additionality_Candidates_Int)
+        
+        print(Additionality_Candidates)
+
+        # total generation from additionality candidates meeting criteria on when plant was built
+        # and location. generator level "cfe_contribution_generator" applied        
+        Additionality_Production_Gross = (
+        ((n.model.variables['Generator-p'].sel(
+            Generator=[i for i in Additionality_Candidates]
+        )) * n.generators.cfe_contribution_generator.loc[Additionality_Candidates].T)
+        .sum(dims='Generator')
+        )
+        
         CI_Demand = (
             n.loads_t.p_set.filter(regex=bus).filter(regex=ci_identifier).values.flatten()
         )
@@ -349,6 +508,7 @@ def apply_cfe_constraint(
             .sum(dims='Link')
         )
 
+        # Exports from CFE bus into its adjoining brownfield
         CI_GridExport = (
             n.model.variables['Link-p'].sel(
                 Link=[i for i in n.links.index if ci_identifier in i and 'Export' in i and bus in i]
@@ -356,14 +516,25 @@ def apply_cfe_constraint(
             .sum(dims='Link')
         )
 
+        # Imports into CFE bus from its adjoining brownfield
         CI_GridImport = (
             n.model.variables['Link-p'].sel(
-                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i]
+                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' not in i]
             )
             .sum(dims='Link')
         )
 
-        # need to ensure that "Fossil" is included in string of emitting generator for blending/CCS
+        # Imports into CFE bus from additionality candidates on the brownfield of other nodes (candidates taken from run["ci_connected_buses"]).
+        CI_GridImport_Additionality = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
+            )
+            .sum(dims='Link')
+        )
+
+        # Fossil generation from new build PPA in CFE bus. This was set up for bleding techs in Tech Palette 3 where both sides 
+        # of blend (clean and fossil) are built in CFE bus. Need to ensure that "Fossil" is included in string 
+        # of emitting generator for blending/CCS. 
         CI_PPA_Fossil = (
 
         ((n.model.variables['Generator-p'].sel(
@@ -371,7 +542,8 @@ def apply_cfe_constraint(
         )))
         .sum(dims='Generator')
         )
-                
+
+        # clean generation from new build PPA in CFE bus
         CI_PPA_Clean = (
     
         ((n.model.variables['Generator-p'].sel(
@@ -384,14 +556,14 @@ def apply_cfe_constraint(
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
+            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_GridImport_Additionality + CI_StorageDischarge - CI_StorageCharge,
             name=f"cfe-constraint-hourly-matching-{bus}",
         )
 
         # Constraint 2: CFE target - note the CI_PPA_Fossil is offset by the share of fossil production which must be exported (set by CFE score)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
+            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) + (CI_GridImport_Additionality) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
             name=f"cfe-constraint-target-{bus}",
  
         )
@@ -416,5 +588,48 @@ def apply_cfe_constraint(
             CI_GridExport >= CI_PPA_Fossil * CFE_Score,
             name=f"cfe-constraint-fossil-excess-{bus}",
         )
-    
+
+        #Constraint 6: Ensure that sum of additionality candidate flows into cfe bus is <= total production * max share of production
+
+        n.model.add_constraints(
+            CI_GridImport_Additionality <= (Additionality_Production_Gross),
+            name=f"cfe-constraint-additionality-flows-{bus}"
+        )
+
+        # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution_generator
+        # of each generator
+        if neighbour_grids_only == False: 
+
+            ci_connected_buses = n.buses.loc[~n.buses.index.str.contains(ci_identifier)].index.to_list()
+
+        for bus in ci_connected_buses:
+
+            Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
+
+            Additionality_Production_Net_Bus = (
+            (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
+            * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
+            ).sum(dims='Generator')
+            )
+
+            Additionality_Links_Gross_Bus = (
+                n.model.variables['Link-p'].sel(
+                    Link=[i for i in n.links.loc[n.links.bus0.str.contains(bus)].index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
+                )
+                .sum(dims='Link')
+            )
+            
+            n.model.add_constraints(
+                Additionality_Links_Gross_Bus <= Additionality_Production_Net_Bus,
+                name=f"cfe-constraint-additionality-flows-individual-{bus}"
+            )
+
+        # Constraint 8: Ensure existing assets do not contribute more than the cfe_existing_limit parameter share of demand
+        # ---------------------------------------------------------------
+
+        n.model.add_constraints(
+            CI_Demand.sum() * run['cfe_existing_limit'] >= (CI_GridImport_Additionality).sum(),
+            name=f"cfe-constraint-existing-share-demand-{bus}",
+        )
+
     return n

@@ -3,6 +3,7 @@ import sys
 
 import pandas as pd
 import pypsa
+import numpy as np
 
 from src import brownfield, cfe, helpers, postprocess
 
@@ -10,7 +11,7 @@ from src import brownfield, cfe, helpers, postprocess
 def GetGridCFE(
     n: pypsa.Network,   
     ci_identifier: str,
-    run: dict
+    run: dict,
 ):
     """
 
@@ -47,6 +48,12 @@ def GetGridCFE(
         if i in n.generators.carrier.tolist()
     ]
 
+    #if run["neighbour_grids_only"] == True:
+    
+    R_agg_clean_generators = []
+    R_agg_all_generators = []
+    R_agg_additionality_exports = []
+
     for bus in run["nodes_with_ci_load"]:
         # get clean generators in R
         R_clean_generators = n.generators.loc[
@@ -66,12 +73,28 @@ def GetGridCFE(
             (n.generators.index.str.contains(bus)) 
         ].index
 
-        # calculate CFE sceore
-        total_clean_generation = n.generators_t.p[R_clean_generators].sum(axis=1)
-        total_generation = n.generators_t.p[R_all_generators].sum(axis=1)
+        #  isolates flows of clean electricity directly as PPA from brownfield grid
+        R_additionality_exports = n.links.loc[
+            (n.links.index.str.contains('Additionality')) &
+            (n.links.index.str.contains(bus)) &
+            (n.links.bus0.str.contains(bus))
+        ].index
 
-    # return CFE score
-    return (total_clean_generation / total_generation).round(2).tolist()
+        # calculate CFE score
+        R_agg_all_generators.extend(R_all_generators)
+        R_agg_clean_generators.extend(R_clean_generators)
+        R_agg_additionality_exports.extend(R_additionality_exports)
+    
+    print(R_agg_all_generators)
+    print(R_agg_clean_generators)
+    print(R_agg_additionality_exports)
+
+    total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+    total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
+    total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+
+    # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
+    return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
 
 
 def PostProcessBrownfield(n: pypsa.Network, ci_identifier: str):
@@ -90,6 +113,7 @@ def PostProcessBrownfield(n: pypsa.Network, ci_identifier: str):
         getattr(n, c).loc[
             getattr(n, c).index.str.contains(ci_identifier), "p_nom_extendable"
         ] = True
+
     return n
 
 
@@ -103,8 +127,11 @@ def RunBrownfieldSimulation(run, configs, env=None):
         N_BROWNFIELD,
         buses_with_ci_load=run["nodes_with_ci_load"],
         ci_load_fraction=run["ci_load_fraction"],
+        ci_identifier = configs["global_vars"]["ci_label"],
         technology_palette=configs["technology_palette"][run["palette"]],
         p_nom_extendable=False,
+        neighbour_grids_only=run["neighbour_grids_only"],
+        ci_connected_buses=run["ci_connected_buses"],
     )
 
     print("prepared network for CFE")
@@ -112,6 +139,7 @@ def RunBrownfieldSimulation(run, configs, env=None):
 
     # lp_model = N_BROWNFIELD.optimize.create_model()
     N_BROWNFIELD.optimize.create_model()
+
     brownfield.ApplyBrownfieldConstraints(N_BROWNFIELD, run, configs)
 
     N_BROWNFIELD.optimize.solve_model(
@@ -133,6 +161,48 @@ def RunBrownfieldSimulation(run, configs, env=None):
 
     return N_BROWNFIELD
 
+def GetAdditionality_Candidates(
+    N_BROWNFIELD: pypsa.Network,
+    run: dict,
+    configs: dict,        
+):
+    
+    global_clean_carriers = [
+    i
+    for i in N_BROWNFIELD.carriers.query(" co2_emissions <= 0").index.tolist()
+    if i in N_BROWNFIELD.generators.carrier.tolist()
+    ]
+
+    if run["neighbour_grids_only"] == True:
+        # get clean generators in R
+        Additionality_Candidates = N_BROWNFIELD.generators.loc[
+        # clean carriers
+        (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
+        &
+        # isolate generators which satisfy additionality vintaging constraint
+        (((N_BROWNFIELD.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
+        &
+        # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        (N_BROWNFIELD.generators.build_year <= configs['global_vars']['year'])
+        & 
+        (N_BROWNFIELD.generators.bus.isin(run['ci_connected_buses']))
+        ].index
+
+    else:
+
+        # get clean generators in R
+        Additionality_Candidates = N_BROWNFIELD.generators.loc[
+        # clean carriers
+        (N_BROWNFIELD.generators.carrier.isin(global_clean_carriers))
+        &
+        # isolate generators which satisfy additionality vintaging constraint
+        (((N_BROWNFIELD.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
+        &
+        # not allow new build in additionality (i.e. ensuring that this is existing capacity)
+        (N_BROWNFIELD.generators.build_year <= configs['global_vars']['year'])
+        ].index
+
+    return Additionality_Candidates
 
 def RunRES100(
     N_BROWNFIELD: pypsa.Network,
@@ -147,7 +217,6 @@ def RunRES100(
 
     # make a copy of the brownfield
     N_RES_100 = N_BROWNFIELD  # .copy()
-
     # post-process to set what is expandable and non-expandable
     N_RES_100 = PostProcessBrownfield(N_RES_100, ci_identifier=ci_identifier)
 
@@ -257,6 +326,33 @@ def RunCFE(
     # init linopy model
     N_CFE.optimize.create_model()
 
+    # assign costs to additionality candidates
+    Additionality_Candidates = GetAdditionality_Candidates(N_BROWNFIELD, run, configs)
+
+    CI_GridImport_Additionality = (
+        N_CFE.model.variables['Link-p'].sel(
+            Link=[i for i in N_CFE.links.index if ci_identifier in i and 'Import' in i and 'Additionality' in i and 'PPA' in i]
+        )
+        .sum(dims='Link')
+    )
+
+    links_additionality = N_CFE.links.loc[N_CFE.links.index.str.contains('Additionality')].index
+
+    for generator in Additionality_Candidates:
+
+        if N_CFE.generators.build_year[generator] + N_CFE.generators.lifetime[generator] >= configs["global_vars"]["year"]:
+            # multiply by p_nom_opt because all generators in brownfield are non-extendable and network already optimised
+            N_BROWNFIELD.generators_t.marginal_cost[generator] = (((N_BROWNFIELD.generators.capital_cost[generator] * ((N_BROWNFIELD.generators.p_nom_opt[generator]) - (N_BROWNFIELD.generators.p_nom[generator])))) + ((N_BROWNFIELD.generators.marginal_cost[generator]) * N_BROWNFIELD.generators_t.p[generator]).sum()) / (N_BROWNFIELD.generators_t.p[generator]).sum()
+        else: 
+            N_BROWNFIELD.generators_t.marginal_cost[generator] = N_BROWNFIELD.generators.marginal_cost[generator]
+
+    marginal_cost = N_BROWNFIELD.generators_t.marginal_cost.max(axis=1).values
+
+    # assign marginal cost of additionality generators (maximum) to marginal cost of link between all connecting buses
+    for link in links_additionality:
+
+        N_CFE.links_t.marginal_cost[link] = marginal_cost
+
     # ---------------------------------------------------------------
     #
     #   ITERATIVELY SOLVE FOR GRID CFE
@@ -293,6 +389,10 @@ def RunCFE(
         ci_identifier,
         CFE_Score,
         configs["global_vars"]["maximum_excess_export_cfe"],
+        run,
+        configs,
+        run["neighbour_grids_only"],
+        run["ci_connected_buses"],
     )
 
     # (Re)apply original brownfield constraints
@@ -306,11 +406,11 @@ def RunCFE(
         env=env,
     )
 
+
     # get GridCFE
     GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
     count += 1
     GridSupplyCFE[f"iteration_{count}"] = GridCFE
-
     # calculate difference between iterations with a maximum of 100 loops
     max_iterations = 100
     while (
@@ -328,6 +428,10 @@ def RunCFE(
             ci_identifier,
             CFE_Score,
             configs["global_vars"]["maximum_excess_export_cfe"],
+            run,
+            configs,
+            run["neighbour_grids_only"],            
+            run["ci_connected_buses"],
         )
         print(f"Computing hourly matching scenario (CFE: {int(CFE_Score*100)}) iteration {count}")
         N_CFE.optimize.solve_model(
@@ -357,6 +461,11 @@ def RunCFE(
             "cfe" + str(int(CFE_Score * 100)) + ".csv",
         )
     )
+
+    N_CFE.links_t.p0.to_csv(f'check_links_{(run["ci_connected_buses"])}.csv')
+    N_CFE.generators.to_csv(f'check_CFE_generators_{(run["ci_connected_buses"])}.csv')
+    N_CFE.generators_t.p.to_csv(f'check_CFE_generators_t_{(run["ci_connected_buses"])}.csv')
+    N_CFE.buses_t.marginal_price.to_csv(f'check_buses_marginal_price_{(run["ci_connected_buses"])}.csv')
 
     N_CFE.export_to_netcdf(
         os.path.join(
