@@ -470,14 +470,11 @@ def apply_cfe_constraint(
                 # not include C&I assets
                 (~n.generators.index.str.contains(ci_identifier))
                 &
-                # generators in bus to avoid oversizing Additionality_Candidates
-                (n.generators.index.str.contains(bus_nest))
-                &                
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
-                (n.generators.build_year < configs['global_vars']['year'])
+                (n.generators.build_year <= configs['global_vars']['year'])
                 ].index     
 
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
@@ -601,13 +598,17 @@ def apply_cfe_constraint(
 
         # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution_generator
         # of each generator
+        if neighbour_grids_only == False: 
+
+            ci_connected_buses = n.buses.loc[~n.buses.index.str.contains(ci_identifier)].index.to_list()
+
         for bus in ci_connected_buses:
 
             Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
 
             Additionality_Production_Net_Bus = (
             (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
-             * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
+            * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
             ).sum(dims='Generator')
             )
 
