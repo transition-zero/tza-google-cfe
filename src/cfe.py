@@ -477,7 +477,7 @@ def apply_cfe_constraint(
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
                 # not allow new build in additionality (i.e. ensuring that this is existing capacity)
-                (n.generators.build_year <= configs['global_vars']['year'])
+                (n.generators.build_year < configs['global_vars']['year'])
                 ].index     
 
                 Additionality_Candidates.extend(Additionality_Candidates_Int)
