@@ -470,6 +470,9 @@ def apply_cfe_constraint(
                 # not include C&I assets
                 (~n.generators.index.str.contains(ci_identifier))
                 &
+                # generators in bus to avoid oversizing Additionality_Candidates
+                (n.generators.index.str.contains(bus_nest))
+                &                
                 # isolate generators which satisfy additionality vintaging constraint
                 (((n.generators.build_year) + run['existing_vintage_limit'] >= configs['global_vars']['year']) == True)
                 &
