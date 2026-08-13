@@ -9,7 +9,8 @@ from src import brownfield, cfe, helpers, postprocess
 
 
 def GetGridCFE(
-    n: pypsa.Network,   
+    n: pypsa.Network,
+    buses: list,   
     ci_identifier: str,
     run: dict,
 ):
@@ -39,62 +40,62 @@ def GetGridCFE(
 
     """
 
-    
+    for bus in buses:
 
-        # get global clean carriers
-    global_clean_carriers = [
-        i
-        for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
-        if i in n.generators.carrier.tolist()
-    ]
+            # get global clean carriers
+        global_clean_carriers = [
+            i
+            for i in n.carriers.query(" co2_emissions <= 0").index.tolist()
+            if i in n.generators.carrier.tolist()
+        ]
 
-    #if run["neighbour_grids_only"] == True:
-    
-    R_agg_clean_generators = []
-    R_agg_all_generators = []
-    R_agg_additionality_exports = []
+        #if run["neighbour_grids_only"] == True:
+        
+        R_agg_clean_generators = []
+        R_agg_all_generators = []
+        R_agg_additionality_exports = []
 
-    for bus in run["nodes_with_ci_load"]:
-        # get clean generators in R
-        R_clean_generators = n.generators.loc[
-            # clean carriers
-            (n.generators.carrier.isin(global_clean_carriers))
-            &
-            #exclude assets not in R
-            (n.generators.index.str.contains(bus)) &
-            # exclude C&I assets
-            (~n.generators.index.str.contains(ci_identifier))
-        ].index
+        for bus in run["nodes_with_ci_load"]:
+            # get clean generators in R
+            R_clean_generators = n.generators.loc[
+                # clean carriers
+                (n.generators.carrier.isin(global_clean_carriers))
+                &
+                #exclude assets not in R
+                (n.generators.index.str.contains(bus)) &
+                # exclude C&I assets
+                (~n.generators.index.str.contains(ci_identifier))
+            ].index
 
-        # get all generators
-        R_all_generators = n.generators.loc[
-            (~n.generators.index.str.contains(ci_identifier))
-            &
-            (n.generators.index.str.contains(bus)) 
-        ].index
+            # get all generators
+            R_all_generators = n.generators.loc[
+                (~n.generators.index.str.contains(ci_identifier))
+                &
+                (n.generators.index.str.contains(bus)) 
+            ].index
 
-        #  isolates flows of clean electricity directly as PPA from brownfield grid
-        R_additionality_exports = n.links.loc[
-            (n.links.index.str.contains('Additionality')) &
-            (n.links.index.str.contains(bus)) &
-            (n.links.bus0.str.contains(bus))
-        ].index
+            #  isolates flows of clean electricity directly as PPA from brownfield grid
+            R_additionality_exports = n.links.loc[
+                (n.links.index.str.contains('Additionality')) &
+                (n.links.index.str.contains(bus)) &
+                (n.links.bus0.str.contains(bus))
+            ].index
 
-        # calculate CFE score
-        R_agg_all_generators.extend(R_all_generators)
-        R_agg_clean_generators.extend(R_clean_generators)
-        R_agg_additionality_exports.extend(R_additionality_exports)
-    
-    print(R_agg_all_generators)
-    print(R_agg_clean_generators)
-    print(R_agg_additionality_exports)
+            # calculate CFE score
+            R_agg_all_generators.extend(R_all_generators)
+            R_agg_clean_generators.extend(R_clean_generators)
+            R_agg_additionality_exports.extend(R_additionality_exports)
+        
+        print(R_agg_all_generators)
+        print(R_agg_clean_generators)
+        print(R_agg_additionality_exports)
 
-    total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
-    total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
-    total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
+        total_clean_generation = n.generators_t.p[R_agg_clean_generators].sum(axis=1)
+        total_clean_generation_additionality = n.links_t.p0[R_agg_additionality_exports].sum(axis=1)
+        total_generation = n.generators_t.p[R_agg_all_generators].sum(axis=1)
 
-    # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
-    return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
+        # return CFE score. Term total_clean_generation_additionality is netted off to ensure that the grid score has been amended to take into account direct PPAs between brownfield and C&I bus
+        return ((total_clean_generation - total_clean_generation_additionality) / total_generation).round(2).tolist()
 
 
 def PostProcessBrownfield(n: pypsa.Network, ci_identifier: str):
@@ -408,7 +409,7 @@ def RunCFE(
 
 
     # get GridCFE
-    GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
+    GridCFE = GetGridCFE(N_CFE, buses=N_BROWNFIELD.buses.index.tolist(), ci_identifier=ci_identifier, run=run)
     count += 1
     GridSupplyCFE[f"iteration_{count}"] = GridCFE
     # calculate difference between iterations with a maximum of 100 loops
@@ -440,7 +441,7 @@ def RunCFE(
             io_api="direct",
             env=env,
         )
-        GridCFE = GetGridCFE(N_CFE, ci_identifier, run=run)
+        GridCFE = GetGridCFE(N_CFE, buses=N_BROWNFIELD.buses.index.tolist(), ci_identifier=ci_identifier, run=run)
         count += 1
         GridSupplyCFE[f"iteration_{count}"] = GridCFE
 
@@ -453,14 +454,16 @@ def RunCFE(
         )
     )
 
-    GridSupplyCFE.to_csv(
-        os.path.join(
-            configs["paths"]["output_model_runs"],
-            run["name"],
-            "grid_supply_cfe_iterations",
-            "cfe" + str(int(CFE_Score * 100)) + ".csv",
+    for bus in ci_identifier:
+
+        GridSupplyCFE.to_csv(
+            os.path.join(
+                configs["paths"]["output_model_runs"],
+                run["name"],
+                "grid_supply_cfe_iterations",
+                "cfe" + str(int(CFE_Score * 100)) + str(bus) + ".csv",
+            )
         )
-    )
 
     N_CFE.links_t.p0.to_csv(f'check_links_{(run["ci_connected_buses"])}.csv')
     N_CFE.generators.to_csv(f'check_CFE_generators_{(run["ci_connected_buses"])}.csv')

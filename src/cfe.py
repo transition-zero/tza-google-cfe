@@ -598,27 +598,27 @@ def apply_cfe_constraint(
 
         # Constraint 7: Ensure indiviudal bus brownfield links to C&I is <= additionality production in that bus * cfe_contribution_generator
         # of each generator
-        for bus in ci_connected_buses:
+        #for bus in ci_connected_buses:
 
-            Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
+        Additionality_Candidates_Bus = [i for i in Additionality_Candidates if bus in i]
 
-            Additionality_Production_Net_Bus = (
-            (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
-             * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
-            ).sum(dims='Generator')
-            )
+        Additionality_Production_Net_Bus = (
+        (n.model.variables['Generator-p'].sel(Generator=[i for i in Additionality_Candidates_Bus]) 
+            * n.generators.cfe_contribution_generator.loc[Additionality_Candidates_Bus].T
+        ).sum(dims='Generator')
+        )
 
-            Additionality_Links_Gross_Bus = (
-                n.model.variables['Link-p'].sel(
-                    Link=[i for i in n.links.loc[n.links.bus0.str.contains(bus)].index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
-                )
-                .sum(dims='Link')
+        Additionality_Links_Gross_Bus = (
+            n.model.variables['Link-p'].sel(
+                Link=[i for i in n.links.loc[n.links.bus0.str.contains(bus)].index if ci_identifier in i and 'Import' in i and bus in i and 'Additionality' in i and 'PPA' in i]
             )
-            
-            n.model.add_constraints(
-                Additionality_Links_Gross_Bus <= Additionality_Production_Net_Bus,
-                name=f"cfe-constraint-additionality-flows-individual-{bus}"
-            )
+            .sum(dims='Link')
+        )
+        
+        n.model.add_constraints(
+            Additionality_Links_Gross_Bus <= Additionality_Production_Net_Bus,
+            name=f"cfe-constraint-additionality-flows-individual-{bus}"
+        )
 
         # Constraint 8: Ensure existing assets do not contribute more than the cfe_existing_limit parameter share of demand
         # ---------------------------------------------------------------
