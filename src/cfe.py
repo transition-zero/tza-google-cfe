@@ -222,7 +222,8 @@ def PrepareNetworkForCFE(
                             is_blend_or_ccs = params['is_blend_or_ccs'],
                             generation_blend_share = network.generators.loc[generator].generation_blend_share, #
                             min_utilisation_rate = params['min_utilisation_rate'], 
-                            max_utilisation_rate = params['max_utilisation_rate']  
+                            max_utilisation_rate = params['max_utilisation_rate'],
+                            share_carbon_free = network.generators.loc[generator].share_carbon_free  
                         )
                     
                     else:
@@ -260,7 +261,8 @@ def PrepareNetworkForCFE(
                             is_blend_or_ccs = params['is_blend_or_ccs'],
                             generation_blend_share = network.generators.loc[generator].generation_blend_share,
                             min_utilisation_rate = params['min_utilisation_rate'], 
-                            max_utilisation_rate = params['max_utilisation_rate']  #                             
+                            max_utilisation_rate = params['max_utilisation_rate'],
+                            share_carbon_free = network.generators.loc[generator].share_carbon_free  #                             
                         )
                 
             elif technology in network.storage_units.carrier.unique():
@@ -364,36 +366,54 @@ def apply_cfe_constraint(
         )
 
         # need to ensure that "Fossil" is included in string of emitting generator for blending/CCS
-        CI_PPA_Fossil = (
+        CI_PPA_Fossil_Carbon = (
 
         ((n.model.variables['Generator-p'].sel(
             Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i and 'Fossil' in i]
-        )))
+        )) * (1 - n.generators.share_carbon_free))
         .sum(dims='Generator')
         )
+
+        CI_PPA_Fossil_Clean = (
+
+        ((n.model.variables['Generator-p'].sel(
+            Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i and 'Fossil' in i]
+        )) * (n.generators.share_carbon_free))
+        .sum(dims='Generator')
+        )        
                 
         CI_PPA_Clean = (
     
-        ((n.model.variables['Generator-p'].sel(
+        (((n.model.variables['Generator-p'].sel(
             Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i and 'Clean' in i]
         )))
         .sum(dims='Generator')
         )
+        )
+
+        CI_PPA_Fossil = (
+    
+        (((n.model.variables['Generator-p'].sel(
+            Generator=[i for i in n.generators.index if ci_identifier in i and 'PPA' in i and bus in i and 'Fossil' in i]
+        )))
+        .sum(dims='Generator')
+        )
+        )
+
 
         # Constraint 1: Hourly matching
         # ---------------------------------------------------------------
 
         n.model.add_constraints(
-            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
+            CI_Demand == CI_PPA_Clean + CI_PPA_Fossil_Carbon + CI_PPA_Fossil_Clean - CI_GridExport + CI_GridImport + CI_StorageDischarge - CI_StorageCharge,
             name=f"cfe-constraint-hourly-matching-{bus}",
         )
 
         # Constraint 2: CFE target - note the CI_PPA_Fossil is offset by the share of fossil production which must be exported (set by CFE score)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            ( CI_PPA_Clean - (CI_GridExport - (CI_PPA_Fossil * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
+            ( CI_PPA_Clean + CI_PPA_Fossil_Clean - (CI_GridExport - (CI_PPA_Fossil_Carbon * CFE_Score) ) + (CI_GridImport * list(GridCFE) ) ).sum() >= ( (CI_StorageCharge - CI_StorageDischarge) + CI_Demand ).sum() * CFE_Score,
             name=f"cfe-constraint-target-{bus}",
- 
         )
 
         # Constraint 3: Excess
@@ -406,15 +426,15 @@ def apply_cfe_constraint(
         # Constraint 4: Battery can only be charged by clean PPA (not grid)
         # ---------------------------------------------------------------
         n.model.add_constraints(
-            CI_PPA_Clean >= CI_StorageCharge,
+            (CI_PPA_Clean + CI_PPA_Fossil_Clean) >= CI_StorageCharge,
             name=f"cfe-constraint-storage-{bus}",
         )
 
         #Constraint 5: Force fossil fuel production (from blended or CCS) to be exported
 
         n.model.add_constraints(
-            CI_GridExport >= CI_PPA_Fossil * CFE_Score,
+            CI_GridExport >= CI_PPA_Fossil_Carbon * CFE_Score,
             name=f"cfe-constraint-fossil-excess-{bus}",
         )
-    
+
     return n
